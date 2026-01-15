@@ -13,7 +13,87 @@ const AppState = {
     isMobile: window.innerWidth <= 768,
     touchSupported: 'ontouchstart' in window
 };
+// ===== EFECTOS GRAFITI ESPECÍFICOS =====
+function initGraffitiEffects() {
+    // Efecto de spray en hover de botones
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+        btn.addEventListener('mouseenter', (e) => {
+            if (AppState.soundsEnabled && Sounds.spray) {
+                Sounds.spray.currentTime = 0;
+                Sounds.spray.play();
+            }
+            
+            // Crear efecto visual de spray
+            const spray = document.createElement('div');
+            spray.className = 'spray-particle';
+            spray.style.cssText = `
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                background: var(--accent-neon);
+                border-radius: 50%;
+                pointer-events: none;
+                filter: blur(5px);
+                animation: sprayParticle 0.5s ease-out forwards;
+            `;
+            
+            const rect = btn.getBoundingClientRect();
+            spray.style.left = `${e.clientX - rect.left}px`;
+            spray.style.top = `${e.clientY - rect.top}px`;
+            
+            btn.appendChild(spray);
+            
+            setTimeout(() => {
+                if (spray.parentNode) {
+                    spray.parentNode.removeChild(spray);
+                }
+            }, 500);
+        });
+    });
+    
+    // Efecto de revelado grafiti al scroll
+    const graffitiElements = document.querySelectorAll('.reveal');
+    const graffitiObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('spray-animate');
+                
+                // Sonido opcional
+                if (AppState.soundsEnabled && entry.target.classList.contains('hero-title')) {
+                    setTimeout(() => {
+                        Sounds.spray.currentTime = 0;
+                        Sounds.spray.play();
+                    }, 300);
+                }
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    graffitiElements.forEach(el => graffitiObserver.observe(el));
+}
 
+// Añade esta animación al CSS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes sprayParticle {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(3);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// Llama a la función en initApp
+function initApp() {
+    // ... tu código existente ...
+    initGraffitiEffects(); // <-- Añade esta línea
+    // ... resto del código ...
+}
 // Elementos del DOM
 const DOM = {
     preloader: document.getElementById('preloader'),
