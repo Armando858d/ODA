@@ -3,7 +3,9 @@
 
 body {
     font-family:'Rubik', sans-serif;
-    background:#000;
+    background:#0F2027; /* fallback */
+    background:-webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
+    background:linear-gradient(to right, #2C5364, #203A43, #0F2027);
     color:#00ff66;
     scroll-behavior:smooth;
 }
@@ -17,7 +19,9 @@ header {
     position:fixed;
     width:100%;
     top:0;
-    background:rgba(0,0,0,0.85);
+    background:#0f0c29;
+    background:-webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);
+    background:linear-gradient(to right, #24243e, #302b63, #0f0c29);
     backdrop-filter:blur(5px);
     z-index:1000;
 }
@@ -31,6 +35,7 @@ header .logo {
 header nav { display:flex; align-items:center; gap:15px; }
 
 header nav a { 
+    position: relative;
     text-decoration:none; 
     color:#00ff66; 
     font-weight:bold; 
@@ -39,7 +44,21 @@ header nav a {
 
 header nav a:hover { 
     color:#fff; 
-    text-shadow:0 0 10px #00ff66; 
+    text-shadow:0 0 10px #00ff66, 0 0 20px #ff00ff;
+}
+
+/* EMOJIS */
+.emoji {
+    display:inline-block;
+    margin-left:8px;
+    transform: translateY(-10px);
+    opacity:0;
+    transition: all 0.3s ease;
+}
+
+header nav a:hover .emoji {
+    opacity:1;
+    transform: translateY(0) rotate(15deg);
 }
 
 /* MENU ICON */
@@ -48,7 +67,6 @@ header nav a:hover {
 /* HERO */
 .hero {
     height:90vh;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('img/fondo.jpg') center/cover no-repeat;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -60,7 +78,13 @@ header nav a:hover {
 .hero .glow {
     font-family:'Permanent Marker', cursive;
     font-size:5rem;
-    text-shadow:0 0 10px #00ff66, 0 0 20px #ff00ff, 0 0 30px #00ffff;
+    color:#00ff66;
+    text-shadow:
+        0 0 5px #00ff66,
+        0 0 10px #00ff66,
+        0 0 20px #00ff66,
+        0 0 30px #ff00ff,
+        0 0 40px #00ffff;
     animation: neonGlow 1.5s ease-in-out infinite alternate;
 }
 
@@ -74,27 +98,30 @@ header nav a:hover {
     color:#00ff66;
     font-weight:bold;
     cursor:pointer;
-    transition:0.3s;
+    transition: all 0.3s ease;
     margin-top:15px;
 }
 
-.btn:hover { background:#00ff66; color:#000; }
-
-/* SECCIONES */
-.bloque {
-    padding:100px 40px;
-    text-align:center;
-    opacity:0;
-    transform:translateY(50px);
-    transition:all 1s ease-out;
+.btn:hover {
+    background:#00ff66;
+    color:#0F2027;
+    box-shadow:0 0 20px #00ff66, 0 0 40px #ff00ff;
 }
 
+/* SECCIONES */
+.bloque { padding:100px 40px; text-align:center; opacity:0; transform:translateY(50px); transition:all 1s ease-out; }
 .bloque.visible { opacity:1; transform:translateY(0); }
 
 .cards { display:flex; justify-content:space-around; flex-wrap:wrap; gap:20px; }
 
 .card {
-    background:#111; border:2px solid #00ff66; width:250px; padding:20px; border-radius:10px; cursor:pointer; transition:0.3s;
+    background:#111; 
+    border:2px solid #00ff66; 
+    width:250px; 
+    padding:20px; 
+    border-radius:10px; 
+    cursor:pointer; 
+    transition:0.3s;
 }
 
 .card img { width:100%; border-radius:10px; transition:0.3s; }
@@ -114,7 +141,16 @@ footer { padding:20px; text-align:center; font-size:0.9rem; color:#777; }
 /* RESPONSIVE */
 @media screen and (max-width:768px){
     .cards { flex-direction:column; align-items:center; }
-    header nav { position:absolute; top:70px; right:0; background:#000; flex-direction:column; width:200px; transform:translateX(100%); transition:0.3s; }
+    header nav { 
+        position:absolute; 
+        top:70px; 
+        right:0; 
+        background:#0f0c29; 
+        flex-direction:column; 
+        width:200px; 
+        transform:translateX(100%); 
+        transition:0.3s; 
+    }
     header nav.active { transform:translateX(0); }
     .menu-icon { display:block; }
 }
