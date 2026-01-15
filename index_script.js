@@ -1,4 +1,4 @@
-// SCROLL REVEAL
+// scroll reveal
 const sections = document.querySelectorAll('.bloque');
 const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -7,12 +7,12 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold:0.2 });
 sections.forEach(section => observer.observe(section));
 
-// SCROLL SUAVE
+// scroll suave
 function scrollToSection(id){
     document.getElementById(id).scrollIntoView({ behavior:'smooth' });
 }
 
-// MENU DESPLEGABLE
+// menú desplegable (mobile)
 const menuIcon = document.getElementById('menu-icon');
 const nav = document.getElementById('nav');
 menuIcon.addEventListener('click', () => {
