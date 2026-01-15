@@ -1,15 +1,14 @@
 /* RESET */
 * { margin:0; padding:0; box-sizing:border-box; }
-
 body {
     font-family:'Rubik', sans-serif;
     background:#000;
-    color:#fff;
+    color:#ffea00;
     scroll-behavior:smooth;
     overflow-x:hidden;
 }
 
-/* CANVAS PARTICULAS */
+/* PARTICULAS DE FONDO */
 #particle-canvas {
     position:fixed;
     top:0;
@@ -33,47 +32,74 @@ header {
     z-index:1000;
 }
 
-header .logo { 
-    font-family:'Permanent Marker', cursive; 
-    font-size:2rem; 
-    text-shadow: 0 0 5px #fff, 0 0 10px #fff;
+header .logo {
+    font-family:'Permanent Marker', cursive;
+    font-size:3rem;
     color:#ffea00;
+    text-shadow:0 0 5px #fff,0 0 10px #fff;
 }
 
 .menu-icon { display:none; font-size:2rem; cursor:pointer; color:#ffea00; }
 
-/* MENU */
+/* MENU LATERAL */
 header nav {
+    position:fixed;
+    top:0;
+    right:-250px;
+    width:250px;
+    height:100vh;
+    background:#111;
     display:flex;
+    flex-direction:column;
     align-items:center;
-    gap:15px;
-    flex-direction: row;
+    padding-top:80px;
+    gap:20px;
+    transition:0.5s ease;
+    z-index:999;
+    box-shadow:-5px 0 20px #000;
 }
 
-header nav a {
-    position: relative;
-    text-decoration:none;
+header nav.active { right:0; }
+
+header nav ul { list-style:none; width:100%; padding:0; }
+header nav ul li { width:100%; text-align:center; }
+header nav ul li a {
+    display:block;
     color:#ffea00;
-    font-weight:bold;
-    overflow:hidden;
-    display:inline-block;
-    white-space: nowrap;
-    transform: translateY(30px);
+    text-decoration:none;
+    font-size:1.5rem;
+    font-family:'Permanent Marker', cursive;
+    padding:10px;
+    text-shadow:0 0 5px #fff,0 0 10px #fff;
+    transform: translateX(50px);
     opacity:0;
-    transition: all 0.3s ease;
-    text-shadow: 0 0 5px #fff;
 }
 
-header nav a.show { opacity:1; transform: translateY(0); }
+header nav ul li a.show {
+    transform:translateX(0);
+    opacity:1;
+    transition: all 0.3s ease;
+}
 
-header nav a:hover { color:#fff; text-shadow:0 0 10px #ffea00,0 0 20px #fff; }
+header nav ul li a:hover {
+    color:#fff;
+    text-shadow:0 0 15px #ffea00,0 0 25px #fff;
+}
 
-/* EMOJIS LOTTIE */
-.emoji { display:inline-block; width:24px; height:24px; margin-left:6px; }
+.emoji {
+    display:inline-block;
+    margin-left:6px;
+    transform: translateY(-10px);
+    transition:0.3s;
+}
+
+header nav ul li a:hover .emoji {
+    transform: translateY(0) rotate(15deg);
+}
 
 /* MAQUINITA */
-.menu-machine { width:30px; height:30px; margin-right:10px; transform: translateX(-50px); opacity:0; transition: all 0.5s ease; }
-.menu-machine.show { opacity:1; transform: translateX(0); }
+.menu-machine { width:30px; height:30px; margin-right:10px; transform:translateX(-50px); opacity:0; transition:0.5s; }
+.menu-machine.show { opacity:1; transform:translateX(0); }
 
 /* HERO */
 .hero {
@@ -89,16 +115,16 @@ header nav a:hover { color:#fff; text-shadow:0 0 10px #ffea00,0 0 20px #fff; }
 
 .hero .glow {
     font-family:'Permanent Marker', cursive;
-    font-size:5rem;
+    font-size:6rem;
     color:#ffea00;
-    text-shadow:0 0 5px #fff,0 0 10px #fff,0 0 15px #ffea00,0 0 25px #fff;
+    text-shadow:0 0 5px #fff,0 0 15px #fff,0 0 25px #ffea00,0 0 35px #fff;
     animation: neonGlow 1.5s ease-in-out infinite alternate;
 }
 
 .subtitulo { margin:15px 0; font-size:1.5rem; color:#fff; text-shadow:0 0 3px #fff; }
 
 /* BOTONES */
-.btn { padding:12px 25px; border:2px solid #ffea00; background:transparent; color:#ffea00; font-weight:bold; cursor:pointer; transition:all 0.3s ease; margin-top:15px; text-shadow:0 0 3px #fff; }
+.btn { padding:12px 25px; border:2px solid #ffea00; background:transparent; color:#ffea00; font-weight:bold; cursor:pointer; transition:0.3s; margin-top:15px; text-shadow:0 0 3px #fff; }
 .btn:hover { background:#ffea00; color:#000; box-shadow:0 0 20px #ffea00,0 0 40px #fff; }
 
 /* SECCIONES */
@@ -120,7 +146,6 @@ footer { padding:20px; text-align:center; font-size:0.9rem; color:#fff; }
 /* RESPONSIVE */
 @media screen and (max-width:768px){
     .cards { flex-direction:column; align-items:center; }
-    header nav { position:absolute; top:70px; right:0; background:#111; flex-direction:column; width:220px; transform:translateX(100%); transition:0.3s; }
-    header nav.active { transform:translateX(0); }
+    header nav { width:220px; }
     .menu-icon { display:block; }
 }
