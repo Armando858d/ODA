@@ -1,1508 +1,602 @@
-/* ===== RESET PREMIUM ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    /* Color Palette Luxury Urban */
-    --black: #0A0A0A;
-    --black-matte: #1A1A1A;
-    --gray-dark: #2A2A2A;
-    --gray: #3A3A3A;
-    --gold: #FFD700;
-    --gold-dark: #B8860B;
-    --gold-light: #FFE55C;
-    --white: #FFFFFF;
-    --white-smoke: #F5F5F5;
-    --accent: #FF6B6B;
-    --accent-dark: #FF4757;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios ODA</title>
     
-    /* Spacing */
-    --space-xs: 0.5rem;
-    --space-sm: 1rem;
-    --space-md: 2rem;
-    --space-lg: 4rem;
-    --space-xl: 8rem;
+    <!-- Fonts Premium + Urban -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;700;900&family=Dancing+Script&family=Bebas+Neue&family=Orbitron:wght@400;700&family=Righteous&display=swap" rel="stylesheet">
     
-    /* Typography */
-    --font-title: 'Playfair Display', serif;
-    --font-body: 'Montserrat', sans-serif;
-    --font-accent: 'Dancing Script', cursive;
-    --font-urban: 'Bebas Neue', sans-serif;
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    /* Shadows */
-    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.2);
-    --shadow-hard: 0 15px 50px rgba(0, 0, 0, 0.3);
-    --shadow-gold: 0 0 30px rgba(255, 215, 0, 0.3);
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
-    /* Transitions */
-    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-}
-
-body {
-    font-family: var(--font-body);
-    background: var(--black);
-    color: var(--white-smoke);
-    line-height: 1.6;
-    overflow-x: hidden;
-    position: relative;
-}
-
-/* ===== TEXTURA DE FONDO ===== */
-.texture-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.02) 0%, transparent 20%),
-        linear-gradient(45deg, var(--black) 0%, var(--black-matte) 100%);
-    z-index: -3;
-    pointer-events: none;
-}
-
-/* ===== NAVEGACIÓN PREMIUM ===== */
-.nav-premium {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-    z-index: 1000;
-    padding: var(--space-sm) 0;
-    transition: var(--transition-smooth);
-}
-
-.nav-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 var(--space-md);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-brand {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    font-size: 2.2rem;
-    font-weight: 900;
-}
-
-.brand-gold {
-    font-family: var(--font-title);
-    color: var(--gold);
-    text-shadow: var(--shadow-gold);
-}
-
-.brand-spray {
-    font-family: var(--font-accent);
-    color: var(--white);
-    position: relative;
-    transform: rotate(-5deg);
-}
-
-.brand-tag {
-    font-size: 0.7rem;
-    color: var(--gray);
-    margin-left: 1rem;
-    font-weight: 300;
-    letter-spacing: 3px;
-}
-
-.nav-desktop {
-    display: flex;
-    gap: var(--space-lg);
-}
-
-.nav-link {
-    color: var(--white-smoke);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 300;
-    letter-spacing: 1px;
-    position: relative;
-    padding: 0.5rem 0;
-    transition: var(--transition-smooth);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.link-number {
-    color: var(--gold);
-    font-size: 0.7rem;
-    opacity: 0.5;
-}
-
-.nav-link:hover {
-    color: var(--gold);
-}
-
-.nav-link:hover .link-number {
-    opacity: 1;
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--gold);
-    transition: width 0.3s ease;
-}
-
-.nav-link:hover::after {
-    width: 100%;
-}
-
-.nav-link.premium {
-    color: var(--gold);
-    font-weight: 700;
-}
-
-.nav-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-}
-
-.nav-toggle span {
-    display: block;
-    width: 25px;
-    height: 2px;
-    background: var(--gold);
-    transition: var(--transition-smooth);
-}
-
-/* ===== HERO PARALLAX ===== */
-.hero-parallax {
-    min-height: 100vh;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding-top: 80px;
-}
-
-.parallax-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-}
-
-.parallax-layer:nth-child(1) {
-    background-image: url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?auto=format&fit=crop&w=2000');
-    opacity: 0.1;
-}
-
-.parallax-layer:nth-child(2) {
-    background-image: url('https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?auto=format&fit=crop&w=2000');
-    opacity: 0.05;
-}
-
-.hero-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    max-width: 1200px;
-    padding: var(--space-xl);
-}
-
-.hero-tag {
-    font-family: var(--font-urban);
-    font-size: 1.2rem;
-    letter-spacing: 5px;
-    color: var(--gold);
-    margin-bottom: var(--space-md);
-    text-transform: uppercase;
-}
-
-.hero-title {
-    font-family: var(--font-title);
-    font-size: clamp(3rem, 8vw, 6rem);
-    line-height: 1;
-    margin-bottom: var(--space-md);
-}
-
-.title-line {
-    display: block;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards;
-}
-
-.title-line:nth-child(1) { animation-delay: 0.2s; }
-.title-line:nth-child(2) { animation-delay: 0.4s; }
-.title-line:nth-child(3) { animation-delay: 0.6s; }
-
-.title-line.accent {
-    color: var(--gold);
-    position: relative;
-    display: inline-block;
-}
-
-.title-line.accent::after {
-    content: '';
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: var(--gold);
-    transform: scaleX(0);
-    animation: expandLine 1s ease 1s forwards;
-}
-
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes expandLine {
-    to { transform: scaleX(1); }
-}
-
-.hero-subtitle {
-    font-size: 1.3rem;
-    color: rgba(255, 255, 255, 0.8);
-    max-width: 600px;
-    margin: 0 auto var(--space-lg);
-    font-weight: 300;
-}
-
-.hero-cta {
-    display: flex;
-    gap: var(--space-md);
-    justify-content: center;
-    margin-bottom: var(--space-xl);
-}
-
-.cta-primary, .cta-secondary {
-    padding: 1.2rem 2.5rem;
-    text-decoration: none;
-    font-weight: 700;
-    letter-spacing: 1px;
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    transition: var(--transition-bounce);
-    position: relative;
-    overflow: hidden;
-}
-
-.cta-primary {
-    background: var(--gold);
-    color: var(--black);
-    border: none;
-}
-
-.cta-primary::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.cta-primary:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
-.cta-secondary {
-    background: transparent;
-    color: var(--white);
-    border: 1px solid var(--gray);
-}
-
-.cta-secondary:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-}
-
-.cta-badge {
-    background: var(--accent);
-    color: white;
-    padding: 0.2rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    margin-left: 0.5rem;
-}
-
-.hero-scroll {
-    position: absolute;
-    bottom: var(--space-lg);
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--gray);
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-}
-
-.scroll-line {
-    width: 1px;
-    height: 50px;
-    background: var(--gray);
-    position: relative;
-    overflow: hidden;
-}
-
-.scroll-line::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 30px;
-    background: var(--gold);
-    animation: scrollLine 2s ease-in-out infinite;
-}
-
-@keyframes scrollLine {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(200%); }
-}
-
-.floating-elements {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.floating-cube, .floating-spray, .floating-diamond {
-    position: absolute;
-    font-size: 3rem;
-    color: rgba(255, 215, 0, 0.1);
-    animation: float 6s ease-in-out infinite;
-}
-
-.floating-cube { top: 20%; left: 10%; animation-delay: 0s; }
-.floating-spray { top: 60%; right: 15%; animation-delay: 2s; }
-.floating-diamond { bottom: 30%; left: 20%; animation-delay: 4s; }
-
-@keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(10deg); }
-}
-
-/* ===== SECCIÓN DE SERVICIOS LUXURY ===== */
-.section-luxury {
-    padding: var(--space-xl) var(--space-md);
-    background: var(--black-matte);
-    position: relative;
-}
-
-.section-header {
-    text-align: center;
-    margin-bottom: var(--space-xl);
-    position: relative;
-}
-
-.section-number {
-    font-size: 8rem;
-    font-family: var(--font-title);
-    color: rgba(255, 215, 0, 0.03);
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 0;
-}
-
-.section-title {
-    font-family: var(--font-title);
-    font-size: 3.5rem;
-    margin-bottom: var(--space-sm);
-    position: relative;
-    z-index: 1;
-}
-
-.title-accent {
-    color: var(--gold);
-    position: relative;
-}
-
-.title-accent::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--gold);
-    transform: scaleX(0.5);
-}
-
-.section-subtitle {
-    color: var(--gray);
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: var(--space-lg);
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.service-card.luxury {
-    background: linear-gradient(145deg, #1A1A1A, #0F0F0F);
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    border-radius: 20px;
-    padding: var(--space-lg);
-    position: relative;
-    overflow: hidden;
-    transition: var(--transition-smooth);
-}
-
-.service-card.luxury::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.03), transparent);
-    opacity: 0;
-    transition: opacity 0.6s ease;
-}
-
-.service-card.luxury:hover::before {
-    opacity: 1;
-}
-
-.service-card.luxury:hover {
-    transform: translateY(-10px);
-    border-color: var(--gold);
-    box-shadow: var(--shadow-gold);
-}
-
-.service-icon {
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 215, 0, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--space-md);
-    font-size: 2rem;
-    color: var(--gold);
-    font-weight: bold;
-    border: 2px solid rgba(255, 215, 0, 0.2);
-}
-
-.service-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-sm);
-}
-
-.service-header h3 {
-    font-size: 1.5rem;
-    color: var(--white);
-    flex: 1;
-}
-
-.service-price, .service-tag, .service-badge {
-    padding: 0.3rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.service-price {
-    background: rgba(255, 215, 0, 0.1);
-    color: var(--gold);
-    border: 1px solid rgba(255, 215, 0, 0.3);
-}
-
-.service-tag {
-    background: rgba(255, 107, 107, 0.1);
-    color: var(--accent);
-    border: 1px solid rgba(255, 107, 107, 0.3);
-}
-
-.service-badge {
-    background: rgba(0, 0, 0, 0.3);
-    color: var(--gold);
-    border: 1px solid var(--gold);
-}
-
-.service-description {
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: var(--space-md);
-    line-height: 1.8;
-}
-
-.service-features {
-    list-style: none;
-    margin-bottom: var(--space-md);
-}
-
-.service-features li {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.service-features i {
-    color: var(--gold);
-}
-
-.service-stats {
-    display: flex;
-    gap: var(--space-md);
-    margin-bottom: var(--space-md);
-}
-
-.stat {
-    text-align: center;
-}
-
-.stat-number {
-    display: block;
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--gold);
-    line-height: 1;
-}
-
-.stat-label {
-    font-size: 0.8rem;
-    color: var(--gray);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.service-process {
-    margin-bottom: var(--space-md);
-}
-
-.process-step {
-    margin-bottom: 1rem;
-}
-
-.process-step span {
-    display: block;
-    margin-bottom: 0.3rem;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-}
-
-.process-bar {
-    height: 3px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-.process-fill {
-    height: 100%;
-    background: var(--gold);
-    transition: width 1s ease;
-}
-
-.service-footer {
-    margin-top: var(--space-md);
-}
-
-.service-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--gold);
-    text-decoration: none;
-    font-weight: bold;
-    letter-spacing: 1px;
-    transition: var(--transition-smooth);
-    padding: 0.5rem 0;
-    position: relative;
-}
-
-.service-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--gold);
-    transition: width 0.3s ease;
-}
-
-.service-link:hover::after {
-    width: 100%;
-}
-
-.service-link i {
-    transition: transform 0.3s ease;
-}
-
-.service-link:hover i {
-    transform: translateX(5px);
-}
-
-.service-link.premium {
-    color: var(--white);
-    background: linear-gradient(45deg, var(--gold-dark), var(--gold));
-    padding: 0.8rem 1.5rem;
-    border-radius: 10px;
-}
-
-.service-link.premium:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-gold);
-}
-
-.service-3d {
-    position: absolute;
-    right: -50px;
-    bottom: -50px;
-    width: 150px;
-    height: 150px;
-    background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.05));
-    border-radius: 50%;
-    opacity: 0.5;
-}
-
-/* ===== GALERÍA ===== */
-.gallery-section {
-    padding: var(--space-xl) var(--space-md);
-    background: var(--black);
-}
-
-.gallery-header {
-    text-align: center;
-    margin-bottom: var(--space-xl);
-}
-
-.gallery-header h2 {
-    font-family: var(--font-title);
-    font-size: 3.5rem;
-    margin-bottom: var(--space-sm);
-}
-
-.gallery-header .highlight {
-    color: var(--gold);
-}
-
-.gallery-header p {
-    color: var(--gray);
-    font-size: 1.2rem;
-}
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-md);
-    max-width: 1400px;
-    margin: 0 auto var(--space-xl);
-}
-
-.gallery-item {
-    position: relative;
-    border-radius: 15px;
-    overflow: hidden;
-    aspect-ratio: 4/5;
-}
-
-.gallery-item.large {
-    grid-column: span 2;
-    aspect-ratio: 16/9;
-}
-
-.gallery-image {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-}
-
-.gallery-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.8s ease;
-}
-
-.gallery-item:hover .gallery-image img {
-    transform: scale(1.1);
-}
-
-.gallery-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: var(--space-md);
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-    transform: translateY(20px);
-    opacity: 0;
-    transition: var(--transition-smooth);
-}
-
-.gallery-item:hover .gallery-overlay {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.gallery-overlay h3 {
-    color: var(--white);
-    margin-bottom: 0.5rem;
-    font-size: 1.3rem;
-}
-
-.gallery-overlay p {
-    color: var(--gold);
-    font-size: 0.9rem;
-    font-weight: 300;
-}
-
-.gallery-cta {
-    text-align: center;
-}
-
-.gallery-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    color: var(--white);
-    text-decoration: none;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
-    padding: 1rem 2rem;
-    border: 1px solid var(--gray);
-    border-radius: 10px;
-    transition: var(--transition-smooth);
-}
-
-.gallery-link:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    padding: 1rem 2.5rem;
-}
-
-.link-arrow {
-    font-size: 1.5rem;
-    transition: transform 0.3s ease;
-}
-
-.gallery-link:hover .link-arrow {
-    transform: translateX(10px);
-}
-
-/* ===== FILOSOFÍA ===== */
-.philosophy-section {
-    padding: var(--space-xl) var(--space-md);
-    background: linear-gradient(135deg, var(--black-matte) 0%, #151515 100%);
-    position: relative;
-    overflow: hidden;
-}
-
-.philosophy-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
-}
-
-.philosophy-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-}
-
-.philosophy-quote {
-    text-align: center;
-    margin-bottom: var(--space-xl);
-    position: relative;
-}
-
-.quote-mark {
-    font-family: var(--font-title);
-    font-size: 10rem;
-    color: rgba(255, 215, 0, 0.1);
-    position: absolute;
-    top: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.philosophy-quote h2 {
-    font-family: var(--font-title);
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    position: relative;
-}
-
-.quote-accent {
-    color: var(--gold);
-    position: relative;
-}
-
-.quote-accent::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: var(--gold);
-}
-
-.quote-author {
-    color: var(--gray);
-    font-size: 1rem;
-    letter-spacing: 5px;
-    margin-top: var(--space-md);
-    text-transform: uppercase;
-}
-
-.philosophy-content {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-lg);
-}
-
-.philosophy-item {
-    text-align: center;
-    padding: var(--space-lg);
-    position: relative;
-}
-
-.philosophy-number {
-    font-family: var(--font-title);
-    font-size: 5rem;
-    color: rgba(255, 215, 0, 0.1);
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 0;
-}
-
-.philosophy-item h3 {
-    font-size: 1.5rem;
-    margin: var(--space-md) 0 var(--space-sm);
-    position: relative;
-    z-index: 1;
-}
-
-.philosophy-item p {
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 1.8;
-    position: relative;
-    z-index: 1;
-}
-
-/* ===== CONTACTO PREMIUM ===== */
-.contact-premium {
-    padding: var(--space-xl) var(--space-md);
-    background: var(--black);
-    position: relative;
-}
-
-.contact-premium::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
-
-.contact-container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.contact-header {
-    text-align: center;
-    margin-bottom: var(--space-xl);
-}
-
-.contact-header h2 {
-    font-family: var(--font-title);
-    font-size: 3rem;
-    margin-bottom: var(--space-sm);
-}
-
-.contact-subtitle {
-    color: var(--gray);
-    font-size: 1.2rem;
-}
-
-.contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-xl);
-    margin-bottom: var(--space-xl);
-}
-
-.contact-form {
-    background: linear-gradient(145deg, #1A1A1A, #151515);
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    border-radius: 20px;
-    padding: var(--space-lg);
-}
-
-.form-header {
-    margin-bottom: var(--space-lg);
-}
-
-.form-header h3 {
-    font-size: 1.8rem;
-    color: var(--white);
-    margin-bottom: 0.5rem;
-}
-
-.form-header p {
-    color: var(--gray);
-    font-size: 0.9rem;
-}
-
-.form-group {
-    margin-bottom: var(--space-md);
-    position: relative;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--white);
-    font-size: 1rem;
-    padding: 1rem 0;
-    outline: none;
-    font-family: var(--font-body);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-.form-group select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23FFD700' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.5rem center;
-    padding-right: 2rem;
-}
-
-.form-line {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--gold);
-    transition: width 0.3s ease;
-}
-
-.form-group input:focus ~ .form-line,
-.form-group select:focus ~ .form-line,
-.form-group textarea:focus ~ .form-line {
-    width: 100%;
-}
-
-.form-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: var(--space-xl);
-}
-
-.form-disclaimer {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--gray);
-    font-size: 0.8rem;
-}
-
-.form-submit {
-    background: linear-gradient(45deg, var(--gold-dark), var(--gold));
-    color: var(--black);
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: var(--transition-smooth);
-}
-
-.form-submit:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-gold);
-}
-
-.contact-info {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-}
-
-.info-card {
-    background: linear-gradient(145deg, #1A1A1A, #151515);
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    border-radius: 15px;
-    padding: var(--space-lg);
-    transition: var(--transition-smooth);
-}
-
-.info-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-5px);
-}
-
-.info-icon {
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 215, 0, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--space-md);
-    font-size: 1.5rem;
-    color: var(--gold);
-}
-
-.info-card h4 {
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-    color: var(--white);
-}
-
-.info-card p {
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: var(--space-md);
-    font-size: 0.9rem;
-}
-
-.info-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--gold);
-    text-decoration: none;
-    font-weight: bold;
-    transition: var(--transition-smooth);
-}
-
-.info-link:hover {
-    gap: 1rem;
-}
-
-.info-link.whatsapp {
-    color: #25D366;
-}
-
-.info-discreet {
-    color: var(--gray);
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: var(--space-md);
-}
-
-.contact-footer {
-    text-align: center;
-    padding-top: var(--space-lg);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--gray);
-    font-size: 0.9rem;
-}
-
-/* ===== FOOTER PREMIUM ===== */
-.footer-premium {
-    background: #0A0A0A;
-    padding: var(--space-xl) var(--space-md);
-    border-top: 1px solid rgba(255, 215, 0, 0.1);
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.footer-brand {
-    margin-bottom: var(--space-lg);
-}
-
-.footer-logo {
-    font-family: var(--font-title);
-    font-size: 3rem;
-    color: var(--gold);
-    margin-bottom: 0.5rem;
-}
-
-.footer-tagline {
-    color: var(--gray);
-    letter-spacing: 3px;
-    font-size: 0.8rem;
-}
-
-.footer-social {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
-}
-
-.social-link {
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--white);
-    font-size: 1.2rem;
-    transition: var(--transition-smooth);
-    text-decoration: none;
-}
-
-.social-link:hover {
-    background: var(--gold);
-    color: var(--black);
-    transform: translateY(-5px);
-}
-
-.social-link.premium {
-    background: rgba(255, 215, 0, 0.1);
-    color: var(--gold);
-}
-
-.footer-legal {
-    color: var(--gray);
-    font-size: 0.8rem;
-}
-
-.footer-legal p {
-    margin-bottom: 0.5rem;
-}
-
-.footer-discreet {
-    opacity: 0.5;
-}
-
-/* ===== WHATSAPP FLOTANTE ===== */
-.whatsapp-float {
-    position: fixed;
-    bottom: var(--space-md);
-    right: var(--space-md);
-    background: #25D366;
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-size: 1.5rem;
-    box-shadow: var(--shadow-medium);
-    z-index: 1000;
-    transition: var(--transition-bounce);
-    overflow: hidden;
-}
-
-.whatsapp-float:hover {
-    width: 180px;
-    border-radius: 30px;
-}
-
-.float-text {
-    position: absolute;
-    right: 70px;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    font-size: 0.9rem;
-    font-weight: bold;
-}
-
-.whatsapp-float:hover .float-text {
-    opacity: 1;
-    right: 20px;
-}
-
-/* ===== LOADER DE LUJO ===== */
-.luxury-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--black);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-
-.loader-content {
-    text-align: center;
-}
-
-.loader-logo {
-    font-family: var(--font-title);
-    font-size: 5rem;
-    color: var(--gold);
-    margin-bottom: var(--space-md);
-    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
-}
-
-.loader-progress {
-    width: 300px;
-    height: 2px;
-    background: rgba(255, 215, 0, 0.1);
-    border-radius: 1px;
-    overflow: hidden;
-    margin: 0 auto var(--space-md);
-}
-
-.progress-bar {
-    height: 100%;
-    background: var(--gold);
-    width: 0;
-    animation: loadProgress 2s ease-in-out forwards;
-}
-
-@keyframes loadProgress {
-    0% { width: 0; }
-    100% { width: 100%; }
-}
-
-.loader-text {
-    color: var(--gray);
-    letter-spacing: 3px;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
-    .services-grid,
-    .philosophy-content,
-    .contact-grid,
-    .gallery-grid {
-        grid-template-columns: 1fr;
-    }
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23FFD700%22>⚡</text></svg>">
+</head>
+<body>
+    <!-- Partículas de fondo -->
+    <div id="particles-js"></div>
     
-    .gallery-item.large {
-        grid-column: span 1;
-    }
+    <!-- Textura overlay premium -->
+    <div class="texture-overlay"></div>
     
-    .nav-desktop {
-        display: none;
-    }
-    
-    .nav-toggle {
-        display: flex;
-    }
-    
-    .nav-mobile {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 300px;
-        height: 100vh;
-        background: var(--black);
-        border-left: 1px solid rgba(255, 215, 0, 0.1);
-        padding: var(--space-lg);
-        transition: right 0.4s ease;
-        z-index: 1001;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .nav-mobile.active {
-        right: 0;
-    }
-    
-    .mobile-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: var(--space-xl);
-        padding-bottom: var(--space-md);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .mobile-brand {
-        font-family: var(--font-title);
-        font-size: 2rem;
-        color: var(--gold);
-    }
-    
-    .mobile-close {
-        background: none;
-        border: none;
-        color: var(--white);
-        font-size: 2rem;
-        cursor: pointer;
-    }
-    
-    .mobile-links {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-md);
-    }
-    
-    .mobile-links a {
-        color: var(--white);
-        text-decoration: none;
-        font-size: 1.2rem;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 0.8rem;
-        border-radius: 10px;
-        transition: var(--transition-smooth);
-    }
-    
-    .mobile-links a:hover {
-        background: rgba(255, 215, 0, 0.1);
-        color: var(--gold);
-    }
-    
-    .mobile-links a.premium {
-        background: rgba(255, 215, 0, 0.2);
-        color: var(--gold);
-    }
-    
-    .mobile-footer {
-        padding-top: var(--space-md);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--gray);
-        font-size: 0.8rem;
-        font-style: italic;
-    }
-}
+    <!-- Navegación combinada -->
+    <header class="main-nav-combined">
+        <div class="nav-container">
+            <!-- Logo 3D premium -->
+            <div class="logo-container">
+                <div class="logo-3d-premium" id="logo3d">
+                    <span class="layer-1">3D</span>
+                    <span class="layer-2">3D</span>
+                    <span class="layer-3">3D</span>
+                </div>
+                <div class="logo-tag">Excelencia en cada servicio, elige calidad. </div>
+            </div>
+            
+            <!-- Navegación premium con números -->
+            <nav class="nav-desktop">
+                <a href="#hero" class="nav-link active"><span class="link-number">01</span>Inicio</a>
+                <a href="#servicios" class="nav-link"><span class="link-number">02</span>Servicios</a>
+                <a href="#procesos" class="nav-link"><span class="link-number">03</span>Proceso</a>
+                <a href="#proyectos" class="nav-link"><span class="link-number">04</span>Proyectos</a>
+                <a href="#contacto" class="nav-link premium"><span class="link-number">05</span>Contacto</a>
+            </nav>
+            
+            <!-- Menú móvil -->
+            <button class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <div class="nav-mobile" id="navMobile">
+                <div class="mobile-header">
+                    <div class="mobile-brand">ODA</div>
+                    <button class="mobile-close">&times;</button>
+                </div>
+                <div class="mobile-links">
+                    <a href="#hero"><i class="fas fa-spray-can"></i> Inicio</a>
+                    <a href="#servicios"><i class="fas fa-cube"></i> Servicios</a>
+                    <a href="#procesos"><i class="fas fa-cogs"></i> Proceso</a>
+                    <a href="#proyectos"><i class="fas fa-paint-roller"></i> Proyectos</a>
+                    <a href="#contacto" class="premium"><i class="fas fa-gem"></i> Contacto Premium</a>
+                </div>
+                <div class="mobile-footer">
+                    <p>"Arte urbano con tecnología de lujo"</p>
+                </div>
+            </div>
+        </div>
+    </header>
 
-@media (max-width: 768px) {
-    :root {
-        --space-xl: 4rem;
-        --space-lg: 2rem;
-        --space-md: 1.5rem;
-    }
-    
-    .hero-title {
-        font-size: clamp(2.5rem, 10vw, 4rem);
-    }
-    
-    .hero-cta {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .section-title {
-        font-size: 2.5rem;
-    }
-    
-    .philosophy-quote h2 {
-        font-size: 2rem;
-    }
-    
-    .contact-header h2 {
-        font-size: 2rem;
-    }
-    
-    .floating-elements {
-        display: none;
-    }
-}
+    <!-- Hero combinado -->
+    <section id="hero" class="hero-combined">
+        <div class="parallax-layer" data-speed="0.1"></div>
+        <div class="parallax-layer" data-speed="0.3"></div>
+        
+        <div class="hero-overlay"></div>
+        
+        <div class="container">
+            <div class="hero-content" >
+                <br>
+                <br>
+                <br>
+             
+                <h1 class="hero-title" >
+                  
+                    <span class="title-line accent" data-text="IMPRESIONES EN 3D">IMPRESIONES EN 3D</span>
+                </h1>
+               
+                <div class="hero-subtitle" >
+                  
 
-@media (max-width: 480px) {
-    .hero-content {
-        padding: var(--space-md);
-    }
-    
-    .service-card.luxury {
-        padding: var(--space-md);
-    }
-    
-    .gallery-item {
-        aspect-ratio: 3/4;
-    }
-}
+ <h4>
+<p>En ODA realizamos impresión 3D con materiales de calidad, creando piezas a medida según tus necesidades o ofreciendo productos listos en nuestro catálogo. desde prototipos funcionales hasta estatuas y decoraciones, cada proyecto se puede personalizar: pintar, modelar o ajustar según lo que busques, pero también puedes elegir entre nuestras piezas ya disponibles para compra inmediata.
+nos enfocamos en detalles y acabados cuidados, para que cada pieza tenga un resultado atractivo y funcional, adaptado a tu idea o lista para disfrutar directamente de nuestro catálogo.
+
+                </div>
+                <h1>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number" data-count="143">0</div>
+                        <div class="stat-label">IMPRESIONES 3D</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="122">0</div>
+                        <div class="stat-label">Modelados 3D</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">97<span class="percent">%0</span></div>
+                        <div class="stat-label">Satisfacción</div>
+                    </div>
+                </div>
+              
+                <div class="hero-cta">
+                    <a href="#servicios" class="cta-primary">
+                        <i class="fas fa-cube"></i>
+                        <span class="cta-text">EXPLORAR SERVICIOS</span>
+                        <span class="cta-icon">→</span>
+                    </a>
+                    <a href="#contacto" class="cta-secondary">
+                        <i class="fas fa-gem"></i>
+                        <span class="cta-text">COTIZACIÓN EXPRESS</span>
+                        <span class="cta-badge">EXCLUSIVO</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Impresora 3D animada -->
+            <div class="printer-animation">
+                <div class="printer">
+                    <div class="printer-body"></div>
+                    <div class="printer-bed">
+                        <div class="printing-object" id="printingObject"></div>
+                    </div>
+                    <div class="printer-head">
+                        <div class="nozzle"></div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+        
+        <!-- Elementos flotantes -->
+        <div class="floating-elements">
+            <div class="floating-cube"><i class="fas fa-cube"></i></div>
+            <div class="floating-spray"><i class="fas fa-spray-can"></i></div>
+            <div class="floating-diamond"><i class="fas fa-gem"></i></div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>SCROLL</span>
+        </div>
+    </section>
+
+    <!-- Servicios Combinados -->
+    <section id="servicios" class="section-luxury">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-number">02</div>
+                <h2 class="section-title">CREACION 3D <span class="title-accent">PREMIUM</span></h2>
+                <p class="section-subtitle">CREACIONES 3D EXCLUSIVAS A TU MEDIDA</p>
+            </div>
+            
+            <div class="services-grid">
+                <!-- Servicio 1 -->
+                <div class="service-card luxury">
+                    <div class="service-icon">
+                        <div class="icon-3d-animated">
+                            <i class="fas fa-cube"></i>
+                            <div class="icon-glow"></div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-header">
+                            <h3>IMPRESIÓN 3D</h3>
+                            <span class="service-price">$$$</span>
+                        </div>
+                        <div class="service-tags">
+                            <span class="tag">PLA PREMIUM</span>
+                            <span class="tag">PETG</span>
+                            <span class="tag">ABS</span>
+                            <span class="tag">TPU</span>
+                            <span class="tag">TPE</span>
+                            <span class="tag">FILAMENTOS ESPECIALES</span>
+                        </div>
+                        <p class="service-description">
+                            Piezas únicas con filamentos premium(PLA, PETG, TPU y acabados especiales). Desde prototipos funcionales hasta arte y decoración personalizada.
+                        </p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Resolución fina hasta 0.2 mm</li>
+                            <li><i class="fas fa-check-circle"></i> Materiales de calidad con acabados personalizados</li>
+                            <li><i class="fas fa-check-circle"></i> Acabados personalizados</li>
+                        </ul>
+                        <div class="service-stats">
+                            <div class="mini-stat">
+                                <div class="mini-value">Producción rápida</div>
+                                <div class="mini-label">Según pedido</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-value">Calidad confiable</div>
+                                <div class="mini-label">En cada pieza</div>
+                            </div>
+                        </div>
+                        <div class="service-footer">
+                            <a href="#contacto" class="service-link">
+                                SOLICITAR COTIZACIÓN 
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="service-decoration">
+                        <div class="cube-3d"></div>
+                    </div>
+                </div>
+
+                <!-- Servicio 2 -->
+                <div class="service-card luxury">
+                    <div class="service-icon">
+                        <div class="icon-spray-animated">
+                            <i class="fas fa-spray-can"></i>
+                            <div class="icon-glow"></div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-header">
+                            <h3>MODELADO Y OPTIMIZACIÓN DE PIEZAS(BASICO)</h3>
+                            <span class="service-tag">TRENDING</span>
+                        </div>
+                        <div class="service-tags">
+                            <span class="tag">DISEÑO</span>
+                            <span class="tag">MEJORA</span>
+                            <span class="tag">MEDIDAS EXACTAS</span>
+                        </div>
+                        <p class="service-description">
+                            Transformamos tus ideas en modelos 3D precisos. Podemos crear desde cero, mejorar archivos STL o ajustar tus piezas para que estén listas para producción o prototipado.
+                        </p>
+                        <div class="service-stats">
+                            <div class="stat">
+                                <span class="stat-number">97%</span><p>
+                                <span class="stat-label">Precisión en detalles</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">24</span> <p>
+                                <span class="stat-label">Proyectos moldeados</span>
+                            </div>
+                        </div>
+                        <div class="service-footer">
+                            <a href="#proyectos" class="service-link">
+                                VER PORTFOLIO 
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Servicio 3 -->
+                <div class="service-card luxury">
+                    <div class="service-icon">
+                        <div class="icon-brand-animated">
+                            <i class="fas fa-paint-brush"></i>
+                            <div class="icon-glow"></div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-header">
+                            <h3>ACABADO ARTISTICO</h3>
+                            <span class="service-badge">EXCLUSIVO</span>
+                        </div>
+                        <div class="service-tags">
+                            <span class="tag">IDENTIDAD</span>
+                            <span class="tag">DISEÑO</span>
+                            <span class="tag">ACABADO</span>
+                        </div>
+                        <p class="service-description">
+                            Transforma tus piezas 3D en verdaderas obras únicas. Pintura a mano sobre tus impresiones para lograr acabados exclusivos y detallados, totalmente personalizados.
+                            
+                        </p>
+                        <div class="design-process">
+                            <div class="process-step">
+                                <span>Concepto</span>
+                                <div class="process-bar"><div class="process-fill" style="width: 98%"></div></div>
+                            </div>
+                            <div class="process-step">
+                                <span>Pintura a mano</span>
+                                <div class="process-bar"><div class="process-fill" style="width: 90%"></div></div>
+                            </div>
+                        </div>
+                        <div class="service-footer">
+                            <a href="#contacto" class="service-link premium">
+                                SOLICITAR ACABADO ARTISTICO 
+                                <i class="fas fa-crown"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Proceso de trabajo (del segundo diseño) -->
+    <section id="procesos" class="process-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">NUESTRO <span class="highlight">PROCESO</span></h2>
+                <p class="section-subtitle">Del archivo digital a tus manos</p>
+            </div>
+            
+            <div class="process-steps">
+                <div class="step" data-step="1">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>CONCEPTO</h3>
+                        <p>Platicamos tu idea, la bocetamos y le damos forma digital.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-concept">
+                            <div class="sketch"></div>
+                            <div class="sketch"></div>
+                            <div class="sketch"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="2">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>MODELADO 3D</h3>
+                        <p>Convertimos el concepto en modelo 3D listo para imprimir.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-model">
+                            <div class="wireframe"></div>
+                            <div class="mesh"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="3">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>IMPRESIÓN</h3>
+                        <p>La máquina hace su magia, capa por capa, con precisión milimétrica.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-print">
+                            <div class="layer"></div>
+                            <div class="layer"></div>
+                            <div class="layer"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="4">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <h3>ENTREGA</h3>
+                        <p>Post-producción y entrega. Listo para impactar.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-delivery">
+                            <div class="product"></div>
+                            <div class="sparkle"></div>
+                            <div class="sparkle"></div>
+                            <div class="sparkle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería de Proyectos -->
+    <section id="proyectos" class="gallery-section">
+        <div class="container">
+            <div class="gallery-header">
+                <h2>PROYECTOS <span class="highlight">ICÓNICOS</span></h2>
+                <p>Donde el arte impreso encuentra la excelencia</p>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item large">
+                    <div class="gallery-image">
+                        <div class="image-overlay">
+                            <h3>ESCULTURA 3D URBANA</h3>
+                            <p>Bronce sintético • 2.5m altura</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <div class="image-overlay">
+                            <h3>CAMPANA MURAL DIGITAL</h3>
+                            <p>Times Square • NYC</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <div class="image-overlay">
+                            <h3>BRANDING CALLEJERO</h3>
+                            <p>Identidad para marca de lujo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-cta">
+                <a href="#contacto" class="gallery-link">
+                    VER MÁS PROYECTOS
+                    <span class="link-arrow">⟶</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filosofía combinada -->
+    <section class="philosophy-section">
+        <div class="philosophy-container">
+            <div class="philosophy-quote">
+                <div class="quote-mark">"</div>
+                <h2>NO CREAMOS PRODUCTOS,</h2>
+                <h2><span class="quote-accent">CREAMOS  PIEZAS QUE CUENTAN HISTORIAS</span></h2>
+                <div class="quote-author">— ODA STUDIO</div>
+            </div>
+            
+            <div class="philosophy-content">
+                <div class="philosophy-item">
+                    <div class="philosophy-number">01</div>
+                    <h3>PRECISIÓN FUNCIONAL</h3>
+                    <p>Cada pieza se imprime cuidando la calidad y el acabado, lista para uso, decoración o prototipo.</p>
+                </div>
+                
+                <div class="philosophy-item">
+                    <div class="philosophy-number">02</div>
+                    <h3>CREATIVIDAD A MEDIDA</h3>
+                    <p>Diseñamos y adaptamos cada pieza según lo que busques, pudiendo personalizar formas, tamaños y detalles.</p>
+                </div>
+                
+                <div class="philosophy-item">
+                    <div class="philosophy-number">03</div>
+                    <h3>CALIDAD CONFIABLE</h3>
+                    <p>Piezas bien terminadas, con materiales de calidad y acabados que resaltan tu idea o proyecto.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto Premium Mejorado -->
+    <section id="contacto" class="contact-premium">
+        <div class="contact-container">
+            <div class="contact-header">
+                <h2>¿LISTO PARA DAR VIDA A TU DISEÑO?</h2>
+                <p class="contact-subtitle">Solicita una consulta privada</p>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-form">
+                    <div class="form-header">
+                        <h3>SOLICITUD DE COTIZACIÓN</h3>
+                        <p>Reservado para proyectos serios</p>
+                    </div>
+                    
+                    <form id="premiumForm">
+                        
+//de aqui
+
+
+<form action="https://formspree.io/f/mzddzvkj" method="POST">
+    <div class="form-group">
+        <input type="text" name="name" placeholder="Nombre completo" required>
+        <div class="form-line"></div>
+    </div>
+
+    <div class="form-group">
+        <input type="email" name="email" placeholder="Email" required>
+        <div class="form-line"></div>
+    </div>
+
+    <div class="form-group">
+        <select name="project" required>
+            <option value="">Tipo de proyecto</option>
+            <option value="3d">Impresión 3D Premium</option>
+            <option value="ad">Modelado 3D</option>
+            <option value="brand">Acabado artistico</option>
+            <option value="other">Otro</option>
+        </select>
+        <div class="form-line"></div>
+    </div>
+
+    <div class="form-group">
+        <textarea name="message" placeholder="Describe tu visión... (mín. 50 caracteres)" rows="4" required></textarea>
+        <div class="form-line"></div>
+    </div>
+
+    <div class="form-footer">
+        <div class="form-disclaimer">
+            <i class="fas fa-lock"></i> Información confidencial
+        </div>
+        <button type="submit" class="form-submit">
+            ENVIAR SOLICITUD
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</form>
+//aca jaja
+                                        </div>
+                
+                <div class="contact-info">
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fab fa-whatsapp"></i></div>
+                        <h2>WHATSAPP EXCLUSIVO</h2>
+                        <h2><p>Contáctanos directamente y recibe respuesta garantizada en menos de 2 horas. Nuestro equipo está listo para ayudarte de manera rápida y segura.</p></2>
+                        <a href="https://wa.me/524492795557?text=Hola%2C%20vi%20su%20pagina%20de%20ODA%20y%20me%20interesan%20las%20impresiones%203D.%20%20Me%20podrian%20dar%20mas%20informacion%2C%20por%20favor%3F" target="_blank" class="info-link whatsapp">
+                            
+                        </a>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <h2>REALIZAR CITA POR MEET</h2>
+                        <h2><p>Reunión por Meet con nuestro equipo de soporte de ODA, 100% segura y transparente, para ofrecerte la mejor atención.</p></h2>
+                        <a href="mailto:daordaz18@gmail.com?subject=Solicitud%20de%20reunión&body=Hola,%20quiero%20agendar%20una%20reunión%20por%20videollamada%20con%20ustedes." target="_blank" class="info-link">
+                            AGENDAR REUNIÓN
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <h2>STUDIO ODA</h2>
+                        <h2><p>AGS- Zona Urbana</p></h2>
+                        <div class="location">
+                            <span><h1>AGUASCALIENTES</h1></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-footer">
+                <p>Proceso de selección exclusivo • Tiempo mínimo de proyecto: 5 dias • Presupuestos desde $50 MXN</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer combinado -->
+    <footer class="footer-premium">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-logo">ODA</div>
+                <div class="footer-tagline">LOS MEJORES SERVICIOS DE AGUASCALIENTES</div>
+            </div>
+            
+            <div class="footer-social">
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/524492795557?text=Hola%2C%20vi%20tu%20pagina%20y%20me%20interesan%20las%20impresiones%203D.%20Me%20podrias%20dar%20informes%3F" class="social-link" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+                <a href="https://www.facebook.com/tuusuario" class="social-link" target="_blank">
+    <i class="fab fa-facebook-f"></i>
+</a>
+
+                <a href="#" class="social-link premium"><i class="fab fa-tiktok"></i></a>
+            </div>
+            
+            <div class="footer-legal">
+                <p>&copy; 2024 ODA STUDIO. Todos los derechos reservados.</p>
+                <p class="footer-discreet">Hecho con 🎨 y 💻 en AGUASCALIENTES</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botón de WhatsApp flotante mejorado -->
+    <a href="https://wa.me/524492795557?text=Hola%2C%20vi%20su%20pagina%20de%20ODA%20y%20me%20interesan%20las%20impresiones%203D.%20%20Me%20podrian%20dar%20mas%20informacion%2C%20por%20favor%3F" target="_blank" class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+        <span class="float-text">¿COTIZACIÓN EXPRESS?</span>
+    </a>
+
+    <!-- Loader de lujo -->
+    <div class="luxury-loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">ODA</div>
+            <div class="loader-progress">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="loader-text">IMPRIMIENDO EXPERIENCIA PREMIUM</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
