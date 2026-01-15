@@ -1,43 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OD - Servicios Urbanos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="index_estilo.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ODA - Servicios Urbanos</title>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="index_estilo.css">
+
+<!-- Lottie -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
 </head>
 <body>
 
+<!-- PARTICULAS DE FONDO -->
+<canvas id="particle-canvas"></canvas>
+
 <header>
     <div class="logo">
-        <span style="color:#ff00ff;">O</span>
-        <span style="color:#00ff66;">D</span>
-        <span style="color:#00ffff;">A</span>
+        <span style="color:#ffea00;">O</span>
+        <span style="color:#ffea00;">D</span>
+        <span style="color:#ffea00;">A</span>
     </div>
 
-    <!-- icono hamburguesa -->
+    <!-- hamburguesa -->
     <div class="menu-icon" id="menu-icon">&#9776;</div>
 
-    <!-- menu oscuro con efecto impresión -->
     <nav id="nav">
         <div class="menu-machine" id="menu-machine">
             <img src="img/plotter.svg" alt="maquinita">
         </div>
-        <a href="#inicio">Inicio <span class="emoji">🏠</span></a>
-        <a href="#servicios">Servicios <span class="emoji">🛠️</span></a>
-        <a href="#contacto">Contacto <span class="emoji">📩</span></a>
-        <a href="#soporte" class="btn">Soporte <span class="emoji">💬</span></a>
-        <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">WhatsApp <span class="emoji">📲</span></a>
+        <a href="#inicio">Inicio <span class="emoji" data-lottie="🏠"></span></a>
+        <a href="#servicios">Servicios <span class="emoji" data-lottie="🛠️"></span></a>
+        <a href="#contacto">Contacto <span class="emoji" data-lottie="📩"></span></a>
+        <a href="#soporte" class="btn">Soporte <span class="emoji" data-lottie="💬"></span></a>
+        <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">WhatsApp <span class="emoji" data-lottie="📲"></span></a>
     </nav>
 </header>
 
 <section id="inicio" class="hero">
-    <h1 class="glow">
-        <span style="color:#ff00ff;">O</span>
-        <span style="color:#00ff66;">D</span>
-        <span style="color:#00ffff;">A</span>
-    </h1>
+    <h1 class="glow">ODA</h1>
     <p class="subtitulo">Soluciones urbanas • Servicios top</p>
     <button class="btn" onclick="scrollToSection('servicios')">Ver Servicios</button>
 </section>
@@ -71,3 +72,4 @@
 <script src="index_script.js"></script>
 </body>
 </html>
+
