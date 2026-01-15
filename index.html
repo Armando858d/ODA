@@ -35,7 +35,7 @@
 
 <!-- HERO -->
 <section id="inicio" class="hero">
-    <h1 class="glow">ODA</h1>
+    <h1 class="glow">OD</h1>
     <p class="subtitulo">Servicios urbanos • Estilo callejero</p>
     <button class="btn" onclick="scrollToSection('servicios')">Ver Servicios</button>
 </section>
