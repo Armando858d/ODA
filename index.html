@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ODA - Servicios Urbanos</title>
+
+<!-- Fuentes urbanas -->
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="index_estilo.css">
 
@@ -16,30 +18,26 @@
 <canvas id="particle-canvas"></canvas>
 
 <header>
-    <div class="logo">
-        <span style="color:#ffea00;">O</span>
-        <span style="color:#ffea00;">D</span>
-        <span style="color:#ffea00;">A</span>
-    </div>
-
-    <!-- hamburguesa -->
+    <div class="logo">ODA</div>
     <div class="menu-icon" id="menu-icon">&#9776;</div>
 
     <nav id="nav">
         <div class="menu-machine" id="menu-machine">
             <img src="img/plotter.svg" alt="maquinita">
         </div>
-        <a href="#inicio">Inicio <span class="emoji" data-lottie="🏠"></span></a>
-        <a href="#servicios">Servicios <span class="emoji" data-lottie="🛠️"></span></a>
-        <a href="#contacto">Contacto <span class="emoji" data-lottie="📩"></span></a>
-        <a href="#soporte" class="btn">Soporte <span class="emoji" data-lottie="💬"></span></a>
-        <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">WhatsApp <span class="emoji" data-lottie="📲"></span></a>
+        <ul>
+            <li><a href="#inicio">Inicio <span class="emoji">🏠</span></a></li>
+            <li><a href="#servicios">Servicios <span class="emoji">🛠️</span></a></li>
+            <li><a href="#contacto">Contacto <span class="emoji">📩</span></a></li>
+            <li><a href="#soporte" class="btn">Soporte <span class="emoji">💬</span></a></li>
+            <li><a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">WhatsApp <span class="emoji">📲</span></a></li>
+        </ul>
     </nav>
 </header>
 
 <section id="inicio" class="hero">
     <h1 class="glow">ODA</h1>
-    <p class="subtitulo">Soluciones urbanas • Servicios top</p>
+    <p class="subtitulo">Servicios urbanos • Estilo callejero</p>
     <button class="btn" onclick="scrollToSection('servicios')">Ver Servicios</button>
 </section>
 
@@ -72,4 +70,3 @@
 <script src="index_script.js"></script>
 </body>
 </html>
-
