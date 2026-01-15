@@ -7,7 +7,7 @@
 
 <!-- Fuentes urbanas -->
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="index.estilo.css">
+<link rel="stylesheet" href="index_estilo.css">
 
 <!-- Lottie (por si quieres animaciones extra) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
