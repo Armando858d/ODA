@@ -1,107 +1,171 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ODA - Venta de Servicios</title>
-
-<!-- Fuentes urbanas -->
-<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="index_estilo.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODA - Servicios Urbanos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index_estilo.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎨</text></svg>">
 </head>
 <body>
-
-<header>
-    <div class="logo">ODA</div>
-    <div class="menu-icon" id="menu-icon">&#9776;</div>
-    <nav id="nav">
-        <ul>
-            <li><a href="#inicio">Inicio <span class="emoji">🏠</span></a></li>
-            <li><a href="#servicios">Servicios <span class="emoji">🛠️</span></a></li>
-            <li><a href="#colaboradores">Colaboradores <span class="emoji">🤝</span></a></li>
-            <li><a href="#promociones">Promociones <span class="emoji">🔥</span></a></li>
-            <li><a href="#faq">Preguntas Frecuentes <span class="emoji">❓</span></a></li>
-            <li><a href="#contacto" class="btn">Contacto <span class="emoji">📩</span></a></li>
-            <li><a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">WhatsApp <span class="emoji">📲</span></a></li>
-        </ul>
-    </nav>
-</header>
-
-<section id="inicio" class="hero">
-    <h1 class="glow">ODA</h1>
-    <p class="subtitulo">Soluciones completas, confiables y urbanas</p>
-    <button class="btn" onclick="scrollToSection('servicios')">Ver Servicios</button>
-</section>
-
-<section id="servicios" class="bloque">
-    <h2>Servicios</h2>
-    <div class="cards">
-
-        <div class="card">
-            <img src="img/publicidad.jpg" alt="Publicidad">
-            <h3>Publicidad</h3>
-            <p>Contenido creativo para redes, banners y diseño urbano.</p>
+    <!-- Canvas para partículas -->
+    <canvas id="particle-canvas"></canvas>
+    
+    <!-- Header fijo -->
+    <header>
+        <div class="logo">ODA</div>
+        <div class="menu-icon" id="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
+        <nav id="nav">
+            <button class="close-menu" id="close-menu">✕</button>
+            <ul>
+                <li><a href="#inicio" data-section="inicio">Inicio <span class="emoji">🏠</span></a></li>
+                <li><a href="#servicios" data-section="servicios">Servicios <span class="emoji">🛠️</span></a></li>
+                <li><a href="#colaboradores" data-section="colaboradores">Colaboradores <span class="emoji">🤝</span></a></li>
+                <li><a href="#promociones" data-section="promociones">Promociones <span class="emoji">🔥</span></a></li>
+                <li><a href="#faq" data-section="faq">FAQ <span class="emoji">❓</span></a></li>
+                <li><a href="#contacto" data-section="contacto" class="btn-nav">Contacto <span class="emoji">📩</span></a></li>
+            </ul>
+            <div class="whatsapp-fixed">
+                <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn-whatsapp">
+                    WhatsApp <span class="emoji">📲</span>
+                </a>
+            </div>
+        </nav>
+    </header>
 
-        <div class="card">
-            <img src="img/armart-phone.jpg" alt="ArmArt Phone">
-            <h3>ArmArt Phone</h3>
-            <p>Servicio de celulares, accesorios y tecnología móvil.</p>
+    <!-- Contenido principal -->
+    <main>
+        <!-- Hero Section -->
+        <section id="inicio" class="hero">
+            <div class="hero-content">
+                <h1 class="glow">ODA</h1>
+                <p class="subtitulo">Soluciones urbanas con estilo grafiti</p>
+                <p class="hero-desc">Publicidad, tecnología, streaming y más con el toque street</p>
+                <button class="btn-hero" onclick="scrollToSection('servicios')">
+                    Explorar Servicios
+                    <span class="arrow">↓</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Servicios Section -->
+        <section id="servicios" class="bloque">
+            <h2 class="section-title">Nuestros <span class="highlight">Servicios</span></h2>
+            <p class="section-subtitle">Todo lo que necesitas con estilo urbano</p>
+            
+            <div class="cards">
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=500" alt="Publicidad">
+                        <div class="card-overlay"></div>
+                    </div>
+                    <h3>Publicidad ODA</h3>
+                    <p>Campañas creativas con impacto visual street. Desde redes sociales hasta murales.</p>
+                    <span class="card-tag">🔥 Trendy</span>
+                </article>
+
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=500" alt="ArmArt Phone">
+                        <div class="card-overlay"></div>
+                    </div>
+                    <h3>ArmArt Phone</h3>
+                    <p>Tecnología móvil con personalización única. Reparación, venta y accesorios.</p>
+                    <span class="card-tag">📱 Tech</span>
+                </article>
+
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=500" alt="Tosigo">
+                        <div class="card-overlay"></div>
+                    </div>
+                    <h3>Tosigo</h3>
+                    <p>Soluciones digitales innovadoras para tu negocio o proyecto personal.</p>
+                    <span class="card-tag">💻 Digital</span>
+                </article>
+
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=500" alt="Streaming">
+                        <div class="card-overlay"></div>
+                    </div>
+                    <h3>Cuentas Streaming</h3>
+                    <p>Acceso a plataformas digitales. Películas, series y música sin límites.</p>
+                    <span class="card-tag">🎬 Entretenimiento</span>
+                </article>
+
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=500" alt="Autobuses">
+                        <div class="card-overlay"></div>
+                    </div>
+                    <h3>Renta de Autobuses</h3>
+                    <p>Transporte seguro y confiable para grupos. Viajes urbanos y fuera de ciudad.</p>
+                    <span class="card-tag">🚌 Transporte</span>
+                </article>
+
+                <article class="card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=500" alt="Belleza">
+                        <div class="card-overlay"></div>
+                    </div>
+                    <h3>Bella Luz Terramar</h3>
+                    <p>Productos de belleza y cuidado personal con calidad premium.</p>
+                    <span class="card-tag">💄 Belleza</span>
+                </article>
+            </div>
+        </section>
+
+        <!-- Otras secciones -->
+        <section id="colaboradores" class="bloque">
+            <h2 class="section-title">Colaboradores <span class="emoji">🤝</span></h2>
+            <p>Marcas y artistas que confían en nuestro estilo urbano.</p>
+        </section>
+
+        <section id="promociones" class="bloque">
+            <h2 class="section-title">Promociones <span class="emoji">🔥</span></h2>
+            <p>Ofertas exclusivas con descuentos especiales.</p>
+        </section>
+
+        <section id="faq" class="bloque">
+            <h2 class="section-title">Preguntas Frecuentes</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">¿Cómo contacto a ODA?</button>
+                    <div class="faq-answer">Por WhatsApp o nuestras redes sociales.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">¿Los servicios son nacionales?</button>
+                    <div class="faq-answer">Sí, cubrimos toda la república mexicana.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacto" class="bloque">
+            <h2 class="section-title">Contacto <span class="emoji">📩</span></h2>
+            <p>¿Listo para darle estilo urbano a tu proyecto?</p>
+            <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn-contact">
+                Escribir por WhatsApp
+                <span class="emoji">🚀</span>
+            </a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">ODA</div>
+            <p>Estilo urbano desde las calles hasta tu pantalla</p>
+            <p>&copy; 2026 ODA • Todos los derechos reservados</p>
         </div>
+    </footer>
 
-        <div class="card">
-            <img src="img/tosigo.jpg" alt="Tosigo">
-            <h3>Tosigo</h3>
-            <p>Servicio especializado en soluciones digitales.</p>
-        </div>
-
-        <div class="card">
-            <img src="img/cuentas-streaming.jpg" alt="Cuentas Streaming">
-            <h3>Cuentas Streaming</h3>
-            <p>Venta de cuentas digitales para entretenimiento online.</p>
-        </div>
-
-        <div class="card">
-            <img src="img/renta-autobuses.jpg" alt="Renta de Autobuses">
-            <h3>Renta de Autobuses</h3>
-            <p>Viajes cómodos y seguros por todo México.</p>
-        </div>
-
-        <div class="card">
-            <img src="img/bella-luz.jpg" alt="Bella Luz Terramar">
-            <h3>Bella Luz Terramar</h3>
-            <p>Productos de belleza y cuidado personal.</p>
-        </div>
-
-    </div>
-</section>
-
-<section id="colaboradores" class="bloque">
-    <h2>Colaboradores</h2>
-    <p>Trabajamos con marcas y socios que comparten nuestra visión urbana.</p>
-</section>
-
-<section id="promociones" class="bloque">
-    <h2>Promociones</h2>
-    <p>Explora las promociones y ofertas vigentes.</p>
-</section>
-
-<section id="faq" class="bloque">
-    <h2>Preguntas Frecuentes</h2>
-    <p>Resuelve todas tus dudas con nuestra sección FAQ.</p>
-</section>
-
-<section id="contacto" class="bloque">
-    <h2>Contacto</h2>
-    <p>¿Tienes dudas o quieres cotizar? Escríbenos o mándanos WhatsApp.</p>
-    <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">Enviar mensaje</a>
-</section>
-
-<footer>
-    &copy; 2026 ODA • Todos los derechos reservados
-</footer>
-
-<script src="index_script.js"></script>
-
+    <script src="index_script.js"></script>
 </body>
 </html>
