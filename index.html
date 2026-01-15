@@ -1,133 +1,722 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- METAS BÁSICOS -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODA | rte Urbano Digital</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>ODA | Arte Urbano & Tecnología</title>
     
-    <!-- ESTILOS INLINE (críticos) -->
-    <style>
-        /* ESTILOS CRÍTICOS - SE VEN INMEDIATO */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #0A0A0A; 
-            color: #F5F5F5; 
-            overflow-x: hidden;
-        }
-        
-        /* Preloader que desaparece rápido */
-        #preloader {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #0A0A0A;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.3s;
-        }
-        
-        /* Contenido principal */
-        .main-content {
-            opacity: 1;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* Hero básico */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-        }
-        
-        .hero h1 {
-            font-size: clamp(2.5rem, 8vw, 4rem);
-            color: #00FF88;
-            margin-bottom: 1rem;
-        }
-        
-        /* Botones */
-        .btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: #00FF88;
-            color: #000;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            margin: 0.5rem;
-            transition: transform 0.2s;
-        }
-        
-        .btn:active {
-            transform: scale(0.95);
-        }
-    </style>
+    <!-- Fuentes Optimizadas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=Space+Grotesk:wght@300;400;600;700&family=Barlow+Condensed:wght@300;400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     
-    <!-- CSS externo (carga después) -->
-    <link rel="stylesheet" href="index_estilo.css" media="print" onload="this.media='all'">
-    
-    <!-- Iconos -->
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA -->
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300FF88%22>⚡</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300FF88%22>⚡</text></svg>">
+    
+    <!-- Preconnect para sonidos -->
+    <link rel="preconnect" href="https://assets.mixkit.co">
 </head>
-<body>
-    <!-- Preloader simple -->
-    <div id="preloader">
-        <div style="text-align: center;">
-            <div style="font-size: 3rem; color: #00FF88; margin-bottom: 1rem;">ODA</div>
-            <div style="width: 100px; height: 4px; background: #333; border-radius: 2px; overflow: hidden;">
-                <div style="width: 100%; height: 100%; background: #00FF88; animation: load 1s ease-in-out;"></div>
+<body class="theme-dark">
+    <!-- Capas de sonido (hidden) -->
+    <audio id="spraySound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-spray-paint-829.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="shakeSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-shaking-a-spray-can-1388.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="printSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-printer-1645.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="clickSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Canvas para efectos WebGL (si está disponible) -->
+    <canvas id="webglCanvas"></canvas>
+    
+    <!-- Fondo degradado dinámico -->
+    <div class="dynamic-gradient"></div>
+    
+    <!-- Capa de partículas -->
+    <div class="particles-layer"></div>
+    
+    <!-- Preloader elegante -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="brand-reveal">
+                <span class="brand-letter" data-letter="O">O</span>
+                <span class="brand-letter" data-letter="D">D</span>
+                <span class="brand-letter" data-letter="A">A</span>
             </div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <div class="loading-text">CARGANDO EXPERIENCIA URBANA</div>
         </div>
     </div>
 
-    <!-- Contenido principal (visible inmediato) -->
-    <div class="main-content">
-        <!-- Tu contenido HTML aquí -->
-        <nav class="main-nav">...</nav>
-        <section class="hero">...</section>
-        <!-- Resto de tu HTML -->
+    <!-- Navegación Premium -->
+    <nav class="main-nav" id="mainNav">
+        <div class="nav-container">
+            <!-- Logo con animación de spray -->
+            <div class="nav-brand">
+                <div class="logo-spray" id="logoSpray">
+                    <span class="spray-dot dot-1"></span>
+                    <span class="spray-dot dot-2"></span>
+                    <span class="spray-dot dot-3"></span>
+                    <div class="logo-text">ODA</div>
+                </div>
+                <div class="brand-subtitle">URBAN DIGITAL</div>
+            </div>
+            
+            <!-- Menú principal -->
+            <div class="nav-menu">
+                <a href="#home" class="nav-item active" data-sound="click">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Inicio</span>
+                    <span class="nav-line"></span>
+                </a>
+                <a href="#services" class="nav-item" data-sound="click">
+                    <span class="nav-icon">🛠️</span>
+                    <span class="nav-label">Servicios</span>
+                    <span class="nav-line"></span>
+                </a>
+                <a href="#gallery" class="nav-item" data-sound="click">
+                    <span class="nav-icon">🎨</span>
+                    <span class="nav-label">Galería</span>
+                    <span class="nav-line"></span>
+                </a>
+                <a href="#contact" class="nav-item highlight" data-sound="spray">
+                    <span class="nav-icon">📞</span>
+                    <span class="nav-label">Contacto</span>
+                    <span class="nav-line"></span>
+                </a>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div class="nav-actions">
+                <button class="action-btn sound-btn" id="soundToggle" aria-label="Sonidos">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="action-btn theme-btn" id="themeToggle" aria-label="Cambiar tema">
+                    <i class="fas fa-palette"></i>
+                </button>
+            </div>
+            
+            <!-- Menú móvil toggle -->
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Menú">
+                <span class="toggle-bar"></span>
+                <span class="toggle-bar"></span>
+                <span class="toggle-bar"></span>
+            </button>
+        </div>
+        
+        <!-- Indicador de scroll -->
+        <div class="nav-indicator"></div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <!-- Canvas para animación de impresora -->
+        <canvas id="printerCanvas" class="printer-canvas"></canvas>
+        
+        <!-- Contenedor principal -->
+        <div class="hero-container">
+            <!-- Tagline animada -->
+            <div class="hero-tagline">
+                <span class="tag-chip">PREMIUM</span>
+                <span class="tag-chip">URBANO</span>
+                <span class="tag-chip">DIGITAL</span>
+            </div>
+            
+            <!-- Título principal -->
+            <h1 class="hero-title">
+                <span class="title-word">IMPRESIÓN</span>
+                <span class="title-word">3D</span>
+                <span class="title-separator">+</span>
+                <span class="title-word">PUBLICIDAD</span>
+                <span class="title-word">DIGITAL</span>
+            </h1>
+            
+            <!-- Subtítulo con tipowriter -->
+            <div class="hero-subtitle">
+                <div class="typewriter">
+                    <span class="typewriter-text"></span>
+                    <span class="typewriter-cursor">|</span>
+                </div>
+            </div>
+            
+            <!-- Estadísticas -->
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-value" data-count="500">0</div>
+                    <div class="stat-label">Proyectos 3D</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-count="99">0</div>
+                    <div class="stat-label">Clientes Satisfechos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" data-count="24">0</div>
+                    <div class="stat-label">Horas Respuesta</div>
+                </div>
+            </div>
+            
+            <!-- CTA Buttons -->
+            <div class="hero-actions">
+                <button class="btn btn-primary" id="exploreBtn" data-sound="spray">
+                    <span class="btn-icon">⚡</span>
+                    <span class="btn-text">Explorar Servicios</span>
+                    <div class="btn-ripple"></div>
+                </button>
+                
+                <button class="btn btn-secondary" id="quoteBtn" data-sound="shake">
+                    <span class="btn-icon">🎨</span>
+                    <span class="btn-text">Solicitar Cotización</span>
+                    <div class="btn-spray"></div>
+                </button>
+            </div>
+            
+            <!-- Elementos decorativos -->
+            <div class="hero-decoration">
+                <div class="decoration-cube"></div>
+                <div class="decoration-spray"></div>
+                <div class="decoration-phone"></div>
+                <div class="decoration-film"></div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="scroll-hint">
+            <div class="scroll-line">
+                <div class="scroll-dot"></div>
+            </div>
+            <span>SCROLL</span>
+        </div>
+        
+        <!-- Efecto de spray al cargar -->
+        <div class="spray-effect" id="sprayEffect"></div>
+    </section>
+
+    <!-- Sección Servicios -->
+    <section id="services" class="services-section">
+        <div class="section-container">
+            <!-- Header -->
+            <div class="section-header">
+                <div class="section-badge">SERVICIOS</div>
+                <h2 class="section-title">Soluciones <span class="text-gradient">Digitales</span></h2>
+                <p class="section-description">Tecnología de punta con esencia urbana y arte callejero</p>
+            </div>
+            
+            <!-- Grid de servicios -->
+            <div class="services-grid">
+                <!-- Servicio 1: Impresión 3D -->
+                <article class="service-card" data-service="3d">
+                    <div class="card-illustration">
+                        <div class="illustration-3d">
+                            <div class="cube-3d">
+                                <div class="cube-face front"></div>
+                                <div class="cube-face back"></div>
+                                <div class="cube-face right"></div>
+                                <div class="cube-face left"></div>
+                                <div class="cube-face top"></div>
+                                <div class="cube-face bottom"></div>
+                            </div>
+                            <div class="printer-beam"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            <h3 class="card-title">Impresión 3D</h3>
+                            <span class="card-tag">PREMIUM</span>
+                        </div>
+                        
+                        <p class="card-description">
+                            Prototipos, piezas personalizadas y arte 3D con materiales de alta calidad.
+                            Desde diseño hasta producto final.
+                        </p>
+                        
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> Alta precisión (0.1mm)</li>
+                            <li><i class="fas fa-check"></i> Variedad de materiales</li>
+                            <li><i class="fas fa-check"></i> Acabados profesionales</li>
+                        </ul>
+                        
+                        <div class="card-stats">
+                            <div class="stat">
+                                <div class="value">48h</div>
+                                <div class="label">Entrega</div>
+                            </div>
+                            <div class="stat">
+                                <div class="value">100%</div>
+                                <div class="label">Calidad</div>
+                            </div>
+                        </div>
+                        
+                        <button class="card-action" data-sound="click">
+                            <span>Cotizar Proyecto</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Efecto hover 3D -->
+                    <div class="card-hover"></div>
+                </article>
+
+                <!-- Servicio 2: Publicidad Digital -->
+                <article class="service-card" data-service="ad">
+                    <div class="card-illustration">
+                        <div class="illustration-ad">
+                            <div class="ad-billboard">
+                                <div class="ad-content">ODA</div>
+                            </div>
+                            <div class="ad-glow"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <h3 class="card-title">Publicidad Digital</h3>
+                            <span class="card-tag">TRENDING</span>
+                        </div>
+                        
+                        <p class="card-description">
+                            Campañas impactantes, branding urbano y estrategias digitales 
+                            con estilo street y alta conversión.
+                        </p>
+                        
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> Redes Sociales</li>
+                            <li><i class="fas fa-check"></i> Branding Urbano</li>
+                            <li><i class="fas fa-check"></i> Contenido Visual</li>
+                        </ul>
+                        
+                        <div class="card-stats">
+                            <div class="stat">
+                                <div class="value">+250%</div>
+                                <div class="label">Engagement</div>
+                            </div>
+                            <div class="stat">
+                                <div class="value">72h</div>
+                                <div class="label">Campaña</div>
+                            </div>
+                        </div>
+                        
+                        <button class="card-action" data-sound="spray">
+                            <span>Ver Portfolio</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Servicio 3: Reparación -->
+                <article class="service-card" data-service="repair">
+                    <div class="card-illustration">
+                        <div class="illustration-repair">
+                            <div class="phone-frame">
+                                <div class="phone-screen"></div>
+                            </div>
+                            <div class="tools">
+                                <div class="tool-screwdriver"></div>
+                                <div class="tool-pincer"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h3 class="card-title">Reparación Celulares</h3>
+                            <span class="card-tag">RÁPIDO</span>
+                        </div>
+                        
+                        <p class="card-description">
+                            Servicio técnico especializado con repuestos originales. 
+                            Reparación express con garantía incluida.
+                        </p>
+                        
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> Todas las marcas</li>
+                            <li><i class="fas fa-check"></i> Repuestos originales</li>
+                            <li><i class="fas fa-check"></i> Garantía 90 días</li>
+                        </ul>
+                        
+                        <div class="card-stats">
+                            <div class="stat">
+                                <div class="value">30min</div>
+                                <div class="label">Promedio</div>
+                            </div>
+                            <div class="stat">
+                                <div class="value">95%</div>
+                                <div class="label">Éxito</div>
+                            </div>
+                        </div>
+                        
+                        <button class="card-action" data-sound="click">
+                            <span>Agendar Reparación</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Servicio 4: Streaming -->
+                <article class="service-card" data-service="streaming">
+                    <div class="card-illustration">
+                        <div class="illustration-streaming">
+                            <div class="streaming-screen">
+                                <div class="screen-content">
+                                    <div class="film-frame"></div>
+                                    <div class="film-frame"></div>
+                                    <div class="film-frame"></div>
+                                </div>
+                            </div>
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <h3 class="card-title">Cuentas Streaming</h3>
+                            <span class="card-tag">EXCLUSIVO</span>
+                        </div>
+                        
+                        <p class="card-description">
+                            Acceso premium a Netflix, Disney+, HBO Max, Spotify y más. 
+                            Calidad 4K y soporte 24/7 garantizado.
+                        </p>
+                        
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> Netflix 4K</li>
+                            <li><i class="fas fa-check"></i> Disney+ Premium</li>
+                            <li><i class="fas fa-check"></i> Spotify Family</li>
+                        </ul>
+                        
+                        <div class="card-stats">
+                            <div class="stat">
+                                <div class="value">4K</div>
+                                <div class="label">Calidad</div>
+                            </div>
+                            <div class="stat">
+                                <div class="value">24/7</div>
+                                <div class="label">Soporte</div>
+                            </div>
+                        </div>
+                        
+                        <button class="card-action" data-sound="click">
+                            <span>Ver Planes</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </article>
+            </div>
+            
+            <!-- Indicador de servicios -->
+            <div class="services-indicator">
+                <div class="indicator-dot active"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Galería -->
+    <section id="gallery" class="gallery-section">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-badge">PORTAFOLIO</div>
+                <h2 class="section-title">Proyectos <span class="text-gradient">Destacados</span></h2>
+                <p class="section-description">Donde el arte digital cobra vida</p>
+            </div>
+            
+            <!-- Grid de galería -->
+            <div class="gallery-grid">
+                <div class="gallery-item" data-category="3d">
+                    <div class="gallery-image">
+                        <div class="image-overlay">
+                            <h3>Escultura 3D Urbana</h3>
+                            <p>PLA + Acabado grafiti</p>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <div class="gallery-tags">
+                            <span class="tag">3D PRINT</span>
+                            <span class="tag">ARTE URBANO</span>
+                        </div>
+                        <button class="gallery-action" data-sound="click">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="ad">
+                    <div class="gallery-image">
+                        <div class="image-overlay">
+                            <h3>Campaña Digital</h3>
+                            <p>Branding callejero</p>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <div class="gallery-tags">
+                            <span class="tag">PUBLICIDAD</span>
+                            <span class="tag">BRANDING</span>
+                        </div>
+                        <button class="gallery-action" data-sound="click">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="phone">
+                    <div class="gallery-image">
+                        <div class="image-overlay">
+                            <h3>Taller Tecnológico</h3>
+                            <p>Reparación premium</p>
+                        </div>
+                    </div>
+                    <div class="gallery-info">
+                        <div class="gallery-tags">
+                            <span class="tag">TECNOLOGÍA</span>
+                            <span class="tag">REPARACIÓN</span>
+                        </div>
+                        <button class="gallery-action" data-sound="click">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Botón ver más -->
+            <div class="gallery-cta">
+                <button class="btn btn-outline" id="viewMoreBtn" data-sound="spray">
+                    <span>Ver Más Proyectos</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contact" class="contact-section">
+        <div class="section-container">
+            <div class="contact-wrapper">
+                <!-- Info de contacto -->
+                <div class="contact-info">
+                    <div class="section-header">
+                        <div class="section-badge">CONTACTO</div>
+                        <h2 class="section-title">Hablemos de tu <span class="text-gradient">Proyecto</span></h2>
+                        <p class="section-description">Transformemos ideas en realidad digital</p>
+                    </div>
+                    
+                    <!-- Métodos de contacto -->
+                    <div class="contact-methods">
+                        <div class="method-card">
+                            <div class="method-icon">
+                                <i class="fab fa-whatsapp"></i>
+                                <div class="icon-pulse"></div>
+                            </div>
+                            <div class="method-content">
+                                <h4>WhatsApp Express</h4>
+                                <p>Respuesta en 15 minutos</p>
+                                <a href="https://wa.me/521XXXXXXXXXX" class="method-link" data-sound="click">
+                                    +52 1 XXX XXX XXXX
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="method-card">
+                            <div class="method-icon">
+                                <i class="fas fa-envelope"></i>
+                                <div class="icon-glow"></div>
+                            </div>
+                            <div class="method-content">
+                                <h4>Email Profesional</h4>
+                                <p>Para proyectos detallados</p>
+                                <div class="email-display">
+                                    <span>contacto@oda.studio</span>
+                                    <button class="copy-btn" data-text="contacto@oda.studio" data-sound="click">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Horarios -->
+                    <div class="contact-schedule">
+                        <h4><i class="fas fa-clock"></i> Horarios</h4>
+                        <div class="schedule-grid">
+                            <div class="schedule-day">
+                                <span>Lun - Vie</span>
+                                <span>9:00 - 20:00</span>
+                            </div>
+                            <div class="schedule-day">
+                                <span>Sábado</span>
+                                <span>10:00 - 18:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Formulario -->
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" required>
+                            <label for="name">Nombre completo</label>
+                            <div class="form-line"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="email" id="email" required>
+                            <label for="email">Correo electrónico</label>
+                            <div class="form-line"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <select id="service" required>
+                                <option value="" disabled selected>Selecciona un servicio</option>
+                                <option value="3d">Impresión 3D</option>
+                                <option value="ad">Publicidad Digital</option>
+                                <option value="repair">Reparación Celulares</option>
+                                <option value="streaming">Cuentas Streaming</option>
+                            </select>
+                            <div class="form-line"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <textarea id="message" rows="4" required></textarea>
+                            <label for="message">Cuéntanos sobre tu proyecto</label>
+                            <div class="form-line"></div>
+                        </div>
+                        
+                        <div class="form-footer">
+                            <div class="form-security">
+                                <i class="fas fa-lock"></i>
+                                <span>Datos protegidos</span>
+                            </div>
+                            <button type="submit" class="btn btn-gradient" data-sound="spray">
+                                <span>Enviar Mensaje</span>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Efecto de conexión -->
+        <div class="connection-effect"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <!-- Brand -->
+            <div class="footer-brand">
+                <div class="footer-logo">ODA</div>
+                <div class="footer-tagline">ARTE URBANO DIGITAL</div>
+            </div>
+            
+            <!-- Links -->
+            <div class="footer-links">
+                <div class="link-group">
+                    <h5>Servicios</h5>
+                    <a href="#services">Impresión 3D</a>
+                    <a href="#services">Publicidad</a>
+                    <a href="#services">Reparación</a>
+                    <a href="#services">Streaming</a>
+                </div>
+                <div class="link-group">
+                    <h5>Legal</h5>
+                    <a href="#">Términos</a>
+                    <a href="#">Privacidad</a>
+                    <a href="#">Cookies</a>
+                </div>
+                <div class="link-group">
+                    <h5>Social</h5>
+                    <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#"><i class="fab fa-tiktok"></i> TikTok</a>
+                    <a href="#"><i class="fab fa-behance"></i> Behance</a>
+                </div>
+            </div>
+            
+            <!-- Newsletter -->
+            <div class="footer-newsletter">
+                <h5>Newsletter</h5>
+                <p>Recibe novedades exclusivas</p>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="tu@email.com">
+                    <button type="submit" data-sound="click">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>&copy; 2024 ODA Studio. Todos los derechos reservados.</p>
+            <div class="footer-tech">
+                <span>CDMX</span>
+                <span class="tech-separator">•</span>
+                <span>V.3.0</span>
+                <span class="tech-separator">•</span>
+                <span><i class="fas fa-heart"></i> Hecho con pasión</span>
+            </div>
+        </div>
+        
+        <!-- Scanner -->
+        <div class="footer-scanner"></div>
+    </footer>
+
+    <!-- Botones flotantes -->
+    <div class="floating-buttons">
+        <a href="https://wa.me/521XXXXXXXXXX" class="whatsapp-float" data-sound="click">
+            <i class="fab fa-whatsapp"></i>
+            <span class="float-label">WhatsApp</span>
+        </a>
+        
+        <button class="back-top" id="backTop" data-sound="click">
+            <i class="fas fa-chevron-up"></i>
+        </button>
     </div>
 
-    <!-- JavaScript optimizado -->
-    <script>
-        // QUITAR PRELOADER INMEDIATO
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const preloader = document.getElementById('preloader');
-                if (preloader) {
-                    preloader.style.opacity = '0';
-                    setTimeout(() => {
-                        preloader.style.display = 'none';
-                    }, 300);
-                }
-            }, 800); // Máximo 800ms
-        });
-        
-        // FALLBACK: quitar después de 3 segundos máximo
-        setTimeout(function() {
-            const preloader = document.getElementById('preloader');
-            if (preloader) {
-                preloader.style.display = 'none';
-            }
-        }, 3000);
-    </script>
-    
-    <!-- Script principal -->
-    <script src="index_script.js" defer></script>
+    <!-- Modales -->
+    <div class="modal" id="projectModal">
+        <div class="modal-content">
+            <button class="modal-close" data-sound="click">&times;</button>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
 </body>
 </html>
