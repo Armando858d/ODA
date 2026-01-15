@@ -1,8 +1,8 @@
 // ===== CONFIGURACIÓN GLOBAL =====
 'use strict';
 
-console.log('%c🚀 ODA URBAN PREMIUM 🌟', 'font-size: 24px; color: #00FF88; font-weight: bold;');
-console.log('%cExperiencia urbana premium cargada', 'color: #888;');
+console.log('%c🎨 URBAN TECH PREMIUM 🌟', 'font-size: 24px; color: #00D4FF; font-weight: bold;');
+console.log('%cEstilo urbano premium cargado', 'color: #888;');
 
 // Estado global
 const AppState = {
@@ -11,89 +11,10 @@ const AppState = {
     currentSection: 'home',
     scrollY: 0,
     isMobile: window.innerWidth <= 768,
-    touchSupported: 'ontouchstart' in window
+    touchSupported: 'ontouchstart' in window,
+    graffitiMode: false
 };
-// ===== EFECTOS GRAFITI ESPECÍFICOS =====
-function initGraffitiEffects() {
-    // Efecto de spray en hover de botones
-    document.querySelectorAll('.btn-primary').forEach(btn => {
-        btn.addEventListener('mouseenter', (e) => {
-            if (AppState.soundsEnabled && Sounds.spray) {
-                Sounds.spray.currentTime = 0;
-                Sounds.spray.play();
-            }
-            
-            // Crear efecto visual de spray
-            const spray = document.createElement('div');
-            spray.className = 'spray-particle';
-            spray.style.cssText = `
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                background: var(--accent-neon);
-                border-radius: 50%;
-                pointer-events: none;
-                filter: blur(5px);
-                animation: sprayParticle 0.5s ease-out forwards;
-            `;
-            
-            const rect = btn.getBoundingClientRect();
-            spray.style.left = `${e.clientX - rect.left}px`;
-            spray.style.top = `${e.clientY - rect.top}px`;
-            
-            btn.appendChild(spray);
-            
-            setTimeout(() => {
-                if (spray.parentNode) {
-                    spray.parentNode.removeChild(spray);
-                }
-            }, 500);
-        });
-    });
-    
-    // Efecto de revelado grafiti al scroll
-    const graffitiElements = document.querySelectorAll('.reveal');
-    const graffitiObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('spray-animate');
-                
-                // Sonido opcional
-                if (AppState.soundsEnabled && entry.target.classList.contains('hero-title')) {
-                    setTimeout(() => {
-                        Sounds.spray.currentTime = 0;
-                        Sounds.spray.play();
-                    }, 300);
-                }
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    graffitiElements.forEach(el => graffitiObserver.observe(el));
-}
 
-// Añade esta animación al CSS
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes sprayParticle {
-        0% {
-            transform: scale(1);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(3);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
-
-// Llama a la función en initApp
-function initApp() {
-    // ... tu código existente ...
-    initGraffitiEffects(); // <-- Añade esta línea
-    // ... resto del código ...
-}
 // Elementos del DOM
 const DOM = {
     preloader: document.getElementById('preloader'),
@@ -109,7 +30,9 @@ const DOM = {
     quoteBtn: document.getElementById('quoteBtn'),
     viewMoreBtn: document.getElementById('viewMoreBtn'),
     projectModal: document.getElementById('projectModal'),
-    modalClose: document.querySelector('.modal-close')
+    modalClose: document.querySelector('.modal-close'),
+    filterButtons: document.querySelectorAll('.filter-btn'),
+    galleryItems: document.querySelectorAll('.gallery-item')
 };
 
 // Elementos de sonido
@@ -138,12 +61,16 @@ function initApp() {
     initScrollEffects();
     initObservers();
     initCanvasEffects();
-    initServiceWorker();
+    initGalleryFilter();
+    initGraffitiEffects();
     
     // Optimizaciones para móvil
     if (AppState.isMobile) {
         optimizeForMobile();
     }
+    
+    // Inicializar controles flotantes
+    initFloatingButtons();
     
     console.log('✅ App inicializada correctamente');
 }
@@ -163,7 +90,7 @@ function checkUserPreferences() {
     applyTheme();
     
     // Verificar almacenamiento local
-    const savedSounds = localStorage.getItem('oda_sounds');
+    const savedSounds = localStorage.getItem('urban_sounds');
     if (savedSounds !== null) {
         AppState.soundsEnabled = savedSounds === 'true';
         updateSoundToggle();
@@ -194,7 +121,6 @@ function initPreloader() {
         // Iniciar animaciones principales
         setTimeout(() => {
             initTypewriter();
-            initFloatingDecorations();
             playSprayEffect();
         }, 500);
     }, 2500);
@@ -222,7 +148,7 @@ function initSounds() {
 
 function toggleSounds() {
     AppState.soundsEnabled = !AppState.soundsEnabled;
-    localStorage.setItem('oda_sounds', AppState.soundsEnabled);
+    localStorage.setItem('urban_sounds', AppState.soundsEnabled);
     updateSoundToggle();
     
     // Reproducir sonido de confirmación
@@ -281,7 +207,7 @@ function initTheme() {
     }
     
     // Aplicar tema guardado
-    const savedTheme = localStorage.getItem('oda_theme');
+    const savedTheme = localStorage.getItem('urban_theme');
     if (savedTheme) {
         AppState.theme = savedTheme;
         applyTheme();
@@ -290,7 +216,7 @@ function initTheme() {
 
 function toggleTheme() {
     AppState.theme = AppState.theme === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('oda_theme', AppState.theme);
+    localStorage.setItem('urban_theme', AppState.theme);
     applyTheme();
     
     // Reproducir sonido
@@ -434,7 +360,11 @@ function updateNavigationOnScroll() {
                 
                 // Mostrar/ocultar botón volver arriba
                 if (DOM.backTop) {
-                    DOM.backTop.style.display = AppState.scrollY > 500 ? 'flex' : 'none';
+                    if (AppState.scrollY > 500) {
+                        DOM.backTop.classList.add('visible');
+                    } else {
+                        DOM.backTop.classList.remove('visible');
+                    }
                 }
                 
                 // Actualizar sección activa
@@ -477,8 +407,8 @@ function initAnimations() {
     // Tipo máquina de escribir
     initTypewriter();
     
-    // Elementos flotantes
-    initFloatingDecorations();
+    // Efectos hover en botones
+    initButtonEffects();
     
     // Animación de logo spray
     if (DOM.logoSpray) {
@@ -489,9 +419,6 @@ function initAnimations() {
             }
         });
     }
-    
-    // Efectos hover en botones
-    initButtonEffects();
 }
 
 function initTypewriter() {
@@ -499,10 +426,10 @@ function initTypewriter() {
     if (!typewriter) return;
     
     const texts = [
-        "Tecnología urbana de vanguardia",
-        "Arte digital con esencia callejera", 
-        "Innovación 3D y diseño futurista",
-        "Soluciones digitales premium"
+        "Impresión 3D • Reparación Expert • Publicidad Impactante",
+        "Calidad Premium • Estilo Urbano • Garantía Total",
+        "Innovación Tecnológica • Creatividad Sin Límites",
+        "Soluciones Personalizadas • Acabados Perfectos"
     ];
     
     let textIndex = 0;
@@ -539,49 +466,150 @@ function initTypewriter() {
     setTimeout(type, 2000);
 }
 
-function initFloatingDecorations() {
-    const decorations = document.querySelectorAll('.decoration-cube, .decoration-spray, .decoration-phone, .decoration-film');
-    
-    decorations.forEach(deco => {
-        // Posición inicial aleatoria
-        const startX = Math.random() * 80 + 10;
-        const startY = Math.random() * 80 + 10;
-        deco.style.left = `${startX}%`;
-        deco.style.top = `${startY}%`;
-        
-        // Movimiento suave
-        setInterval(() => {
-            const moveX = (Math.random() - 0.5) * 30;
-            const moveY = (Math.random() - 0.5) * 20;
-            deco.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        }, 3000);
-    });
-}
-
 function initButtonEffects() {
     // Efecto ripple en botones primarios
     document.querySelectorAll('.btn-primary').forEach(btn => {
         btn.addEventListener('click', function(e) {
             if (AppState.touchSupported) return;
             
-            const ripple = this.querySelector('.btn-ripple');
-            if (!ripple) return;
-            
             const rect = this.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-            ripple.style.width = '0';
-            ripple.style.height = '0';
+            const ripple = document.createElement('span');
+            ripple.className = 'btn-ripple';
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                width: 0;
+                height: 0;
+                left: ${x}px;
+                top: ${y}px;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+            `;
+            
+            this.appendChild(ripple);
             
             setTimeout(() => {
-                ripple.style.width = '200%';
-                ripple.style.height = '200%';
+                ripple.style.width = '200px';
+                ripple.style.height = '200px';
+                ripple.style.opacity = '0';
             }, 10);
+            
+            setTimeout(() => {
+                if (ripple.parentNode) {
+                    ripple.parentNode.removeChild(ripple);
+                }
+            }, 600);
         });
     });
+}
+
+// ===== EFECTOS GRAFITI =====
+function initGraffitiEffects() {
+    // Efecto de spray en hover de botones principales
+    document.querySelectorAll('.btn-primary, .logo').forEach(element => {
+        element.addEventListener('mouseenter', (e) => {
+            if (AppState.soundsEnabled && Sounds.spray && Math.random() > 0.5) {
+                Sounds.spray.currentTime = 0;
+                Sounds.spray.play();
+            }
+            
+            if (AppState.graffitiMode) {
+                createSprayEffect(e.clientX, e.clientY);
+            }
+        });
+    });
+    
+    // Activar modo grafiti con doble clic en el logo
+    if (DOM.logoSpray) {
+        let clickCount = 0;
+        let clickTimer;
+        
+        DOM.logoSpray.addEventListener('click', (e) => {
+            clickCount++;
+            
+            if (clickCount === 1) {
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 500);
+            } else if (clickCount === 2) {
+                clearTimeout(clickTimer);
+                clickCount = 0;
+                toggleGraffitiMode();
+            }
+        });
+    }
+}
+
+function toggleGraffitiMode() {
+    AppState.graffitiMode = !AppState.graffitiMode;
+    
+    if (AppState.graffitiMode) {
+        document.body.classList.add('graffiti-active');
+        showNotification('Modo Grafiti Activado 🎨', 'info');
+        
+        // Agregar evento para crear sprays al hacer clic
+        document.addEventListener('click', createGraffitiOnClick);
+    } else {
+        document.body.classList.remove('graffiti-active');
+        showNotification('Modo Grafiti Desactivado', 'info');
+        document.removeEventListener('click', createGraffitiOnClick);
+    }
+}
+
+function createGraffitiOnClick(e) {
+    if (e.target.closest('button, a, input, textarea, select')) return;
+    createSprayEffect(e.clientX, e.clientY);
+}
+
+function createSprayEffect(x, y) {
+    const spray = document.createElement('div');
+    spray.className = 'spray-effect';
+    spray.style.cssText = `
+        position: fixed;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, 
+            ${Math.random() > 0.5 ? 'var(--neon-pink)' : 'var(--neon-cyan)'} 0%, 
+            transparent 70%);
+        opacity: 0.3;
+        filter: blur(15px);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        left: ${x - 50}px;
+        top: ${y - 50}px;
+        transform: scale(0);
+        animation: sprayAppear 0.5s ease-out forwards;
+    `;
+    
+    document.body.appendChild(spray);
+    
+    setTimeout(() => {
+        spray.style.opacity = '0';
+        setTimeout(() => {
+            if (spray.parentNode) {
+                spray.parentNode.removeChild(spray);
+            }
+        }, 500);
+    }, 1000);
+    
+    // Crear estilo para la animación
+    if (!document.querySelector('#spray-animation')) {
+        const style = document.createElement('style');
+        style.id = 'spray-animation';
+        style.textContent = `
+            @keyframes sprayAppear {
+                0% { transform: scale(0); opacity: 0; }
+                50% { transform: scale(1.2); opacity: 0.4; }
+                100% { transform: scale(1); opacity: 0.3; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 }
 
 // ===== CONTADORES ANIMADOS =====
@@ -675,9 +703,8 @@ function handleCopyEmail(e) {
     navigator.clipboard.writeText(text).then(() => {
         // Feedback visual
         const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i>';
-        btn.style.background = '#00FF88';
-        btn.style.color = '#000';
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        btn.style.color = '#00FF88';
         
         // Sonido
         if (AppState.soundsEnabled && Sounds.click) {
@@ -691,7 +718,6 @@ function handleCopyEmail(e) {
         // Restaurar después de 2 segundos
         setTimeout(() => {
             btn.innerHTML = originalHTML;
-            btn.style.background = '';
             btn.style.color = '';
         }, 2000);
     }).catch(err => {
@@ -700,45 +726,26 @@ function handleCopyEmail(e) {
     });
 }
 
+// ===== NOTIFICACIONES =====
 function showNotification(message, type) {
     // Crear notificación
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    // Estilos
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? 'rgba(0, 255, 136, 0.9)' : 
-                     type === 'error' ? 'rgba(255, 46, 147, 0.9)' : 'rgba(0, 168, 255, 0.9)'};
-        color: #000;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(10px);
-        z-index: 1200;
-        transform: translateX(120%);
-        transition: transform 0.3s ease;
-        max-width: 400px;
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
     `;
     
     document.body.appendChild(notification);
     
     // Mostrar
     setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
+        notification.classList.add('show');
     }, 10);
     
     // Ocultar después de 3 segundos
     setTimeout(() => {
-        notification.style.transform = 'translateX(120%)';
+        notification.classList.remove('show');
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.parentNode.removeChild(notification);
@@ -848,7 +855,7 @@ function initCanvasEffects() {
         ctx.fillRect(centerX - 80, centerY - 30, 160, 80);
         
         // Estructura
-        ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(centerX - 100, centerY + 50);
@@ -866,13 +873,13 @@ function initCanvasEffects() {
         ctx.fillRect(headX - 15, headY - 5, 30, 10);
         
         // Boquilla
-        ctx.fillStyle = '#FF6B35';
+        ctx.fillStyle = '#FF2E93';
         ctx.beginPath();
         ctx.arc(headX, headY + 5, 3, 0, Math.PI * 2);
         ctx.fill();
         
         // Luz de boquilla
-        ctx.fillStyle = 'rgba(255, 107, 53, 0.2)';
+        ctx.fillStyle = 'rgba(255, 46, 147, 0.2)';
         ctx.beginPath();
         ctx.arc(headX, headY + 5, 10, 0, Math.PI * 2);
         ctx.fill();
@@ -883,7 +890,7 @@ function initCanvasEffects() {
             const layerWidth = 30 + Math.sin(time + i) * 10;
             const layerX = centerX - layerWidth / 2;
             
-            ctx.fillStyle = `rgba(0, 255, 136, ${0.1 + i * 0.05})`;
+            ctx.fillStyle = `rgba(0, 212, 255, ${0.1 + i * 0.05})`;
             ctx.fillRect(layerX, layerY, layerWidth, 2);
         }
     }
@@ -901,37 +908,140 @@ function initCanvasEffects() {
     animate();
 }
 
-// ===== SERVICE WORKER (PWA) =====
-function initServiceWorker() {
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then(registration => {
-                    console.log('✅ Service Worker registrado:', registration);
-                })
-                .catch(error => {
-                    console.log('❌ Error registrando Service Worker:', error);
-                });
+// ===== GALERÍA FILTRO =====
+function initGalleryFilter() {
+    if (!DOM.filterButtons.length || !DOM.galleryItems.length) return;
+    
+    DOM.filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remover active de todos los botones
+            DOM.filterButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Agregar active al botón clickeado
+            this.classList.add('active');
+            
+            const filterValue = this.getAttribute('data-filter');
+            
+            // Filtrar items
+            DOM.galleryItems.forEach(item => {
+                if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    }, 50);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+            
+            // Sonido
+            if (AppState.soundsEnabled && Sounds.click) {
+                Sounds.click.currentTime = 0;
+                Sounds.click.play();
+            }
         });
+    });
+}
+
+// ===== BOTONES FLOTANTES =====
+function initFloatingButtons() {
+    // Efecto hover en WhatsApp
+    if (DOM.whatsappFloat) {
+        DOM.whatsappFloat.addEventListener('mouseenter', () => {
+            if (AppState.soundsEnabled && Sounds.click) {
+                Sounds.click.currentTime = 0;
+                Sounds.click.play();
+            }
+        });
+    }
+}
+
+// ===== MODAL =====
+function initModal() {
+    if (!DOM.projectModal || !DOM.modalClose) return;
+    
+    // Abrir modal al hacer clic en proyectos
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal(this.closest('.gallery-item'));
+        });
+    });
+    
+    // Cerrar modal
+    DOM.modalClose.addEventListener('click', closeModal);
+    
+    // Cerrar con ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && DOM.projectModal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+    
+    // Cerrar haciendo clic fuera
+    DOM.projectModal.addEventListener('click', (e) => {
+        if (e.target === DOM.projectModal) {
+            closeModal();
+        }
+    });
+}
+
+function openModal(galleryItem) {
+    const img = galleryItem.querySelector('img');
+    const title = galleryItem.querySelector('h3').textContent;
+    const description = galleryItem.querySelector('p').textContent;
+    const category = galleryItem.getAttribute('data-category');
+    
+    const modalBody = DOM.projectModal.querySelector('.modal-body');
+    modalBody.innerHTML = `
+        <div class="modal-image">
+            <img src="${img.src}" alt="${img.alt}">
+        </div>
+        <div class="modal-content">
+            <span class="modal-category">${category.toUpperCase()}</span>
+            <h2 class="modal-title">${title}</h2>
+            <p class="modal-description">${description}</p>
+            <div class="modal-actions">
+                <a href="#contacto" class="btn btn-primary">Cotizar Proyecto Similar</a>
+            </div>
+        </div>
+    `;
+    
+    DOM.projectModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Sonido
+    if (AppState.soundsEnabled && Sounds.print) {
+        Sounds.print.currentTime = 0;
+        Sounds.print.play();
+    }
+}
+
+function closeModal() {
+    DOM.projectModal.classList.remove('active');
+    document.body.style.overflow = '';
+    
+    // Sonido
+    if (AppState.soundsEnabled && Sounds.click) {
+        Sounds.click.currentTime = 0;
+        Sounds.click.play();
     }
 }
 
 // ===== OPTIMIZACIONES PARA MÓVIL =====
 function optimizeForMobile() {
-    // Reducir animaciones complejas
+    // Reducir animaciones complejas en móvil
     document.querySelectorAll('.decoration-cube, .decoration-spray, .decoration-phone, .decoration-film')
         .forEach(el => el.style.display = 'none');
     
     // Ajustar tiempos de animación
     document.documentElement.style.setProperty('--transition-normal', '0.2s');
     document.documentElement.style.setProperty('--transition-slow', '0.3s');
-    
-    // Mejorar performance de scroll
-    document.addEventListener('touchmove', (e) => {
-        if (e.target.closest('.modal-content')) {
-            e.preventDefault();
-        }
-    }, { passive: false });
 }
 
 // ===== MANEJADORES DE EVENTOS GLOBALES =====
@@ -955,25 +1065,6 @@ function debounce(func, wait) {
     };
 }
 
-// ===== API DE BATTERY (OPCIONAL) =====
-if ('getBattery' in navigator) {
-    navigator.getBattery().then(battery => {
-        // Reducir animaciones si la batería es baja
-        if (battery.level < 0.2) {
-            document.documentElement.style.setProperty('--transition-normal', '0.01ms');
-        }
-        
-        battery.addEventListener('levelchange', () => {
-            if (battery.level < 0.15) {
-                // Apagar animaciones complejas
-                document.querySelectorAll('.floating-buttons, .hero-decoration').forEach(el => {
-                    el.style.display = 'none';
-                });
-            }
-        });
-    });
-}
-
 // ===== OFFLINE SUPPORT =====
 window.addEventListener('online', () => {
     showNotification('Conexión restablecida', 'info');
@@ -983,22 +1074,7 @@ window.addEventListener('offline', () => {
     showNotification('Estás offline. Algunas funciones pueden no estar disponibles.', 'error');
 });
 
-// ===== CACHE DE RECURSOS =====
-const criticalResources = [
-    '/',
-    '/style.css',
-    '/script.js'
-];
-
-if ('caches' in window) {
-    caches.open('oda-v1').then(cache => {
-        cache.addAll(criticalResources);
-    });
-}
-
-// ===== EXPORTAR PARA DEBUG =====
-if (window.location.search.includes('debug=1')) {
-    window.AppState = AppState;
-    window.DOM = DOM;
-    window.Sounds = Sounds;
-}
+// Inicializar modal después de que todo esté listo
+setTimeout(() => {
+    initModal();
+}, 1000);
