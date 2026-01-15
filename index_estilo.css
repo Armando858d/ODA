@@ -1,602 +1,2002 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servicios ODA</title>
+/* ===== VARIABLES COMBINADAS ===== */
+:root {
+    /* Paleta de lujo (del primer diseño) */
+    --black: #0A0A0A;
+    --black-matte: #1A1A1A;
+    --gray-dark: #2A2A2A;
+    --gray: #3A3A3A;
+    --gold: #FFD700;
+    --gold-dark: #B8860B;
+    --gold-light: #FFE55C;
     
-    <!-- Fonts Premium + Urban -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;700;900&family=Dancing+Script&family=Bebas+Neue&family=Orbitron:wght@400;700&family=Righteous&display=swap" rel="stylesheet">
+    /* Paleta urbana (del segundo diseño) */
+    --neon-green: #00FF88;
+    --neon-blue: #00A8FF;
+    --neon-pink: #FF2E93;
+    --neon-yellow: #FFEA00;
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    /* Colores neutros */
+    --white: #FFFFFF;
+    --white-smoke: #F5F5F5;
+    --light: #F5F5F5;
     
-    <!-- Particles.js -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    /* Gradientes combinados */
+    --grad-gold: linear-gradient(135deg, var(--gold), var(--gold-light));
+    --grad-neon: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
+    --grad-dark: linear-gradient(135deg, var(--dark), var(--black));
+    --grad-accent: linear-gradient(135deg, var(--neon-pink), var(--neon-yellow));
     
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23FFD700%22>⚡</text></svg>">
-</head>
-<body>
-    <!-- Partículas de fondo -->
-    <div id="particles-js"></div>
+    /* Espaciado */
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 2rem;
+    --space-lg: 4rem;
+    --space-xl: 8rem;
     
-    <!-- Textura overlay premium -->
-    <div class="texture-overlay"></div>
+    /* Tipografía combinada */
+    --font-title: 'Playfair Display', serif;
+    --font-body: 'Montserrat', sans-serif;
+    --font-accent: 'Dancing Script', cursive;
+    --font-urban: 'Bebas Neue', sans-serif;
+    --font-tech: 'Orbitron', monospace;
+    --font-street: 'Righteous', cursive;
     
-    <!-- Navegación combinada -->
-    <header class="main-nav-combined">
-        <div class="nav-container">
-            <!-- Logo 3D premium -->
-            <div class="logo-container">
-                <div class="logo-3d-premium" id="logo3d">
-                    <span class="layer-1">3D</span>
-                    <span class="layer-2">3D</span>
-                    <span class="layer-3">3D</span>
-                </div>
-                <div class="logo-tag">Excelencia en cada servicio, elige calidad. </div>
-            </div>
-            
-            <!-- Navegación premium con números -->
-            <nav class="nav-desktop">
-                <a href="#hero" class="nav-link active"><span class="link-number">01</span>Inicio</a>
-                <a href="#servicios" class="nav-link"><span class="link-number">02</span>Servicios</a>
-                <a href="#procesos" class="nav-link"><span class="link-number">03</span>Proceso</a>
-                <a href="#proyectos" class="nav-link"><span class="link-number">04</span>Proyectos</a>
-                <a href="#contacto" class="nav-link premium"><span class="link-number">05</span>Contacto</a>
-            </nav>
-            
-            <!-- Menú móvil -->
-            <button class="menu-toggle" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <div class="nav-mobile" id="navMobile">
-                <div class="mobile-header">
-                    <div class="mobile-brand">ODA</div>
-                    <button class="mobile-close">&times;</button>
-                </div>
-                <div class="mobile-links">
-                    <a href="#hero"><i class="fas fa-spray-can"></i> Inicio</a>
-                    <a href="#servicios"><i class="fas fa-cube"></i> Servicios</a>
-                    <a href="#procesos"><i class="fas fa-cogs"></i> Proceso</a>
-                    <a href="#proyectos"><i class="fas fa-paint-roller"></i> Proyectos</a>
-                    <a href="#contacto" class="premium"><i class="fas fa-gem"></i> Contacto Premium</a>
-                </div>
-                <div class="mobile-footer">
-                    <p>"Arte urbano con tecnología de lujo"</p>
-                </div>
-            </div>
-        </div>
-    </header>
+    /* Sombras combinadas */
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.2);
+    --shadow-hard: 0 15px 50px rgba(0, 0, 0, 0.3);
+    --shadow-gold: 0 0 30px rgba(255, 215, 0, 0.3);
+    --shadow-neon: 0 0 20px var(--neon-green);
+    --shadow-spray: 0 0 30px rgba(0, 168, 255, 0.5);
+    
+    /* Transiciones */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
 
-    <!-- Hero combinado -->
-    <section id="hero" class="hero-combined">
-        <div class="parallax-layer" data-speed="0.1"></div>
-        <div class="parallax-layer" data-speed="0.3"></div>
-        
-        <div class="hero-overlay"></div>
-        
-        <div class="container">
-            <div class="hero-content" >
-                <br>
-                <br>
-                <br>
-             
-                <h1 class="hero-title" >
-                  
-                    <span class="title-line accent" data-text="IMPRESIONES EN 3D">IMPRESIONES EN 3D</span>
-                </h1>
-               
-                <div class="hero-subtitle" >
-                  
+/* ===== RESET Y BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
- <h4>
-<p>En ODA realizamos impresión 3D con materiales de calidad, creando piezas a medida según tus necesidades o ofreciendo productos listos en nuestro catálogo. desde prototipos funcionales hasta estatuas y decoraciones, cada proyecto se puede personalizar: pintar, modelar o ajustar según lo que busques, pero también puedes elegir entre nuestras piezas ya disponibles para compra inmediata.
-nos enfocamos en detalles y acabados cuidados, para que cada pieza tenga un resultado atractivo y funcional, adaptado a tu idea o lista para disfrutar directamente de nuestro catálogo.
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
 
-                </div>
-                <h1>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-number" data-count="143">0</div>
-                        <div class="stat-label">IMPRESIONES 3D</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number" data-count="122">0</div>
-                        <div class="stat-label">Modelados 3D</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">97<span class="percent">%0</span></div>
-                        <div class="stat-label">Satisfacción</div>
-                    </div>
-                </div>
-              
-                <div class="hero-cta">
-                    <a href="#servicios" class="cta-primary">
-                        <i class="fas fa-cube"></i>
-                        <span class="cta-text">EXPLORAR SERVICIOS</span>
-                        <span class="cta-icon">→</span>
-                    </a>
-                    <a href="#contacto" class="cta-secondary">
-                        <i class="fas fa-gem"></i>
-                        <span class="cta-text">COTIZACIÓN EXPRESS</span>
-                        <span class="cta-badge">EXCLUSIVO</span>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Impresora 3D animada -->
-            <div class="printer-animation">
-                <div class="printer">
-                    <div class="printer-body"></div>
-                    <div class="printer-bed">
-                        <div class="printing-object" id="printingObject"></div>
-                    </div>
-                    <div class="printer-head">
-                        <div class="nozzle"></div>
-                    </div>
-                    </div>
-            </div>
-        </div>
-        
-        <!-- Elementos flotantes -->
-        <div class="floating-elements">
-            <div class="floating-cube"><i class="fas fa-cube"></i></div>
-            <div class="floating-spray"><i class="fas fa-spray-can"></i></div>
-            <div class="floating-diamond"><i class="fas fa-gem"></i></div>
-        </div>
-        
-        <!-- Scroll indicator -->
-        <div class="scroll-indicator">
-            <div class="mouse">
-                <div class="wheel"></div>
-            </div>
-            <span>SCROLL</span>
-        </div>
-    </section>
+body {
+    font-family: var(--font-body);
+    background: var(--black);
+    color: var(--white-smoke);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
 
-    <!-- Servicios Combinados -->
-    <section id="servicios" class="section-luxury">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-number">02</div>
-                <h2 class="section-title">CREACION 3D <span class="title-accent">PREMIUM</span></h2>
-                <p class="section-subtitle">CREACIONES 3D EXCLUSIVAS A TU MEDIDA</p>
-            </div>
-            
-            <div class="services-grid">
-                <!-- Servicio 1 -->
-                <div class="service-card luxury">
-                    <div class="service-icon">
-                        <div class="icon-3d-animated">
-                            <i class="fas fa-cube"></i>
-                            <div class="icon-glow"></div>
-                        </div>
-                    </div>
-                    <div class="service-content">
-                        <div class="service-header">
-                            <h3>IMPRESIÓN 3D</h3>
-                            <span class="service-price">$$$</span>
-                        </div>
-                        <div class="service-tags">
-                            <span class="tag">PLA PREMIUM</span>
-                            <span class="tag">PETG</span>
-                            <span class="tag">ABS</span>
-                            <span class="tag">TPU</span>
-                            <span class="tag">TPE</span>
-                            <span class="tag">FILAMENTOS ESPECIALES</span>
-                        </div>
-                        <p class="service-description">
-                            Piezas únicas con filamentos premium(PLA, PETG, TPU y acabados especiales). Desde prototipos funcionales hasta arte y decoración personalizada.
-                        </p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check-circle"></i> Resolución fina hasta 0.2 mm</li>
-                            <li><i class="fas fa-check-circle"></i> Materiales de calidad con acabados personalizados</li>
-                            <li><i class="fas fa-check-circle"></i> Acabados personalizados</li>
-                        </ul>
-                        <div class="service-stats">
-                            <div class="mini-stat">
-                                <div class="mini-value">Producción rápida</div>
-                                <div class="mini-label">Según pedido</div>
-                            </div>
-                            <div class="mini-stat">
-                                <div class="mini-value">Calidad confiable</div>
-                                <div class="mini-label">En cada pieza</div>
-                            </div>
-                        </div>
-                        <div class="service-footer">
-                            <a href="#contacto" class="service-link">
-                                SOLICITAR COTIZACIÓN 
-                                <i class="fas fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="service-decoration">
-                        <div class="cube-3d"></div>
-                    </div>
-                </div>
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
 
-                <!-- Servicio 2 -->
-                <div class="service-card luxury">
-                    <div class="service-icon">
-                        <div class="icon-spray-animated">
-                            <i class="fas fa-spray-can"></i>
-                            <div class="icon-glow"></div>
-                        </div>
-                    </div>
-                    <div class="service-content">
-                        <div class="service-header">
-                            <h3>MODELADO Y OPTIMIZACIÓN DE PIEZAS(BASICO)</h3>
-                            <span class="service-tag">TRENDING</span>
-                        </div>
-                        <div class="service-tags">
-                            <span class="tag">DISEÑO</span>
-                            <span class="tag">MEJORA</span>
-                            <span class="tag">MEDIDAS EXACTAS</span>
-                        </div>
-                        <p class="service-description">
-                            Transformamos tus ideas en modelos 3D precisos. Podemos crear desde cero, mejorar archivos STL o ajustar tus piezas para que estén listas para producción o prototipado.
-                        </p>
-                        <div class="service-stats">
-                            <div class="stat">
-                                <span class="stat-number">97%</span><p>
-                                <span class="stat-label">Precisión en detalles</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-number">24</span> <p>
-                                <span class="stat-label">Proyectos moldeados</span>
-                            </div>
-                        </div>
-                        <div class="service-footer">
-                            <a href="#proyectos" class="service-link">
-                                VER PORTFOLIO 
-                                <i class="fas fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+/* ===== FONDOS COMBINADOS ===== */
+#particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
 
-                <!-- Servicio 3 -->
-                <div class="service-card luxury">
-                    <div class="service-icon">
-                        <div class="icon-brand-animated">
-                            <i class="fas fa-paint-brush"></i>
-                            <div class="icon-glow"></div>
-                        </div>
-                    </div>
-                    <div class="service-content">
-                        <div class="service-header">
-                            <h3>ACABADO ARTISTICO</h3>
-                            <span class="service-badge">EXCLUSIVO</span>
-                        </div>
-                        <div class="service-tags">
-                            <span class="tag">IDENTIDAD</span>
-                            <span class="tag">DISEÑO</span>
-                            <span class="tag">ACABADO</span>
-                        </div>
-                        <p class="service-description">
-                            Transforma tus piezas 3D en verdaderas obras únicas. Pintura a mano sobre tus impresiones para lograr acabados exclusivos y detallados, totalmente personalizados.
-                            
-                        </p>
-                        <div class="design-process">
-                            <div class="process-step">
-                                <span>Concepto</span>
-                                <div class="process-bar"><div class="process-fill" style="width: 98%"></div></div>
-                            </div>
-                            <div class="process-step">
-                                <span>Pintura a mano</span>
-                                <div class="process-bar"><div class="process-fill" style="width: 90%"></div></div>
-                            </div>
-                        </div>
-                        <div class="service-footer">
-                            <a href="#contacto" class="service-link premium">
-                                SOLICITAR ACABADO ARTISTICO 
-                                <i class="fas fa-crown"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+.texture-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(0, 255, 136, 0.02) 0%, transparent 20%),
+        linear-gradient(45deg, var(--black) 0%, var(--black-matte) 100%);
+    z-index: -1;
+    pointer-events: none;
+}
 
-    <!-- Proceso de trabajo (del segundo diseño) -->
-    <section id="procesos" class="process-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">NUESTRO <span class="highlight">PROCESO</span></h2>
-                <p class="section-subtitle">Del archivo digital a tus manos</p>
-            </div>
-            
-            <div class="process-steps">
-                <div class="step" data-step="1">
-                    <div class="step-number">01</div>
-                    <div class="step-content">
-                        <h3>CONCEPTO</h3>
-                        <p>Platicamos tu idea, la bocetamos y le damos forma digital.</p>
-                    </div>
-                    <div class="step-visual">
-                        <div class="visual-concept">
-                            <div class="sketch"></div>
-                            <div class="sketch"></div>
-                            <div class="sketch"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="step" data-step="2">
-                    <div class="step-number">02</div>
-                    <div class="step-content">
-                        <h3>MODELADO 3D</h3>
-                        <p>Convertimos el concepto en modelo 3D listo para imprimir.</p>
-                    </div>
-                    <div class="step-visual">
-                        <div class="visual-model">
-                            <div class="wireframe"></div>
-                            <div class="mesh"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="step" data-step="3">
-                    <div class="step-number">03</div>
-                    <div class="step-content">
-                        <h3>IMPRESIÓN</h3>
-                        <p>La máquina hace su magia, capa por capa, con precisión milimétrica.</p>
-                    </div>
-                    <div class="step-visual">
-                        <div class="visual-print">
-                            <div class="layer"></div>
-                            <div class="layer"></div>
-                            <div class="layer"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="step" data-step="4">
-                    <div class="step-number">04</div>
-                    <div class="step-content">
-                        <h3>ENTREGA</h3>
-                        <p>Post-producción y entrega. Listo para impactar.</p>
-                    </div>
-                    <div class="step-visual">
-                        <div class="visual-delivery">
-                            <div class="product"></div>
-                            <div class="sparkle"></div>
-                            <div class="sparkle"></div>
-                            <div class="sparkle"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+/* ===== NAVEGACIÓN COMBINADA ===== */
+.main-nav-combined {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    z-index: 1000;
+    padding: var(--space-sm) 0;
+    transition: var(--transition-smooth);
+}
 
-    <!-- Galería de Proyectos -->
-    <section id="proyectos" class="gallery-section">
-        <div class="container">
-            <div class="gallery-header">
-                <h2>PROYECTOS <span class="highlight">ICÓNICOS</span></h2>
-                <p>Donde el arte impreso encuentra la excelencia</p>
-            </div>
-            
-            <div class="gallery-grid">
-                <div class="gallery-item large">
-                    <div class="gallery-image">
-                        <div class="image-overlay">
-                            <h3>ESCULTURA 3D URBANA</h3>
-                            <p>Bronce sintético • 2.5m altura</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="gallery-item">
-                    <div class="gallery-image">
-                        <div class="image-overlay">
-                            <h3>CAMPANA MURAL DIGITAL</h3>
-                            <p>Times Square • NYC</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="gallery-item">
-                    <div class="gallery-image">
-                        <div class="image-overlay">
-                            <h3>BRANDING CALLEJERO</h3>
-                            <p>Identidad para marca de lujo</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="gallery-cta">
-                <a href="#contacto" class="gallery-link">
-                    VER MÁS PROYECTOS
-                    <span class="link-arrow">⟶</span>
-                </a>
-            </div>
-        </div>
-    </section>
+.main-nav-combined.scrolled {
+    background: rgba(10, 10, 10, 0.98);
+    border-bottom-color: var(--gold);
+    padding: 0.8rem 0;
+}
 
-    <!-- Filosofía combinada -->
-    <section class="philosophy-section">
-        <div class="philosophy-container">
-            <div class="philosophy-quote">
-                <div class="quote-mark">"</div>
-                <h2>NO CREAMOS PRODUCTOS,</h2>
-                <h2><span class="quote-accent">CREAMOS  PIEZAS QUE CUENTAN HISTORIAS</span></h2>
-                <div class="quote-author">— ODA STUDIO</div>
-            </div>
-            
-            <div class="philosophy-content">
-                <div class="philosophy-item">
-                    <div class="philosophy-number">01</div>
-                    <h3>PRECISIÓN FUNCIONAL</h3>
-                    <p>Cada pieza se imprime cuidando la calidad y el acabado, lista para uso, decoración o prototipo.</p>
-                </div>
-                
-                <div class="philosophy-item">
-                    <div class="philosophy-number">02</div>
-                    <h3>CREATIVIDAD A MEDIDA</h3>
-                    <p>Diseñamos y adaptamos cada pieza según lo que busques, pudiendo personalizar formas, tamaños y detalles.</p>
-                </div>
-                
-                <div class="philosophy-item">
-                    <div class="philosophy-number">03</div>
-                    <h3>CALIDAD CONFIABLE</h3>
-                    <p>Piezas bien terminadas, con materiales de calidad y acabados que resaltan tu idea o proyecto.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    <!-- Contacto Premium Mejorado -->
-    <section id="contacto" class="contact-premium">
-        <div class="contact-container">
-            <div class="contact-header">
-                <h2>¿LISTO PARA DAR VIDA A TU DISEÑO?</h2>
-                <p class="contact-subtitle">Solicita una consulta privada</p>
-            </div>
-            
-            <div class="contact-grid">
-                <div class="contact-form">
-                    <div class="form-header">
-                        <h3>SOLICITUD DE COTIZACIÓN</h3>
-                        <p>Reservado para proyectos serios</p>
-                    </div>
-                    
-                    <form id="premiumForm">
-                        
-//de aqui
+/* Logo 3D premium combinado */
+.logo-container {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+}
 
+.logo-3d-premium {
+    position: relative;
+    font-family: var(--font-title);
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: transparent;
+    cursor: pointer;
+}
 
-<form action="https://formspree.io/f/mzddzvkj" method="POST">
-    <div class="form-group">
-        <input type="text" name="name" placeholder="Nombre completo" required>
-        <div class="form-line"></div>
-    </div>
+.layer-1, .layer-2, .layer-3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 
-    <div class="form-group">
-        <input type="email" name="email" placeholder="Email" required>
-        <div class="form-line"></div>
-    </div>
+.layer-1 {
+    color: var(--gold);
+    text-shadow: 2px 2px 0 var(--neon-pink);
+    z-index: 3;
+}
 
-    <div class="form-group">
-        <select name="project" required>
-            <option value="">Tipo de proyecto</option>
-            <option value="3d">Impresión 3D Premium</option>
-            <option value="ad">Modelado 3D</option>
-            <option value="brand">Acabado artistico</option>
-            <option value="other">Otro</option>
-        </select>
-        <div class="form-line"></div>
-    </div>
+.layer-2 {
+    color: var(--neon-green);
+    transform: translate(3px, 3px);
+    z-index: 2;
+    opacity: 0.7;
+}
 
-    <div class="form-group">
-        <textarea name="message" placeholder="Describe tu visión... (mín. 50 caracteres)" rows="4" required></textarea>
-        <div class="form-line"></div>
-    </div>
+.layer-3 {
+    color: var(--neon-blue);
+    transform: translate(6px, 6px);
+    z-index: 1;
+    opacity: 0.4;
+}
 
-    <div class="form-footer">
-        <div class="form-disclaimer">
-            <i class="fas fa-lock"></i> Información confidencial
-        </div>
-        <button type="submit" class="form-submit">
-            ENVIAR SOLICITUD
-            <i class="fas fa-paper-plane"></i>
-        </button>
-    </div>
-</form>
-//aca jaja
-                                        </div>
-                
-                <div class="contact-info">
-                    <div class="info-card">
-                        <div class="info-icon"><i class="fab fa-whatsapp"></i></div>
-                        <h2>WHATSAPP EXCLUSIVO</h2>
-                        <h2><p>Contáctanos directamente y recibe respuesta garantizada en menos de 2 horas. Nuestro equipo está listo para ayudarte de manera rápida y segura.</p></2>
-                        <a href="https://wa.me/524492795557?text=Hola%2C%20vi%20su%20pagina%20de%20ODA%20y%20me%20interesan%20las%20impresiones%203D.%20%20Me%20podrian%20dar%20mas%20informacion%2C%20por%20favor%3F" target="_blank" class="info-link whatsapp">
-                            
-                        </a>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
-                        <h2>REALIZAR CITA POR MEET</h2>
-                        <h2><p>Reunión por Meet con nuestro equipo de soporte de ODA, 100% segura y transparente, para ofrecerte la mejor atención.</p></h2>
-                        <a href="mailto:daordaz18@gmail.com?subject=Solicitud%20de%20reunión&body=Hola,%20quiero%20agendar%20una%20reunión%20por%20videollamada%20con%20ustedes." target="_blank" class="info-link">
-                            AGENDAR REUNIÓN
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
-                        <h2>STUDIO ODA</h2>
-                        <h2><p>AGS- Zona Urbana</p></h2>
-                        <div class="location">
-                            <span><h1>AGUASCALIENTES</h1></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="contact-footer">
-                <p>Proceso de selección exclusivo • Tiempo mínimo de proyecto: 5 dias • Presupuestos desde $50 MXN</p>
-            </div>
-        </div>
-    </section>
+.logo-tag {
+    font-family: var(--font-tech);
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
 
-    <!-- Footer combinado -->
-    <footer class="footer-premium">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <div class="footer-logo">ODA</div>
-                <div class="footer-tagline">LOS MEJORES SERVICIOS DE AGUASCALIENTES</div>
-            </div>
-            
-            <div class="footer-social">
-                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/524492795557?text=Hola%2C%20vi%20tu%20pagina%20y%20me%20interesan%20las%20impresiones%203D.%20Me%20podrias%20dar%20informes%3F" class="social-link" target="_blank">
-    <i class="fab fa-whatsapp"></i>
-</a>
+/* Navegación premium */
+.nav-desktop {
+    display: flex;
+    gap: var(--space-lg);
+}
 
-                <a href="https://www.facebook.com/tuusuario" class="social-link" target="_blank">
-    <i class="fab fa-facebook-f"></i>
-</a>
+.nav-link {
+    color: var(--white-smoke);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 
-                <a href="#" class="social-link premium"><i class="fab fa-tiktok"></i></a>
-            </div>
-            
-            <div class="footer-legal">
-                <p>&copy; 2024 ODA STUDIO. Todos los derechos reservados.</p>
-                <p class="footer-discreet">Hecho con 🎨 y 💻 en AGUASCALIENTES</p>
-            </div>
-        </div>
-    </footer>
+.link-number {
+    color: var(--gold);
+    font-size: 0.7rem;
+    opacity: 0.5;
+    transition: var(--transition-smooth);
+}
 
-    <!-- Botón de WhatsApp flotante mejorado -->
-    <a href="https://wa.me/524492795557?text=Hola%2C%20vi%20su%20pagina%20de%20ODA%20y%20me%20interesan%20las%20impresiones%203D.%20%20Me%20podrian%20dar%20mas%20informacion%2C%20por%20favor%3F" target="_blank" class="whatsapp-float">
-        <i class="fab fa-whatsapp"></i>
-        <span class="float-text">¿COTIZACIÓN EXPRESS?</span>
-    </a>
+.nav-link:hover {
+    color: var(--neon-green);
+}
 
-    <!-- Loader de lujo -->
-    <div class="luxury-loader" id="loader">
-        <div class="loader-content">
-            <div class="loader-logo">ODA</div>
-            <div class="loader-progress">
-                <div class="progress-bar"></div>
-            </div>
-            <div class="loader-text">IMPRIMIENDO EXPERIENCIA PREMIUM</div>
-        </div>
-    </div>
+.nav-link:hover .link-number {
+    opacity: 1;
+    color: var(--neon-green);
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--neon-green);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link.premium {
+    color: var(--gold);
+    font-weight: 700;
+}
+
+/* Menú móvil */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1002;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background: var(--gold);
+    transition: var(--transition-smooth);
+}
+
+.nav-mobile {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 300px;
+    height: 100vh;
+    background: var(--black);
+    border-left: 1px solid rgba(255, 215, 0, 0.1);
+    padding: var(--space-lg);
+    transition: right 0.4s ease;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-mobile.active {
+    right: 0;
+}
+
+.mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-brand {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    color: var(--gold);
+}
+
+.mobile-close {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.mobile-links {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.mobile-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem;
+    border-radius: 10px;
+    transition: var(--transition-smooth);
+}
+
+.mobile-links a:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--gold);
+}
+
+.mobile-links a.premium {
+    background: rgba(255, 215, 0, 0.2);
+    color: var(--gold);
+}
+
+.mobile-footer {
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--gray);
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* ===== HERO COMBINADO ===== */
+.hero-combined {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-top: 100px;
+}
+
+.parallax-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+}
+
+.parallax-layer:nth-child(1) {
+    background-image: url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?auto=format&fit=crop&w=2000');
+    opacity: 0.1;
+}
+
+.parallax-layer:nth-child(2) {
+    background-image: url('https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?auto=format&fit=crop&w=2000');
+    opacity: 0.05;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 30%, rgba(0, 255, 136, 0.1), transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(0, 168, 255, 0.1), transparent 50%);
+    z-index: -1;
+}
+
+.hero-combined .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content {
+    z-index: 2;
+}
+
+.hero-tag {
+    font-family: var(--font-tech);
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    color: var(--neon-green);
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+}
+
+.hero-title {
+    font-family: var(--font-title);
+    font-size: clamp(3rem, 8vw, 5rem);
+    line-height: 1.1;
+    margin-bottom: var(--space-md);
+}
+
+.title-line {
+    display: block;
+    position: relative;
+    overflow: hidden;
+}
+
+.title-line::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--neon-green);
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: printText 1s ease forwards;
+}
+
+.title-line:nth-child(1)::before { animation-delay: 0.2s; }
+.title-line:nth-child(2)::before { animation-delay: 0.4s; }
+.title-line:nth-child(3)::before { animation-delay: 0.6s; }
+.title-line:nth-child(4)::before { animation-delay: 0.8s; }
+.title-line:nth-child(5)::before { animation-delay: 1s; }
+
+.title-line.accent::before {
+    color: var(--gold);
+}
+
+@keyframes printText {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin: 0 0 var(--space-lg);
+    font-weight: 300;
+}
+
+/* Estadísticas combinadas */
+.hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: var(--space-lg);
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-number {
+    font-family: var(--font-tech);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+}
+
+.stat-number .percent {
+    color: var(--neon-green);
+    font-size: 1.5rem;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* CTA combinado */
+.hero-cta {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.cta-primary, .cta-secondary {
+    padding: 1.2rem 2.5rem;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition-bounce);
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.cta-primary {
+    background: var(--grad-neon);
+    color: var(--black);
+}
+
+.cta-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-neon);
+}
+
+.cta-secondary {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid var(--gray);
+}
+
+.cta-secondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-3px);
+}
+
+.cta-badge {
+    background: var(--neon-pink);
+    color: white;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+}
+
+/* Impresora 3D animada */
+.printer-animation {
+    position: relative;
+    height: 400px;
+}
+
+.printer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 200px;
+}
+
+.printer-body {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: var(--gray);
+    border-radius: 5px;
+}
+
+.printer-bed {
+    position: absolute;
+    bottom: 40px;
+    left: 30px;
+    width: 240px;
+    height: 140px;
+    background: var(--dark);
+    border: 2px solid var(--gray);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.printing-object {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 0;
+    background: var(--neon-green);
+    border-radius: 3px;
+    animation: printing 4s ease-in-out infinite;
+}
+
+@keyframes printing {
+    0%, 100% { height: 0; }
+    50% { height: 100px; }
+}
+
+.printer-head {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 30px;
+    background: var(--gray);
+    border-radius: 3px;
+    animation: headMove 3s ease-in-out infinite;
+}
+
+@keyframes headMove {
+    0%, 100% { left: 30%; }
+    50% { left: 70%; }
+}
+
+.nozzle {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 15px;
+    background: var(--neon-pink);
+    border-radius: 0 0 5px 5px;
+}
+
+.filament-spool {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--gray);
+    border-radius: 50%;
+}
+
+.filament {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 60px;
+    background: var(--neon-pink);
+    transform-origin: top center;
+    animation: spinFilament 2s linear infinite;
+}
+
+@keyframes spinFilament {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Elementos flotantes */
+.floating-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floating-cube, .floating-spray, .floating-diamond {
+    position: absolute;
+    font-size: 3rem;
+    color: rgba(255, 215, 0, 0.1);
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-cube { top: 20%; left: 10%; animation-delay: 0s; }
+.floating-spray { top: 60%; right: 15%; animation-delay: 2s; color: rgba(0, 255, 136, 0.1); }
+.floating-diamond { bottom: 30%; left: 20%; animation-delay: 4s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #888;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    z-index: 2;
+}
+
+.mouse {
+    width: 30px;
+    height: 50px;
+    border: 2px solid var(--gold);
+    border-radius: 15px;
+    position: relative;
+}
+
+.wheel {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 10px;
+    background: var(--gold);
+    border-radius: 2px;
+    animation: scrollWheel 2s infinite;
+}
+
+@keyframes scrollWheel {
+    0%, 100% { top: 10px; opacity: 1; }
+    50% { top: 30px; opacity: 0; }
+}
+
+/* ===== SECCIÓN DE SERVICIOS ===== */
+.section-luxury {
+    padding: var(--space-xl) 0;
+    background: var(--black-matte);
+    position: relative;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    position: relative;
+}
+
+.section-number {
+    font-size: 8rem;
+    font-family: var(--font-title);
+    color: rgba(255, 215, 0, 0.03);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 0;
+}
+
+.section-title {
+    font-family: var(--font-title);
+    font-size: 3.5rem;
+    margin-bottom: var(--space-sm);
+    position: relative;
+    z-index: 1;
+}
+
+.title-accent, .highlight {
+    color: var(--gold);
+    position: relative;
+}
+
+.title-accent::after, .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0.5);
+}
+
+.section-subtitle {
+    color: var(--gray);
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Grid de servicios mejorado */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--space-lg);
+}
+
+.service-card.luxury {
+    background: linear-gradient(145deg, #1A1A1A, #0F0F0F);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 20px;
+    padding: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+
+.service-card.luxury:hover {
+    transform: translateY(-10px);
+    border-color: var(--neon-green);
+    box-shadow: var(--shadow-neon);
+}
+
+/* Iconos animados */
+.service-icon {
+    margin-bottom: var(--space-md);
+}
+
+.icon-3d-animated, .icon-spray-animated, .icon-brand-animated {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.icon-3d-animated {
+    background: rgba(0, 255, 136, 0.1);
+    color: var(--neon-green);
+    border: 2px solid var(--neon-green);
+}
+
+.icon-spray-animated {
+    background: rgba(0, 168, 255, 0.1);
+    color: var(--neon-blue);
+    border: 2px solid var(--neon-blue);
+}
+
+.icon-brand-animated {
+    background: rgba(255, 46, 147, 0.1);
+    color: var(--neon-pink);
+    border: 2px solid var(--neon-pink);
+}
+
+.icon-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: glowPulse 2s ease-in-out infinite;
+    opacity: 0.5;
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px currentColor; }
+    50% { box-shadow: 0 0 40px currentColor; }
+}
+
+/* Contenido de servicio */
+.service-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.service-header h3 {
+    font-size: 1.5rem;
+    color: var(--white);
+    flex: 1;
+}
+
+.service-price, .service-tag, .service-badge {
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.service-price {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--gold);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.service-tag {
+    background: rgba(255, 107, 107, 0.1);
+    color: var(--neon-pink);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.service-badge {
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+.service-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.tag {
+    padding: 0.3rem 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+.service-description {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--space-md);
+    line-height: 1.8;
+}
+
+.service-features {
+    list-style: none;
+    margin-bottom: var(--space-md);
+}
+
+.service-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.service-features i {
+    color: var(--neon-green);
+}
+
+/* Stats combinados */
+.service-stats {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.mini-stat {
+    text-align: center;
+}
+
+.mini-value {
+    font-family: var(--font-tech);
+    font-size: 1.5rem;
+    color: var(--neon-green);
+    font-weight: 700;
+}
+
+.mini-label {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+/* Proceso de diseño */
+.design-process {
+    margin-bottom: 1.5rem;
+}
+
+.process-step {
+    margin-bottom: 0.5rem;
+}
+
+.process-step span {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.process-bar {
+    height: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.process-fill {
+    height: 100%;
+    background: var(--grad-neon);
+    border-radius: 3px;
+}
+
+/* Footer de servicio */
+.service-footer {
+    margin-top: var(--space-md);
+}
+
+.service-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: var(--transition-smooth);
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.service-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+}
+
+.service-link:hover::after {
+    width: 100%;
+}
+
+.service-link i {
+    transition: transform 0.3s ease;
+}
+
+.service-link:hover i {
+    transform: translateX(5px);
+}
+
+.service-link.premium {
+    color: var(--white);
+    background: var(--grad-gold);
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+}
+
+.service-link.premium:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-gold);
+}
+
+/* Decoración 3D */
+.service-decoration {
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.cube-3d {
+    width: 100px;
+    height: 100px;
+    background: var(--neon-green);
+    transform: rotate(45deg);
+    animation: rotateCube 10s linear infinite;
+}
+
+@keyframes rotateCube {
+    0% { transform: rotate(45deg) rotateX(0) rotateY(0); }
+    100% { transform: rotate(45deg) rotateX(360deg) rotateY(360deg); }
+}
+
+/* ===== SECCIÓN DE PROCESO ===== */
+.process-section {
+    padding: var(--space-xl) 0;
+    background: var(--black);
+}
+
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    position: relative;
+}
+
+.process-steps::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--gray);
+    z-index: 1;
+}
+
+.step {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.step-number {
+    width: 80px;
+    height: 80px;
+    background: var(--grad-gold);
+    color: var(--black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-tech);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 auto 1.5rem;
+}
+
+.step-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--light);
+}
+
+.step-content p {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.step-visual {
+    margin-top: 1.5rem;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Visualizaciones del proceso */
+.visual-concept .sketch {
+    width: 40px;
+    height: 40px;
+    background: var(--neon-blue);
+    margin: 0 5px;
+    display: inline-block;
+    animation: sketchPulse 2s ease-in-out infinite;
+}
+
+.visual-concept .sketch:nth-child(2) { animation-delay: 0.2s; }
+.visual-concept .sketch:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes sketchPulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1); }
+}
+
+.visual-model {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.wireframe {
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--neon-green);
+    border-radius: 10px;
+    animation: wireframeRotate 4s linear infinite;
+}
+
+.mesh {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, transparent 49%, var(--neon-green) 50%, transparent 51%),
+                linear-gradient(-45deg, transparent 49%, var(--neon-green) 50%, transparent 51%);
+    background-size: 10px 10px;
+    opacity: 0.5;
+}
+
+@keyframes wireframeRotate {
+    0% { transform: rotateX(0) rotateY(0); }
+    100% { transform: rotateX(360deg) rotateY(360deg); }
+}
+
+.visual-print .layer {
+    width: 60px;
+    height: 20px;
+    background: var(--neon-pink);
+    margin-bottom: 5px;
+    animation: layerBuild 1s ease-in-out infinite;
+}
+
+.visual-print .layer:nth-child(2) { animation-delay: 0.2s; }
+.visual-print .layer:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes layerBuild {
+    0% { transform: scaleY(0); opacity: 0; }
+    50% { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(0); opacity: 0; }
+}
+
+.visual-delivery {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.visual-delivery .product {
+    width: 60px;
+    height: 60px;
+    background: var(--gold);
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--neon-yellow);
+    border-radius: 50%;
+    animation: sparklePop 1s ease-in-out infinite;
+}
+
+.sparkle:nth-child(2) { top: 20px; left: 20px; animation-delay: 0.2s; }
+.sparkle:nth-child(3) { top: 20px; right: 20px; animation-delay: 0.4s; }
+.sparkle:nth-child(4) { bottom: 20px; left: 20px; animation-delay: 0.6s; }
+
+@keyframes sparklePop {
+    0%, 100% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1); opacity: 1; }
+}
+
+/* ===== GALERÍA ===== */
+.gallery-section {
+    padding: var(--space-xl) 0;
+    background: var(--dark);
+}
+
+.gallery-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.gallery-header h2 {
+    font-family: var(--font-title);
+    font-size: 3.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+.gallery-header p {
+    color: var(--gray);
+    font-size: 1.2rem;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.gallery-item {
+    height: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+.gallery-item.large {
+    grid-column: span 2;
+    height: 400px;
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    background: var(--gray);
+    position: relative;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover .gallery-image {
+    transform: scale(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover .image-overlay {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.image-overlay h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--light);
+}
+
+.image-overlay p {
+    color: var(--gold);
+    font-size: 0.9rem;
+}
+
+.gallery-cta {
+    text-align: center;
+}
+
+.gallery-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    padding: 1rem 2rem;
+    border: 1px solid var(--gray);
+    border-radius: 10px;
+    transition: var(--transition-smooth);
+}
+
+.gallery-link:hover {
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    padding: 1rem 2.5rem;
+}
+
+.link-arrow {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.gallery-link:hover .link-arrow {
+    transform: translateX(10px);
+}
+
+/* ===== FILOSOFÍA ===== */
+.philosophy-section {
+    padding: var(--space-xl) 0;
+    background: linear-gradient(135deg, var(--black-matte) 0%, #151515 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.philosophy-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.philosophy-quote {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    position: relative;
+}
+
+.quote-mark {
+    font-family: var(--font-title);
+    font-size: 10rem;
+    color: rgba(255, 215, 0, 0.1);
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.philosophy-quote h2 {
+    font-family: var(--font-title);
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.quote-accent {
+    color: var(--gold);
+    position: relative;
+}
+
+.quote-accent::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--gold);
+}
+
+.quote-author {
+    color: var(--gray);
+    font-size: 1rem;
+    letter-spacing: 5px;
+    margin-top: var(--space-md);
+    text-transform: uppercase;
+}
+
+.philosophy-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+}
+
+.philosophy-item {
+    text-align: center;
+    padding: var(--space-lg);
+    position: relative;
+}
+
+.philosophy-number {
+    font-family: var(--font-title);
+    font-size: 5rem;
+    color: rgba(255, 215, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 0;
+}
+
+.philosophy-item h3 {
+    font-size: 1.5rem;
+    margin: var(--space-md) 0 var(--space-sm);
+    position: relative;
+    z-index: 1;
+}
+
+.philosophy-item p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.8;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== CONTACTO PREMIUM ===== */
+.contact-premium {
+    padding: var(--space-xl) 0;
+    background: var(--black);
+    position: relative;
+}
+
+.contact-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.contact-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.contact-header h2 {
+    font-family: var(--font-title);
+    font-size: 3rem;
+    margin-bottom: var(--space-sm);
+}
+
+.contact-subtitle {
+    color: var(--gray);
+    font-size: 1.2rem;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.contact-form {
+    background: linear-gradient(145deg, #1A1A1A, #151515);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 20px;
+    padding: var(--space-lg);
+}
+
+.form-header {
+    margin-bottom: var(--space-lg);
+}
+
+.form-header h3 {
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+}
+
+.form-header p {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.form-group {
+    margin-bottom: var(--space-md);
+    position: relative;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    background: black;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--white);
+    font-size: 1rem;
+    padding: 1rem 0;
+    outline: none;
+    font-family: var(--font-body);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23FFD700' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    padding-right: 2rem;
+}
+
+.form-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--neon-green);
+    transition: width 0.3s ease;
+}
+
+.form-group input:focus ~ .form-line,
+.form-group select:focus ~ .form-line,
+.form-group textarea:focus ~ .form-line {
+    width: 100%;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-xl);
+}
+
+.form-disclaimer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    font-size: 0.8rem;
+}
+
+.form-submit {
+    background: var(--grad-gold);
+    color: var(--black);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition-smooth);
+}
+
+.form-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-gold);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.info-card {
+    background: linear-gradient(145deg, #1A1A1A, #151515);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 15px;
+    padding: var(--space-lg);
+    transition: var(--transition-smooth);
+}
+
+.info-card:hover {
+    border-color: var(--neon-green);
+    transform: translateY(-5px);
+}
+
+.info-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 255, 136, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-md);
+    font-size: 1.5rem;
+    color: var(--neon-green);
+}
+
+.info-card h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+.info-card p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--space-md);
+    font-size: 0.9rem;
+}
+
+.info-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: bold;
+    transition: var(--transition-smooth);
+}
+
+.info-link:hover {
+    gap: 1rem;
+    color: var(--neon-green);
+}
+
+.info-link.whatsapp {
+    color: #25D366;
+}
+
+.location span {
+    font-family: var(--font-tech);
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.contact-footer {
+    text-align: center;
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* ===== FOOTER PREMIUM ===== */
+.footer-premium {
+    background: #0A0A0A;
+    padding: var(--space-xl) 0;
+    border-top: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-brand {
+    margin-bottom: var(--space-lg);
+}
+
+.footer-logo {
+    font-family: var(--font-title);
+    font-size: 3rem;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+}
+
+.footer-tagline {
+    color: var(--gray);
+    letter-spacing: 3px;
+    font-size: 0.8rem;
+}
+
+.footer-social {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.social-link {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1.2rem;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+}
+
+.social-link:hover {
+    background: var(--neon-green);
+    color: var(--black);
+    transform: translateY(-5px);
+}
+
+.social-link.premium {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--gold);
+}
+
+.footer-legal {
+    color: var(--gray);
+    font-size: 0.8rem;
+}
+
+.footer-legal p {
+    margin-bottom: 0.5rem;
+}
+
+.footer-discreet {
+    opacity: 0.5;
+}
+
+/* ===== WHATSAPP FLOTANTE ===== */
+.whatsapp-float {
+    position: fixed;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    background: #25D366;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    box-shadow: var(--shadow-medium);
+    z-index: 1000;
+    transition: var(--transition-bounce);
+    overflow: hidden;
+}
+
+.whatsapp-float:hover {
+    width: 220px;
+    border-radius: 30px;
+}
+
+.float-text {
+    position: absolute;
+    right: 70px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.whatsapp-float:hover .float-text {
+    opacity: 1;
+    right: 20px;
+}
+
+/* ===== LOADER DE LUJO ===== */
+.luxury-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.loader-logo {
+    font-family: var(--font-title);
+    font-size: 5rem;
+    color: var(--gold);
+    margin-bottom: var(--space-md);
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.loader-progress {
+    width: 300px;
+    height: 2px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 1px;
+    overflow: hidden;
+    margin: 0 auto var(--space-md);
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--neon-green);
+    width: 0;
+    animation: loadProgress 2s ease-in-out forwards;
+}
+
+@keyframes loadProgress {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+
+.loader-text {
+    color: var(--gray);
+    letter-spacing: 3px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+/* ===== ANIMACIONES ADICIONALES ===== */
+@keyframes logoFloat {
+    0% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+    100% { transform: translateY(0) rotate(0); }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated {
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.success-message {
+    background: rgba(0, 255, 136, 0.1);
+    border: 2px solid #00FF88;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 2rem;
+    animation: fadeInUp 0.5s ease;
+}
+
+.success-message i {
+    font-size: 3rem;
+    color: #00FF88;
+    margin-bottom: 1rem;
+}
+
+.success-message h3 {
+    color: #00FF88;
+    margin-bottom: 0.5rem;
+}
+
+.success-message p {
+    color: #ccc;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .services-grid,
+    .philosophy-content,
+    .contact-grid,
+    .gallery-grid,
+    .process-steps {
+        grid-template-columns: 1fr;
+    }
+    
+    .gallery-item.large {
+        grid-column: span 1;
+        height: 300px;
+    }
+    
+    .nav-desktop {
+        display: none;
+    }
+    
+    .menu-toggle {
+        display: flex;
+    }
+    
+    .hero-combined .container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .printer-animation {
+        order: -1;
+        height: 300px;
+    }
+    
+    .process-steps::before {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --space-xl: 4rem;
+        --space-lg: 2rem;
+        --space-md: 1.5rem;
+    }
+    
+    .hero-title {
+        font-size: clamp(2.5rem, 10vw, 4rem);
+    }
+    
+    .hero-cta {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .section-title,
+    .gallery-header h2 {
+        font-size: 2.5rem;
+    }
+    
+    .philosophy-quote h2 {
+        font-size: 2rem;
+    }
+    
+    .contact-header h2 {
+        font-size: 2rem;
+    }
+    
+    .floating-elements {
+        display: none;
+    }
+    
+    .form-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .hero-content {
+        padding: var(--space-md);
+    }
+    
+    .service-card.luxury {
+        padding: var(--space-md);
+    }
+    
+    .gallery-item {
+        height: 250px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .hero-stats {
+        gap: 1.5rem;
+    }
+}
+
+/* ===== CURSOR PERSONALIZADO (opcional) ===== */
+.custom-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, background 0.3s;
+}
+
+.custom-cursor.hover {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 215, 0, 0.1);
+}
