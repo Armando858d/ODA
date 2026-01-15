@@ -3,9 +3,7 @@
 
 body {
     font-family:'Rubik', sans-serif;
-    background:#0F2027; /* fallback */
-    background:-webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
-    background:linear-gradient(to right, #2C5364, #203A43, #0F2027);
+    background:#050505;
     color:#00ff66;
     scroll-behavior:smooth;
 }
@@ -19,9 +17,7 @@ header {
     position:fixed;
     width:100%;
     top:0;
-    background:#0f0c29;
-    background:-webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);
-    background:linear-gradient(to right, #24243e, #302b63, #0f0c29);
+    background:#0a0a0a;
     backdrop-filter:blur(5px);
     z-index:1000;
 }
@@ -29,25 +25,43 @@ header {
 header .logo { 
     font-family:'Permanent Marker', cursive; 
     font-size:2rem; 
-    text-shadow: 0 0 10px #00ff66;
+    text-shadow: 0 0 10px #00ff66, 0 0 20px #ff00ff;
 }
 
-header nav { display:flex; align-items:center; gap:15px; }
+.menu-icon { display:none; font-size:2rem; cursor:pointer; color:#00ff66; }
 
-header nav a { 
+/* MENU oscuro */
+header nav {
+    display:flex;
+    align-items:center;
+    gap:15px;
+    flex-direction: row;
+}
+
+header nav a {
     position: relative;
-    text-decoration:none; 
-    color:#00ff66; 
-    font-weight:bold; 
-    transition:0.3s; 
+    text-decoration:none;
+    color:#00ff66;
+    font-weight:bold;
+    overflow:hidden;
+    display:inline-block;
+    white-space: nowrap;
+    transform: translateY(30px);
+    opacity:0;
+    transition: all 0.3s ease;
 }
 
-header nav a:hover { 
-    color:#fff; 
+header nav a.show {
+    opacity:1;
+    transform: translateY(0);
+}
+
+header nav a:hover {
+    color:#fff;
     text-shadow:0 0 10px #00ff66, 0 0 20px #ff00ff;
 }
 
-/* EMOJIS */
+/* EMOJIS animados */
 .emoji {
     display:inline-block;
     margin-left:8px;
@@ -61,8 +75,20 @@ header nav a:hover .emoji {
     transform: translateY(0) rotate(15deg);
 }
 
-/* MENU ICON */
-.menu-icon { display:none; font-size:2rem; cursor:pointer; color:#00ff66; }
+/* MAQUINITA */
+.menu-machine {
+    width:30px;
+    height:30px;
+    margin-right:10px;
+    transform: translateX(-50px);
+    opacity:0;
+    transition: all 0.5s ease;
+}
+
+.menu-machine.show {
+    opacity:1;
+    transform: translateX(0);
+}
 
 /* HERO */
 .hero {
@@ -73,12 +99,14 @@ header nav a:hover .emoji {
     align-items:center;
     text-align:center;
     padding-top:60px;
+    background:#0F2027;
+    background:-webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
+    background:linear-gradient(to right, #2C5364, #203A43, #0F2027);
 }
 
 .hero .glow {
     font-family:'Permanent Marker', cursive;
     font-size:5rem;
-    color:#00ff66;
     text-shadow:
         0 0 5px #00ff66,
         0 0 10px #00ff66,
@@ -145,9 +173,9 @@ footer { padding:20px; text-align:center; font-size:0.9rem; color:#777; }
         position:absolute; 
         top:70px; 
         right:0; 
-        background:#0f0c29; 
+        background:#0a0a0a; 
         flex-direction:column; 
-        width:200px; 
+        width:220px; 
         transform:translateX(100%); 
         transition:0.3s; 
     }
