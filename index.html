@@ -3,415 +3,534 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODA • 3D & Publicidad de Lujo</title>
+    <title>ODA • Taller Digital Urbano</title>
     
-    <!-- Fonts Premium -->
+    <!-- Fonts Artísticas -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;700;900&family=Dancing+Script&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Righteous&family=Archivo+Black&family=Urbanist:wght@300;400;700&family=Dela+Gothic+One&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome -->
+    <!-- Three.js para efectos 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- GSAP para animaciones pro -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="index_estilo.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23FFD700%22>⚡</text></svg>">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300ff88%22>⚡</text></svg>">
 </head>
 <body>
-    <!-- Fondo con textura -->
-    <div class="texture-overlay"></div>
+    <!-- Canvas 3D para fondo -->
+    <canvas id="bgCanvas3D"></canvas>
     
-    <!-- Navegación Premium -->
-    <nav class="nav-premium">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <span class="brand-gold">O</span>
-                <span class="brand-spray">D</span>
-                <span class="brand-gold">A</span>
-                <span class="brand-tag">EST. 2023</span>
+    <!-- Efectos de partículas de pintura -->
+    <div id="sprayParticles"></div>
+    
+    <!-- Navegación tipo taller -->
+    <nav class="nav-workshop">
+        <div class="nav-tools">
+            <div class="tool-spray"></div>
+            <div class="tool-marker"></div>
+            <div class="tool-3dpen"></div>
+        </div>
+        
+        <div class="nav-main">
+            <!-- Logo que se "imprime" -->
+            <div class="logo-printer">
+                <div class="printer-base"></div>
+                <div class="printer-head">
+                    <div class="printer-nozzle"></div>
+                </div>
+                <div class="printer-bed">
+                    <div class="logo-printing" id="printingLogo">
+                        <span class="letter-o">O</span>
+                        <span class="letter-d">D</span>
+                        <span class="letter-a">A</span>
+                    </div>
+                </div>
+                <div class="filament-spool">
+                    <div class="filament"></div>
+                </div>
             </div>
             
-            <div class="nav-desktop">
-                <a href="#hero" class="nav-link"><span class="link-number">01</span>Inicio</a>
-                <a href="#servicios" class="nav-link"><span class="link-number">02</span>Servicios</a>
-                <a href="#proyectos" class="nav-link"><span class="link-number">03</span>Proyectos</a>
-                <a href="#about" class="nav-link"><span class="link-number">04</span>Filosofía</a>
-                <a href="#contacto" class="nav-link premium"><span class="link-number">05</span>Contacto</a>
+            <div class="nav-menu">
+                <a href="#inicio" class="nav-btn">
+                    <span class="btn-icon">🏠</span>
+                    <span class="btn-label">Taller</span>
+                </a>
+                <a href="#servicios" class="nav-btn">
+                    <span class="btn-icon">🛠️</span>
+                    <span class="btn-label">Herramientas</span>
+                </a>
+                <a href="#proyectos" class="nav-btn">
+                    <span class="btn-icon">🎨</span>
+                    <span class="btn-label">Galería</span>
+                </a>
+                <a href="#contacto" class="nav-btn special">
+                    <span class="btn-icon">📞</span>
+                    <span class="btn-label">Comisión</span>
+                </a>
             </div>
-            
-            <button class="nav-toggle" id="navToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <div class="nav-mobile" id="navMobile">
-                <div class="mobile-header">
-                    <div class="mobile-brand">ODA</div>
-                    <button class="mobile-close">&times;</button>
-                </div>
-                <div class="mobile-links">
-                    <a href="#hero"><i class="fas fa-spray-can"></i> Inicio</a>
-                    <a href="#servicios"><i class="fas fa-cube"></i> Impresión 3D</a>
-                    <a href="#proyectos"><i class="fas fa-paint-roller"></i> Publicidad</a>
-                    <a href="#about"><i class="fas fa-crown"></i> Filosofía</a>
-                    <a href="#contacto" class="premium"><i class="fas fa-gem"></i> Contacto</a>
-                </div>
-                <div class="mobile-footer">
-                    <p>"Del estudio a la calle, de la calle al lujo"</p>
-                </div>
+        </div>
+        
+        <div class="nav-stats">
+            <div class="stat">
+                <div class="stat-value" id="projectsCount">0</div>
+                <div class="stat-label">Proyectos</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="filamentUsed">0m</div>
+                <div class="stat-label">Filamento</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="sprayCans">0</div>
+                <div class="stat-label">Sprays</div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero con Parallax -->
-    <section id="hero" class="hero-parallax">
-        <div class="parallax-layer" data-speed="0.1"></div>
-        <div class="parallax-layer" data-speed="0.3"></div>
+    <!-- Sección Hero - Taller Virtual -->
+    <section id="inicio" class="hero-workshop">
+        <div class="workshop-walls">
+            <div class="wall left"></div>
+            <div class="wall right"></div>
+            <div class="wall back">
+                <!-- Grafitis proyectados en la pared -->
+                <div class="grafiti-projection" id="grafiti1"></div>
+                <div class="grafiti-projection" id="grafiti2"></div>
+                <div class="grafiti-projection" id="grafiti3"></div>
+            </div>
+            <div class="floor"></div>
+            <div class="ceiling">
+                <div class="neon-tube"></div>
+                <div class="neon-tube"></div>
+            </div>
+        </div>
         
-        <div class="hero-content">
-            <div class="hero-tag">LUXURY URBAN DESIGN</div>
-            <h1 class="hero-title">
-                <span class="title-line">IMPRESIÓN 3D</span>
-                <span class="title-line">Y PUBLICIDAD</span>
-                <span class="title-line accent">CON ACTITUD</span>
+        <div class="workshop-content">
+            <div class="tagline">
+                <div class="tag-spray">SPRAY</div>
+                <div class="tag-meets">MEETS</div>
+                <div class="tag-technology">TECHNOLOGY</div>
+            </div>
+            
+            <h1 class="main-title">
+                <span class="title-3d" id="title3d">ODA</span>
+                <span class="title-sub">TALLER DIGITAL URBANO</span>
             </h1>
             
-            <div class="hero-subtitle">
-                Donde la precisión industrial se encuentra con el arte callejero
-            </div>
+            <p class="workshop-desc">
+                Donde cada píxel es un grano de pintura, cada línea de código es un trazo de spray.<br>
+                <strong>Impresión 3D + Arte Callejero + Tecnología.</strong>
+            </p>
             
-            <div class="hero-cta">
-                <a href="#servicios" class="cta-primary">
-                    <span class="cta-text">EXPLORAR SERVICIOS</span>
-                    <span class="cta-icon">→</span>
-                </a>
-                <a href="#contacto" class="cta-secondary">
-                    <span class="cta-text">COTIZACIÓN PREMIUM</span>
-                    <span class="cta-badge">EXCLUSIVO</span>
-                </a>
-            </div>
-            
-            <div class="hero-scroll">
-                <div class="scroll-line"></div>
-                <span>SCROLL</span>
-            </div>
-        </div>
-        
-        <!-- Elementos flotantes premium -->
-        <div class="floating-elements">
-            <div class="floating-cube"><i class="fas fa-cube"></i></div>
-            <div class="floating-spray"><i class="fas fa-spray-can"></i></div>
-            <div class="floating-diamond"><i class="fas fa-gem"></i></div>
-        </div>
-    </section>
-
-    <!-- Sección de Servicios (Lujo) -->
-    <section id="servicios" class="section-luxury">
-        <div class="section-header">
-            <div class="section-number">02</div>
-            <h2 class="section-title">SERVICIOS <span class="title-accent">PREMIUM</span></h2>
-            <p class="section-subtitle">Tecnología de vanguardia con toque urbano exclusivo</p>
-        </div>
-        
-        <div class="services-grid">
-            <!-- Servicio 1 - 3D Printing -->
-            <div class="service-card luxury">
-                <div class="service-icon">
-                    <div class="icon-3d">3D</div>
-                </div>
-                <div class="service-content">
-                    <div class="service-header">
-                        <h3>IMPRESIÓN 3D DE LUXE</h3>
-                        <span class="service-price">$$$</span>
-                    </div>
-                    <p class="service-description">
-                        Piezas únicas con filamentos premium (cobre, madera, mármol sintético).
-                        Desde prototipos industriales hasta arte escultórico.
-                    </p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check-circle"></i> Resolución industrial 0.05mm</li>
-                        <li><i class="fas fa-check-circle"></i> Materiales exclusivos</li>
-                        <li><i class="fas fa-check-circle"></i> Acabados personalizados</li>
-                    </ul>
-                    <div class="service-footer">
-                        <a href="#contacto" class="service-link">SOLICITAR COTIZACIÓN <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="service-3d"></div>
-            </div>
-
-            <!-- Servicio 2 - Publicidad -->
-            <div class="service-card luxury">
-                <div class="service-icon">
-                    <div class="icon-ad">AD</div>
-                </div>
-                <div class="service-content">
-                    <div class="service-header">
-                        <h3>PUBLICIDAD URBAN LUXURY</h3>
-                        <span class="service-tag">TRENDING</span>
-                    </div>
-                    <p class="service-description">
-                        Campañas que combinan street art con marketing de lujo.
-                        Vallas, murales digitales, experiencias inmersivas.
-                    </p>
-                    <div class="service-stats">
-                        <div class="stat">
-                            <span class="stat-number">+250%</span>
-                            <span class="stat-label">Engagement</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">48h</span>
-                            <span class="stat-label">Producción</span>
-                        </div>
-                    </div>
-                    <div class="service-footer">
-                        <a href="#contacto" class="service-link">VER PORTFOLIO <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Servicio 3 - Branding -->
-            <div class="service-card luxury">
-                <div class="service-icon">
-                    <div class="icon-brand">B</div>
-                </div>
-                <div class="service-content">
-                    <div class="service-header">
-                        <h3>BRANDING CALLEJERO</h3>
-                        <span class="service-badge">EXCLUSIVO</span>
-                    </div>
-                    <p class="service-description">
-                        Identidad visual que habla el lenguaje de la calle pero se viste de gala.
-                        Logos, packaging, experiencias físicas.
-                    </p>
-                    <div class="service-process">
-                        <div class="process-step">
-                            <span>1. Concept</span>
-                            <div class="process-bar"><div class="process-fill" style="width: 100%"></div></div>
-                        </div>
-                        <div class="process-step">
-                            <span>2. Design</span>
-                            <div class="process-bar"><div class="process-fill" style="width: 80%"></div></div>
-                        </div>
-                    </div>
-                    <div class="service-footer">
-                        <a href="#contacto" class="service-link premium">SOLICITAR AUDITORÍA <i class="fas fa-crown"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Galería de Proyectos -->
-    <section id="proyectos" class="gallery-section">
-        <div class="gallery-header">
-            <h2>PROYECTOS <span class="highlight">ICÓNICOS</span></h2>
-            <p>Donde el arte callejero encuentra la excelencia</p>
-        </div>
-        
-        <div class="gallery-grid">
-            <div class="gallery-item large">
-                <div class="gallery-image">
-                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200" alt="3D Printing Luxury">
-                    <div class="gallery-overlay">
-                        <h3>ESCULTURA 3D URBANA</h3>
-                        <p>Bronce sintético • 2.5m altura</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="gallery-item">
-                <div class="gallery-image">
-                    <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w-800" alt="Street Advertising">
-                    <div class="gallery-overlay">
-                        <h3>CAMPANA MURAL DIGITAL</h3>
-                        <p>Times Square • NYC</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="gallery-item">
-                <div class="gallery-image">
-                    <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?auto=format&fit=crop&w=800" alt="Industrial Design">
-                    <div class="gallery-overlay">
-                        <h3>MOBILIARIO URBANO</h3>
-                        <p>Acero + Concreto • Serie limitada</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="gallery-cta">
-            <a href="#contacto" class="gallery-link">
-                VER MÁS PROYECTOS
-                <span class="link-arrow">⟶</span>
-            </a>
-        </div>
-    </section>
-
-    <!-- Filosofía / About -->
-    <section id="about" class="philosophy-section">
-        <div class="philosophy-container">
-            <div class="philosophy-quote">
-                <div class="quote-mark">"</div>
-                <h2>NO CREAMOS PRODUCTOS,</h2>
-                <h2>CREAMOS <span class="quote-accent">LEGADO URBANO</span></h2>
-                <div class="quote-author">— ODA STUDIO</div>
-            </div>
-            
-            <div class="philosophy-content">
-                <div class="philosophy-item">
-                    <div class="philosophy-number">01</div>
-                    <h3>PRECISIÓN INDUSTRIAL</h3>
-                    <p>Tecnología de punta con tolerancias milimétricas. Cada pieza es perfecta.</p>
-                </div>
+            <div class="workshop-actions">
+                <button class="action-btn print-btn" id="startPrint">
+                    <span class="action-icon">🖨️</span>
+                    <span class="action-text">IMPRIMIR EXPERIENCIA</span>
+                    <div class="print-progress"></div>
+                </button>
                 
-                <div class="philosophy-item">
-                    <div class="philosophy-number">02</div>
-                    <h3>ALMA CALLEJERA</h3>
-                    <p>La autenticidad del grafiti, la energía urbana, la voz de la ciudad.</p>
-                </div>
-                
-                <div class="philosophy-item">
-                    <div class="philosophy-number">03</div>
-                    <h3>LUJO ACCESIBLE</h3>
-                    <p>Excelencia sin pretensiones. Calidad premium, actitud real.</p>
-                </div>
+                <button class="action-btn spray-btn" id="startSpray">
+                    <span class="action-icon">🎨</span>
+                    <span class="action-text">PINTAR CONMIGO</span>
+                    <div class="spray-effect"></div>
+                </button>
             </div>
+            
+            <div class="workshop-scanner">
+                <div class="scanner-beam"></div>
+                <div class="scanner-text">ESCANEANDO CREATIVIDAD...</div>
+            </div>
+        </div>
+        
+        <!-- Elementos del taller flotantes -->
+        <div class="floating-tools">
+            <div class="tool" data-tool="spray"></div>
+            <div class="tool" data-tool="roller"></div>
+            <div class="tool" data-tool="stencil"></div>
+            <div class="tool" data-tool="filament"></div>
+            <div class="tool" data-tool="sketchbook"></div>
         </div>
     </section>
 
-    <!-- Contacto Premium -->
-    <section id="contacto" class="contact-premium">
-        <div class="contact-container">
-            <div class="contact-header">
-                <h2>¿LISTO PARA ELEVAR TU MARCA?</h2>
-                <p class="contact-subtitle">Solicita una consulta privada</p>
-            </div>
-            
-            <div class="contact-grid">
-                <div class="contact-form">
-                    <div class="form-header">
-                        <h3>SOLICITUD DE COTIZACIÓN</h3>
-                        <p>Reservado para proyectos serios</p>
-                    </div>
-                    
-                    <form id="premiumForm">
-                        <div class="form-group">
-                            <input type="text" placeholder="Nombre completo" required>
-                            <div class="form-line"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <input type="email" placeholder="Email corporativo" required>
-                            <div class="form-line"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <select required>
-                                <option value="">Tipo de proyecto</option>
-                                <option value="3d">Impresión 3D Premium</option>
-                                <option value="ad">Publicidad Urban Luxury</option>
-                                <option value="brand">Branding Callejero</option>
-                                <option value="other">Proyecto personalizado</option>
-                            </select>
-                            <div class="form-line"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <textarea placeholder="Describe tu visión... (mín. 50 caracteres)" rows="4" required></textarea>
-                            <div class="form-line"></div>
-                        </div>
-                        
-                        <div class="form-footer">
-                            <div class="form-disclaimer">
-                                <i class="fas fa-lock"></i> Información confidencial
+    <!-- Sección Impresión 3D Interactiva -->
+    <section id="impresion3d" class="section-printing">
+        <div class="printing-header">
+            <h2>
+                <span class="section-num">01</span>
+                <span class="section-title">IMPRESIÓN <span class="highlight">3D</span></span>
+            </h2>
+            <p class="section-sub">Desde el archivo digital hasta tu mano</p>
+        </div>
+        
+        <div class="printing-process">
+            <!-- Paso 1: Diseño -->
+            <div class="process-step active" data-step="1">
+                <div class="step-visual">
+                    <div class="visual-screen">
+                        <div class="screen-content">
+                            <div class="design-lines">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
                             </div>
-                            <button type="submit" class="form-submit">
-                                ENVIAR SOLICITUD
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
+                            <div class="design-form" id="designForm"></div>
                         </div>
-                    </form>
+                        <div class="screen-glow"></div>
+                    </div>
                 </div>
-                
-                <div class="contact-info">
-                    <div class="info-card">
-                        <div class="info-icon"><i class="fas fa-crown"></i></div>
-                        <h4>CONSULTA PRIVADA</h4>
-                        <p>Reunión 1:1 con nuestro director creativo</p>
-                        <a href="https://calendly.com" target="_blank" class="info-link">
-                            AGENDAR REUNIÓN
-                            <i class="fas fa-calendar-alt"></i>
-                        </a>
+                <div class="step-info">
+                    <div class="step-number">01</div>
+                    <h3>DISEÑO DIGITAL</h3>
+                    <p>Modelado 3D en software especializado. Cada curva, cada ángulo, pensado para ser perfecto.</p>
+                    <div class="step-tools">
+                        <span class="tool-tag">Blender</span>
+                        <span class="tool-tag">Fusion 360</span>
+                        <span class="tool-tag">ZBrush</span>
                     </div>
-                    
-                    <div class="info-card">
-                        <div class="info-icon"><i class="fab fa-whatsapp"></i></div>
-                        <h4>WHATSAPP EXCLUSIVO</h4>
-                        <p>Respuesta en menos de 2 horas</p>
-                        <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="info-link whatsapp">
-                            +52 1 XXX XXX XXXX
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
+                </div>
+            </div>
+            
+            <!-- Paso 2: Slice -->
+            <div class="process-step" data-step="2">
+                <div class="step-visual">
+                    <div class="visual-slice">
+                        <div class="slice-layer" style="--layer:1"></div>
+                        <div class="slice-layer" style="--layer:2"></div>
+                        <div class="slice-layer" style="--layer:3"></div>
+                        <div class="slice-layer" style="--layer:4"></div>
+                        <div class="slice-layer" style="--layer:5"></div>
                     </div>
-                    
-                    <div class="info-card">
-                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
-                        <h4>STUDIO ODA</h4>
-                        <p>Dirección exclusiva para clientes</p>
-                        <div class="info-discreet">
-                            <i class="fas fa-eye-slash"></i> Se revela tras confirmación
+                </div>
+                <div class="step-info">
+                    <div class="step-number">02</div>
+                    <h3>REBANADO</h3>
+                    <p>El modelo se divide en miles de capas de 0.1mm. La magia comienza aquí.</p>
+                    <div class="step-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="layerCount">250</div>
+                            <div class="stat-label">Capas</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="printTime">8h</div>
+                            <div class="stat-label">Tiempo</div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="contact-footer">
-                <p>Proceso de selección exclusivo • Tiempo mínimo de proyecto: 2 semanas • Presupuestos desde $50,000 MXN</p>
+            <!-- Paso 3: Impresión -->
+            <div class="process-step" data-step="3">
+                <div class="step-visual">
+                    <div class="visual-printer">
+                        <div class="printer-visual">
+                            <div class="pv-bed"></div>
+                            <div class="pv-nozzle"></div>
+                            <div class="pv-print" id="livePrint"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-info">
+                    <div class="step-number">03</div>
+                    <h3>IMPRESIÓN</h3>
+                    <p>Capas superpuestas de filamento derretido. Precisión milimétrica, arte en construcción.</p>
+                    <div class="step-materials">
+                        <div class="material active" data-material="pla">PLA</div>
+                        <div class="material" data-material="petg">PETG</div>
+                        <div class="material" data-material="tpu">TPU</div>
+                        <div class="material" data-material="wood">MADERA</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Paso 4: Post-Producción -->
+            <div class="process-step" data-step="4">
+                <div class="step-visual">
+                    <div class="visual-finish">
+                        <div class="finish-piece" id="finishedPiece"></div>
+                        <div class="finish-tools">
+                            <div class="tool-finish sand"></div>
+                            <div class="tool-finish paint"></div>
+                            <div class="tool-finish clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-info">
+                    <div class="step-number">04</div>
+                    <h3>POST-PRODUCCIÓN</h3>
+                    <p>Lijado, pintado, detalles finales. Donde la impresión se convierte en arte.</p>
+                    <div class="step-actions">
+                        <button class="step-btn" id="startPostProd">VER PROCESO</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="printing-controls">
+            <button class="control-btn prev" id="prevStep">
+                <i class="fas fa-arrow-left"></i> ANTERIOR
+            </button>
+            <div class="progress-bar">
+                <div class="progress-fill" id="printProgress"></div>
+            </div>
+            <button class="control-btn next" id="nextStep">
+                SIGUIENTE <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Galería de Street Art Digital -->
+    <section id="galeria" class="section-gallery">
+        <div class="gallery-header">
+            <h2>GALERÍA <span class="accent">CALLEJERA</span></h2>
+            <p>Arte urbano meets impresión 3D</p>
+        </div>
+        
+        <div class="gallery-wall">
+            <!-- Cuadros interactivos -->
+            <div class="art-piece" data-art="mural">
+                <div class="piece-frame">
+                    <div class="piece-image">
+                        <div class="image-layer base"></div>
+                        <div class="image-layer spray"></div>
+                        <div class="image-layer texture"></div>
+                    </div>
+                    <div class="piece-info">
+                        <h3>MURAL DIGITAL</h3>
+                        <p>Spray sobre lienzo urbano virtual</p>
+                    </div>
+                    <div class="piece-interact">
+                        <button class="interact-btn zoom">🔍</button>
+                        <button class="interact-btn spray">🎨</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="art-piece" data-art="3dprint">
+                <div class="piece-frame">
+                    <div class="piece-image">
+                        <div class="print-visual">
+                            <div class="print-layers"></div>
+                        </div>
+                    </div>
+                    <div class="piece-info">
+                        <h3>ESCULTURA 3D</h3>
+                        <p>Filamento PLA, acabado grafiti</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="art-piece large" data-art="hybrid">
+                <div class="piece-frame">
+                    <div class="piece-image">
+                        <!-- Este será interactivo -->
+                        <canvas id="hybridCanvas"></canvas>
+                    </div>
+                    <div class="piece-info">
+                        <h3>HÍBRIDO ODA</h3>
+                        <p>Pintura física + proyección digital</p>
+                        <div class="piece-controls">
+                            <button class="control-mode" data-mode="spray">SPRAY</button>
+                            <button class="control-mode" data-mode="print">IMPRIMIR</button>
+                            <button class="control-mode" data-mode="mix">MEZCLAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="gallery-tools">
+            <div class="tool-selector">
+                <div class="tool-option active" data-tool="spray">
+                    <div class="tool-icon">🔄</div>
+                    <div class="tool-name">Spray</div>
+                </div>
+                <div class="tool-option" data-tool="stencil">
+                    <div class="tool-icon">✂️</div>
+                    <div class="tool-name">Stencil</div>
+                </div>
+                <div class="tool-option" data-tool="projector">
+                    <div class="tool-icon">📽️</div>
+                    <div class="tool-name">Proyector</div>
+                </div>
+                <div class="tool-option" data-tool="3dprint">
+                    <div class="tool-icon">🖨️</div>
+                    <div class="tool-name">3D Print</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer de Lujo -->
-    <footer class="footer-premium">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <div class="footer-logo">ODA</div>
-                <div class="footer-tagline">LUXURY URBAN DESIGN</div>
+    <!-- Contacto tipo Consola de Artista -->
+    <section id="contacto" class="section-contact">
+        <div class="contact-terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">ODA_CONSOLE_v2.1</div>
+                <div class="terminal-buttons">
+                    <span class="tb red"></span>
+                    <span class="tb yellow"></span>
+                    <span class="tb green"></span>
+                </div>
             </div>
             
-            <div class="footer-social">
-                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-behance"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="social-link premium"><i class="fab fa-pinterest"></i></a>
+            <div class="terminal-body">
+                <div class="terminal-output">
+                    <div class="output-line">
+                        <span class="prompt">>_</span> Bienvenido al sistema ODA.
+                    </div>
+                    <div class="output-line">
+                        <span class="prompt">>_</span> Cargando módulos creativos...
+                    </div>
+                    <div class="output-line">
+                        <span class="prompt">>_</span> Sistema de comisiones [ONLINE]
+                    </div>
+                    <div class="output-line">
+                        <span class="prompt">>_</span> Ingresa tu consulta:
+                    </div>
+                </div>
+                
+                <div class="terminal-input">
+                    <span class="input-prompt">$</span>
+                    <input type="text" 
+                           id="commissionInput" 
+                           placeholder="Ej: Necesito una pieza 3D con estilo grafiti para mi marca..." 
+                           autocomplete="off">
+                    <button class="input-send" id="sendCommission">↵ ENVIAR</button>
+                </div>
+                
+                <div class="terminal-status">
+                    <div class="status-item">
+                        <span class="status-led online"></span>
+                        <span class="status-text">3D_PRINTER: READY</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-led online"></span>
+                        <span class="status-text">SPRAY_STOCK: 87%</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-led busy"></span>
+                        <span class="status-text">ARTIST: CREATING</span>
+                    </div>
+                </div>
             </div>
             
-            <div class="footer-legal">
-                <p>&copy; 2024 ODA STUDIO. Todos los derechos reservados.</p>
-                <p class="footer-discreet">Proyectos confidenciales • Clientes selectos • Calidad certificada</p>
+            <div class="terminal-footer">
+                <div class="quick-commands">
+                    <button class="cmd-btn" data-cmd="quote">/COTIZAR</button>
+                    <button class="cmd-btn" data-cmd="portfolio">/PORTFOLIO</button>
+                    <button class="cmd-btn" data-cmd="contact">/CONTACTO</button>
+                    <button class="cmd-btn" data-cmd="emergency">/URGENTE</button>
+                </div>
+                
+                <div class="social-feed">
+                    <div class="feed-item">📸 Instagram: @oda.studio</div>
+                    <div class="feed-item">🎨 Behance: ODA_Urban_Art</div>
+                    <div class="feed-item">🛠️ GitHub: ODA-Tech</div>
+                </div>
             </div>
+        </div>
+        
+        <div class="contact-methods">
+            <div class="method-card">
+                <div class="method-icon">📧</div>
+                <h3>EMAIL SECRETO</h3>
+                <p>Solo para proyectos serios</p>
+                <div class="method-address" id="secretEmail">
+                    <span class="hidden">******@******.com</span>
+                    <button class="reveal-btn" id="revealEmail">REVELAR</button>
+                </div>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-icon">📱</div>
+                <h3>WHATSAPP ARTISTA</h3>
+                <p>Respuesta en modo creativo</p>
+                <a href="https://wa.me/521XXXXXXXXXX" class="method-link">
+                    +52 1 XXX-XXX-XXXX
+                    <span class="link-ping">💬</span>
+                </a>
+            </div>
+            
+            <div class="method-card">
+                <div class="method-icon">📍</div>
+                <h3>TALLER FÍSICO</h3>
+                <p>CDMX - Zona Urbana</p>
+                <div class="method-map">
+                    <div class="map-preview"></div>
+                    <div class="map-coords">19.4326° N, 99.1332° W</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer tipo Tablero de Control -->
+    <footer class="footer-control">
+        <div class="control-panel">
+            <div class="panel-section">
+                <h4>SISTEMA ODA</h4>
+                <div class="system-stats">
+                    <div class="gauge" id="creativityGauge">
+                        <div class="gauge-fill"></div>
+                        <div class="gauge-value">87%</div>
+                        <div class="gauge-label">CREATIVIDAD</div>
+                    </div>
+                    <div class="gauge" id="techGauge">
+                        <div class="gauge-fill"></div>
+                        <div class="gauge-value">92%</div>
+                        <div class="gauge-label">TECNOLOGÍA</div>
+                    </div>
+                    <div class="gauge" id="urbanGauge">
+                        <div class="gauge-fill"></div>
+                        <div class="gauge-value">95%</div>
+                        <div class="gauge-label">URBANIDAD</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <h4>CRÉDITOS</h4>
+                <div class="credits">
+                    <p>Concepto: ODA Studio</p>
+                    <p>Desarrollo: Código & Spray</p>
+                    <p>Arte: Calles de la Ciudad</p>
+                    <p>Tecnología: Innovación Urbana</p>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <h4>MODO</h4>
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="day">DÍA</button>
+                    <button class="mode-btn" data-mode="night">NOCHE</button>
+                    <button class="mode-btn" data-mode="neon">NEÓN</button>
+                    <button class="mode-btn" data-mode="graffiti">GRAFFITI</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="final-signature">
+            <div class="signature-spray">ODA</div>
+            <div class="signature-date">EST. 2023 • CDMX</div>
+            <div class="signature-tag">#ARTE_TECNOLÓGICO_URBANO</div>
         </div>
     </footer>
 
-    <!-- Botón de WhatsApp flotante -->
-    <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="whatsapp-float">
-        <i class="fab fa-whatsapp"></i>
-        <span class="float-text">COTIZAR</span>
-    </a>
+    <!-- Audio para efectos (opcional) -->
+    <audio id="spraySound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-spray-1324.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="printSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-printer-1645.mp3" type="audio/mpeg">
+    </audio>
 
-    <!-- Loader de lujo -->
-    <div class="luxury-loader" id="loader">
-        <div class="loader-content">
-            <div class="loader-logo">ODA</div>
-            <div class="loader-progress">
-                <div class="progress-bar"></div>
-            </div>
-            <div class="loader-text">CARGANDO EXPERIENCIA PREMIUM</div>
-        </div>
-    </div>
-
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
     <script src="index_script.js"></script>
 </body>
 </html>
