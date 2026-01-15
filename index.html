@@ -3,73 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ODA - Servicios Urbanos</title>
+<title>ODA - Venta de Servicios</title>
 
 <!-- Fuentes urbanas -->
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="index_estilo.css">
-
-<!-- Lottie (por si quieres animaciones extra) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+<link rel="stylesheet" href="index.estilo.css">
 </head>
 <body>
 
-<!-- PARTICULAS DE FONDO -->
-<canvas id="particle-canvas"></canvas>
-
-<!-- HEADER / MENU -->
 <header>
     <div class="logo">ODA</div>
     <div class="menu-icon" id="menu-icon">&#9776;</div>
-
     <nav id="nav">
         <ul>
             <li><a href="#inicio">Inicio <span class="emoji">🏠</span></a></li>
             <li><a href="#servicios">Servicios <span class="emoji">🛠️</span></a></li>
-            <li><a href="#contacto">Contacto <span class="emoji">📩</span></a></li>
-            <li><a href="#soporte" class="btn">Soporte <span class="emoji">💬</span></a></li>
+            <li><a href="#colaboradores">Colaboradores <span class="emoji">🤝</span></a></li>
+            <li><a href="#promociones">Promociones <span class="emoji">🔥</span></a></li>
+            <li><a href="#faq">Preguntas Frecuentes <span class="emoji">❓</span></a></li>
+            <li><a href="#contacto" class="btn">Contacto <span class="emoji">📩</span></a></li>
             <li><a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">WhatsApp <span class="emoji">📲</span></a></li>
         </ul>
     </nav>
 </header>
 
-<!-- HERO -->
 <section id="inicio" class="hero">
-    <h1 class="glow">OD</h1>
-    <p class="subtitulo">Servicios urbanos • Estilo callejero</p>
+    <h1 class="glow">ODA</h1>
+    <p class="subtitulo">Soluciones completas, confiables y urbanas</p>
     <button class="btn" onclick="scrollToSection('servicios')">Ver Servicios</button>
 </section>
 
-<!-- SERVICIOS -->
 <section id="servicios" class="bloque">
     <h2>Servicios</h2>
     <div class="cards">
+
         <div class="card">
-            <img src="img/servicio1.jpg" alt="Publicidad">
+            <img src="img/publicidad.jpg" alt="Publicidad">
             <h3>Publicidad</h3>
-            <p>Diseño urbano, banners, redes sociales</p>
+            <p>Contenido creativo para redes, banners y diseño urbano.</p>
         </div>
+
         <div class="card">
-            <img src="img/servicio2.jpg" alt="Renta de autobuses">
-            <h3>Renta de autobuses</h3>
-            <p>Viajes cómodos y seguros para tours o eventos.</p>
+            <img src="img/armart-phone.jpg" alt="ArmArt Phone">
+            <h3>ArmArt Phone</h3>
+            <p>Servicio de celulares, accesorios y tecnología móvil.</p>
         </div>
+
+        <div class="card">
+            <img src="img/tosigo.jpg" alt="Tosigo">
+            <h3>Tosigo</h3>
+            <p>Servicio especializado en soluciones digitales.</p>
+        </div>
+
+        <div class="card">
+            <img src="img/cuentas-streaming.jpg" alt="Cuentas Streaming">
+            <h3>Cuentas Streaming</h3>
+            <p>Venta de cuentas digitales para entretenimiento online.</p>
+        </div>
+
+        <div class="card">
+            <img src="img/renta-autobuses.jpg" alt="Renta de Autobuses">
+            <h3>Renta de Autobuses</h3>
+            <p>Viajes cómodos y seguros por todo México.</p>
+        </div>
+
+        <div class="card">
+            <img src="img/bella-luz.jpg" alt="Bella Luz Terramar">
+            <h3>Bella Luz Terramar</h3>
+            <p>Productos de belleza y cuidado personal.</p>
+        </div>
+
     </div>
 </section>
 
-<!-- CONTACTO -->
+<section id="colaboradores" class="bloque">
+    <h2>Colaboradores</h2>
+    <p>Trabajamos con marcas y socios que comparten nuestra visión urbana.</p>
+</section>
+
+<section id="promociones" class="bloque">
+    <h2>Promociones</h2>
+    <p>Explora las promociones y ofertas vigentes.</p>
+</section>
+
+<section id="faq" class="bloque">
+    <h2>Preguntas Frecuentes</h2>
+    <p>Resuelve todas tus dudas con nuestra sección FAQ.</p>
+</section>
+
 <section id="contacto" class="bloque">
     <h2>Contacto</h2>
-    <p>Comunícate con nosotros o manda un mensaje a WhatsApp</p>
+    <p>¿Tienes dudas o quieres cotizar? Escríbenos o mándanos WhatsApp.</p>
     <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">Enviar mensaje</a>
 </section>
 
-<!-- FOOTER -->
 <footer>
-    &copy; 2026 ODA • Estilo urbano grafitero
+    &copy; 2026 ODA • Todos los derechos reservados
 </footer>
 
-<!-- JS -->
 <script src="index_script.js"></script>
+
 </body>
 </html>
