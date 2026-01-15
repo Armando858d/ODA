@@ -1,58 +1,75 @@
-// scroll reveal
-const sections = document.querySelectorAll('.bloque');
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('visible'); } });
-}, { threshold:0.2 });
-sections.forEach(section => observer.observe(section));
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ODA - Servicios Urbanos</title>
 
-// scroll suave
-function scrollToSection(id){ document.getElementById(id).scrollIntoView({ behavior:'smooth' }); }
+<!-- Fuentes urbanas -->
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="index.estilo.css">
 
-// menú desplegable + animación impresión
-const menuIcon = document.getElementById('menu-icon');
-const nav = document.getElementById('nav');
-const menuLinks = document.querySelectorAll('nav ul li a');
+<!-- Lottie (por si quieres animaciones extra) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+</head>
+<body>
 
-function animateMenu(){
-    menuLinks.forEach((link,i)=>{
-        setTimeout(()=>{ link.classList.add('show'); }, i*200);
-    });
-}
+<!-- PARTICULAS DE FONDO -->
+<canvas id="particle-canvas"></canvas>
 
-menuIcon.addEventListener('click', ()=>{
-    nav.classList.toggle('active');
-    if(nav.classList.contains('active')){
-        document.getElementById('menu-machine').classList.add('show');
-        animateMenu();
-    } else {
-        menuLinks.forEach(link=>link.classList.remove('show'));
-        document.getElementById('menu-machine').classList.remove('show');
-    }
-});
+<!-- HEADER / MENU -->
+<header>
+    <div class="logo">ODA</div>
+    <div class="menu-icon" id="menu-icon">&#9776;</div>
 
-// PARTICULAS AMARILLAS
-const canvas=document.getElementById('particle-canvas');
-const ctx=canvas.getContext('2d');
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+    <nav id="nav">
+        <ul>
+            <li><a href="#inicio">Inicio <span class="emoji">🏠</span></a></li>
+            <li><a href="#servicios">Servicios <span class="emoji">🛠️</span></a></li>
+            <li><a href="#contacto">Contacto <span class="emoji">📩</span></a></li>
+            <li><a href="#soporte" class="btn">Soporte <span class="emoji">💬</span></a></li>
+            <li><a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">WhatsApp <span class="emoji">📲</span></a></li>
+        </ul>
+    </nav>
+</header>
 
-const particles=[];
-for(let i=0;i<100;i++){
-    particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*2+1, dx:(Math.random()-0.5)*0.5, dy:(Math.random()-0.5)*0.5});
-}
+<!-- HERO -->
+<section id="inicio" class="hero">
+    <h1 class="glow">ODA</h1>
+    <p class="subtitulo">Servicios urbanos • Estilo callejero</p>
+    <button class="btn" onclick="scrollToSection('servicios')">Ver Servicios</button>
+</section>
 
-function animateParticles(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(p=>{
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fillStyle="#ffea00";
-        ctx.fill();
-        p.x+=p.dx; p.y+=p.dy;
-        if(p.x<0||p.x>canvas.width)p.dx*=-1;
-        if(p.y<0||p.y>canvas.height)p.dy*=-1;
-    });
-    requestAnimationFrame(animateParticles);
-}
-animateParticles();
-window.addEventListener('resize',()=>{ canvas.width=window.innerWidth; canvas.height=window.innerHeight; });
+<!-- SERVICIOS -->
+<section id="servicios" class="bloque">
+    <h2>Servicios</h2>
+    <div class="cards">
+        <div class="card">
+            <img src="img/servicio1.jpg" alt="Publicidad">
+            <h3>Publicidad</h3>
+            <p>Diseño urbano, banners, redes sociales</p>
+        </div>
+        <div class="card">
+            <img src="img/servicio2.jpg" alt="Renta de autobuses">
+            <h3>Renta de autobuses</h3>
+            <p>Viajes cómodos y seguros para tours o eventos.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" class="bloque">
+    <h2>Contacto</h2>
+    <p>Comunícate con nosotros o manda un mensaje a WhatsApp</p>
+    <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">Enviar mensaje</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    &copy; 2026 ODA • Estilo urbano grafitero
+</footer>
+
+<!-- JS -->
+<script src="index_script.js"></script>
+</body>
+</html>
