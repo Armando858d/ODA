@@ -3,78 +3,472 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODA LUXURY URBAN</title>
+    <title>ODA • Impresión 3D & Publicidad Urbana</title>
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Orbitron:wght@400;700&family=Bebas+Neue&family=Righteous&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link rel="stylesheet" href="index_estilo.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2300ff88%22>⚡</text></svg>">
 </head>
 <body>
-    <!-- LOADER -->
-    <div id="loader">
-        <div class="spinner"></div>
-    </div>
-
-    <!-- HEADER -->
-    <header class="nav-premium">
-        <div class="logo">ODA</div>
-        <nav>
-            <ul class="desktop-links">
-                <li><a href="#home">inicio</a></li>
-                <li><a href="#services">servicios</a></li>
-                <li><a href="#about">nosotros</a></li>
-                <li><a href="#contact">contacto</a></li>
-            </ul>
-            <div id="navToggle"><i class="fas fa-bars"></i></div>
-        </nav>
+    <!-- Efecto de partículas -->
+    <div id="particles-js"></div>
+    
+    <!-- Navegación elegante -->
+    <header class="main-header">
+        <div class="container">
+            <!-- Logo con efecto 3D -->
+            <div class="logo-container">
+                <div class="logo-3d" id="logo3d">
+                    <span class="layer-1">ODA</span>
+                    <span class="layer-2">ODA</span>
+                    <span class="layer-3">ODA</span>
+                </div>
+                <div class="logo-tag">ARTE URBANO DIGITAL</div>
+            </div>
+            
+            <!-- Menú principal -->
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+                    <li><a href="#servicios" class="nav-link">Servicios</a></li>
+                    <li><a href="#proyectos" class="nav-link">Proyectos</a></li>
+                    <li><a href="#contacto" class="nav-link cta">Contacto</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Menú móvil -->
+            <button class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
 
-    <!-- MENÚ MÓVIL -->
-    <div id="navMobile">
-        <div class="mobile-close"><i class="fas fa-times"></i></div>
-        <ul class="mobile-links">
-            <li><a href="#home">inicio</a></li>
-            <li><a href="#services">servicios</a></li>
-            <li><a href="#about">nosotros</a></li>
-            <li><a href="#contact">contacto</a></li>
-        </ul>
-    </div>
-
-    <!-- SECCIÓN HOME -->
-    <section id="home" class="parallax-layer" data-speed="0.3">
-        <h1 data-typewriter>oda luxury urban</h1>
-        <p>experiencia premium en cada detalle</p>
-    </section>
-
-    <!-- SERVICIOS -->
-    <section id="services">
-        <h2>nuestros servicios</h2>
-        <div class="services-container">
-            <div class="service-card">diseño urbano</div>
-            <div class="service-card">impresion 3d</div>
-            <div class="service-card">branding</div>
+    <!-- Hero Section Impactante -->
+    <section id="inicio" class="hero-section">
+        <div class="hero-overlay"></div>
+        
+        <div class="container">
+            <div class="hero-content">
+                <!-- Título con animación de impresión -->
+                <h1 class="hero-title">
+                    <span class="title-line" data-text="IMPRESIÓN">IMPRESIÓN</span>
+                    <span class="title-line" data-text="3D">3D</span>
+                    <span class="title-line" data-text="+">+</span>
+                    <span class="title-line" data-text="PUBLICIDAD">PUBLICIDAD</span>
+                    <span class="title-line" data-text="URBANA">URBANA</span>
+                </h1>
+                
+                <p class="hero-subtitle">
+                    Donde la tecnología de punta se encuentra con el arte callejero
+                </p>
+                
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number" data-count="150">0</div>
+                        <div class="stat-label">Proyectos 3D</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="89">0</div>
+                        <div class="stat-label">Murales Digitales</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="100">100</div>
+                        <div class="stat-label">% Urban</div>
+                    </div>
+                </div>
+                
+                <div class="hero-buttons">
+                    <a href="#servicios" class="btn btn-primary">
+                        <i class="fas fa-cube"></i>
+                        VER SERVICIOS
+                    </a>
+                    <a href="#contacto" class="btn btn-secondary">
+                        <i class="fas fa-spray-can"></i>
+                        PEDIR COTIZACIÓN
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Impresora 3D animada -->
+            <div class="printer-animation">
+                <div class="printer">
+                    <div class="printer-body"></div>
+                    <div class="printer-bed">
+                        <div class="printing-object" id="printingObject"></div>
+                    </div>
+                    <div class="printer-head">
+                        <div class="nozzle"></div>
+                    </div>
+                    <div class="filament-spool">
+                        <div class="filament"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>SCROLL</span>
         </div>
     </section>
 
-    <!-- ESTADÍSTICAS -->
-    <section id="stats">
-        <div class="stat-number">120+</div>
-        <div class="stat-number">95%</div>
-        <div class="stat-number">50+</div>
+    <!-- Sección Servicios -->
+    <section id="servicios" class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">NUESTROS <span class="highlight">SERVICIOS</span></h2>
+                <p class="section-subtitle">Tecnología + Creatividad + Calle</p>
+            </div>
+            
+            <div class="services-grid">
+                <!-- Servicio 1 -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <div class="icon-3d">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>IMPRESIÓN 3D PROFESIONAL</h3>
+                        <div class="service-tags">
+                            <span class="tag">PLA</span>
+                            <span class="tag">PETG</span>
+                            <span class="tag">RESINA</span>
+                        </div>
+                        <p>Prototipos, piezas personalizadas, arte 3D. Desde diseño hasta producto final.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Alta precisión (0.1mm)</li>
+                            <li><i class="fas fa-check"></i> Gran variedad de materiales</li>
+                            <li><i class="fas fa-check"></i> Acabados profesionales</li>
+                        </ul>
+                        <a href="#contacto" class="service-link">
+                            COTIZAR PROYECTO
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="service-decoration">
+                        <div class="cube-3d"></div>
+                    </div>
+                </div>
+                
+                <!-- Servicio 2 -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <div class="icon-spray">
+                            <i class="fas fa-spray-can"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>PUBLICIDAD URBANA</h3>
+                        <div class="service-tags">
+                            <span class="tag">MURALES</span>
+                            <span class="tag">VALLAS</span>
+                            <span class="tag">DIGITAL</span>
+                        </div>
+                        <p>Campañas visuales impactantes con esencia street. Desde paredes hasta redes sociales.</p>
+                        <div class="service-stats">
+                            <div class="mini-stat">
+                                <div class="mini-value">+250%</div>
+                                <div class="mini-label">Engagement</div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-value">48h</div>
+                                <div class="mini-label">Producción</div>
+                            </div>
+                        </div>
+                        <a href="#contacto" class="service-link">
+                            VER PORTFOLIO
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Servicio 3 -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <div class="icon-design">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3>DISEÑO URBANO</h3>
+                        <div class="service-tags">
+                            <span class="tag">BRANDING</span>
+                            <span class="tag">PACKAGING</span>
+                            <span class="tag">IDENTIDAD</span>
+                        </div>
+                        <p>Identidad visual con actitud callejera. Logos, packaging, merch que se ve bien en la calle.</p>
+                        <div class="design-process">
+                            <div class="process-step">
+                                <span>Concepto</span>
+                                <div class="process-bar"><div class="process-fill" style="width: 100%"></div></div>
+                            </div>
+                            <div class="process-step">
+                                <span>Diseño</span>
+                                <div class="process-bar"><div class="process-fill" style="width: 90%"></div></div>
+                            </div>
+                        </div>
+                        <a href="#contacto" class="service-link">
+                            SOLICITAR AUDITORÍA
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <!-- CONTACTO -->
-    <section id="contact">
-        <form id="premiumForm">
-            <input type="text" placeholder="nombre" required>
-            <input type="email" placeholder="correo" required>
-            <button type="submit" class="form-submit">enviar</button>
-        </form>
+    <!-- Sección Proceso 3D -->
+    <section class="process-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">CÓMO <span class="highlight">TRABAJAMOS</span></h2>
+                <p class="section-subtitle">Del archivo digital a tus manos</p>
+            </div>
+            
+            <div class="process-steps">
+                <div class="step" data-step="1">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>CONCEPTO</h3>
+                        <p>Platicamos tu idea, la bocetamos y le damos forma digital.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-concept">
+                            <div class="sketch"></div>
+                            <div class="sketch"></div>
+                            <div class="sketch"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="2">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>MODELADO 3D</h3>
+                        <p>Convertimos el concepto en modelo 3D listo para imprimir.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-model">
+                            <div class="wireframe"></div>
+                            <div class="mesh"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="3">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>IMPRESIÓN</h3>
+                        <p>La máquina hace su magia, capa por capa, con precisión milimétrica.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-print">
+                            <div class="layer"></div>
+                            <div class="layer"></div>
+                            <div class="layer"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step" data-step="4">
+                    <div class="step-number">04</div>
+                    <div class="step-content">
+                        <h3>ENTREGA</h3>
+                        <p>Post-producción y entrega. Listo para impactar.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="visual-delivery">
+                            <div class="product"></div>
+                            <div class="sparkle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <!-- WHATSAPP FLOTANTE -->
-    <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank">
+    <!-- Galería de Proyectos -->
+    <section id="proyectos" class="gallery-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">PROYECTOS <span class="highlight">RECIENTES</span></h2>
+                <p class="section-subtitle">Arte que deja huella</p>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <div class="image-overlay">
+                            <h3>ESCULTURA 3D URBANA</h3>
+                            <p>PLA + Acabado grafiti</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <div class="image-overlay">
+                            <h3>MURAL DIGITAL</h3>
+                            <p>Campaña streetwear</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <div class="image-overlay">
+                            <h3>BRANDING CALLEJERO</h3>
+                            <p>Identidad para marca local</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-cta">
+                <a href="#contacto" class="btn btn-outline">
+                    <i class="fas fa-images"></i>
+                    VER MÁS PROYECTOS
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Contacto -->
+    <section id="contacto" class="contact-section">
+        <div class="container">
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h2 class="contact-title">HABLEMOS DE TU <span class="highlight">PROYECTO</span></h2>
+                    <p class="contact-subtitle">Cuéntanos tu idea y te decimos cómo hacerla realidad</p>
+                    
+                    <div class="contact-methods">
+                        <div class="method">
+                            <div class="method-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="method-content">
+                                <h4>WHATSAPP</h4>
+                                <p>Respuesta en menos de 2 horas</p>
+                                <a href="https://wa.me/521XXXXXXXXXX" class="method-link">
+                                    +52 1 XXX XXX XXXX
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="method">
+                            <div class="method-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="method-content">
+                                <h4>EMAIL</h4>
+                                <p>Para proyectos detallados</p>
+                                <div class="email-reveal">
+                                    <span class="email-placeholder">••••••@••••••.com</span>
+                                    <button class="reveal-btn" id="revealEmail">REVELAR</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="method">
+                            <div class="method-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="method-content">
+                                <h4>UBICACIÓN</h4>
+                                <p>CDMX - Zona Urbana</p>
+                                <div class="location">
+                                    <span>19.4326° N, 99.1332° W</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form id="projectForm">
+                        <div class="form-group">
+                            <input type="text" placeholder="Tu nombre" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="email" placeholder="Email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <select required>
+                                <option value="">¿Qué necesitas?</option>
+                                <option value="3d">Impresión 3D</option>
+                                <option value="ad">Publicidad Urbana</option>
+                                <option value="design">Diseño Gráfico</option>
+                                <option value="mixed">Proyecto Mixto</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <textarea placeholder="Cuéntanos sobre tu proyecto..." rows="5" required></textarea>
+                        </div>
+                        
+                        <div class="form-footer">
+                            <p class="form-note">
+                                <i class="fas fa-lock"></i>
+                                Tu información es confidencial
+                            </p>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                ENVIAR PROPUESTA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">ODA</div>
+                    <p>Arte urbano con tecnología de punta</p>
+                </div>
+                
+                <div class="footer-social">
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-behance"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                </div>
+                
+                <div class="footer-legal">
+                    <p>&copy; 2024 ODA Studio. Todos los derechos reservados.</p>
+                    <p class="footer-note">Hecho con 🎨 y 💻 en la CDMX</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botón WhatsApp flotante -->
+    <a href="https://wa.me/521XXXXXXXXXX" class="whatsapp-float" target="_blank">
         <i class="fab fa-whatsapp"></i>
+        <span class="float-text">¿Hablamos?</span>
     </a>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="index_script.js"></script>
 </body>
 </html>
