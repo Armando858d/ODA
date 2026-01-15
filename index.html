@@ -3,772 +3,415 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URBAN TECH | Impresión 3D Premium & Reparación</title>
+    <title>ODA • 3D & Publicidad de Lujo</title>
     
-    <!-- Fuentes -->
+    <!-- Fonts Premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;700;900&family=Dancing+Script&family=Bebas+Neue&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CSS -->
     <link rel="stylesheet" href="index_estilo.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23FFD700%22>⚡</text></svg>">
 </head>
 <body>
-    <!-- ===== PRELOADER ===== -->
-    <div id="preloader" class="preloader">
-        <div class="loading-content">
-            <div class="brand-logo">
-                <span class="brand-letter">U</span>
-                <span class="brand-letter">R</span>
-                <span class="brand-letter">B</span>
-                <span class="brand-letter">A</span>
-                <span class="brand-letter">N</span>
+    <!-- Fondo con textura -->
+    <div class="texture-overlay"></div>
+    
+    <!-- Navegación Premium -->
+    <nav class="nav-premium">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="brand-gold">O</span>
+                <span class="brand-spray">D</span>
+                <span class="brand-gold">A</span>
+                <span class="brand-tag">EST. 2023</span>
             </div>
-            <div class="loading-progress"></div>
-            <p class="loading-text">Cargando creatividad urbana...</p>
+            
+            <div class="nav-desktop">
+                <a href="#hero" class="nav-link"><span class="link-number">01</span>Inicio</a>
+                <a href="#servicios" class="nav-link"><span class="link-number">02</span>Servicios</a>
+                <a href="#proyectos" class="nav-link"><span class="link-number">03</span>Proyectos</a>
+                <a href="#about" class="nav-link"><span class="link-number">04</span>Filosofía</a>
+                <a href="#contacto" class="nav-link premium"><span class="link-number">05</span>Contacto</a>
+            </div>
+            
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <div class="nav-mobile" id="navMobile">
+                <div class="mobile-header">
+                    <div class="mobile-brand">ODA</div>
+                    <button class="mobile-close">&times;</button>
+                </div>
+                <div class="mobile-links">
+                    <a href="#hero"><i class="fas fa-spray-can"></i> Inicio</a>
+                    <a href="#servicios"><i class="fas fa-cube"></i> Impresión 3D</a>
+                    <a href="#proyectos"><i class="fas fa-paint-roller"></i> Publicidad</a>
+                    <a href="#about"><i class="fas fa-crown"></i> Filosofía</a>
+                    <a href="#contacto" class="premium"><i class="fas fa-gem"></i> Contacto</a>
+                </div>
+                <div class="mobile-footer">
+                    <p>"Del estudio a la calle, de la calle al lujo"</p>
+                </div>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- ===== HEADER & NAVEGACIÓN ===== -->
-    <header class="header" id="header">
-        <div class="container">
-            <nav class="navbar">
-                <!-- Logo -->
-                <a href="#home" class="logo" id="logoSpray">
-                    <span class="logo-text">URBA</span>
-                    <span class="logo-highlight">TECH</span>
+    <!-- Hero con Parallax -->
+    <section id="hero" class="hero-parallax">
+        <div class="parallax-layer" data-speed="0.1"></div>
+        <div class="parallax-layer" data-speed="0.3"></div>
+        
+        <div class="hero-content">
+            <div class="hero-tag">LUXURY URBAN DESIGN</div>
+            <h1 class="hero-title">
+                <span class="title-line">IMPRESIÓN 3D</span>
+                <span class="title-line">Y PUBLICIDAD</span>
+                <span class="title-line accent">CON ACTITUD</span>
+            </h1>
+            
+            <div class="hero-subtitle">
+                Donde la precisión industrial se encuentra con el arte callejero
+            </div>
+            
+            <div class="hero-cta">
+                <a href="#servicios" class="cta-primary">
+                    <span class="cta-text">EXPLORAR SERVICIOS</span>
+                    <span class="cta-icon">→</span>
                 </a>
-                
-                <!-- Menú Desktop -->
-                <ul class="nav-menu">
-                    <li><a href="#home" class="nav-item active">Inicio</a></li>
-                    <li><a href="#servicios" class="nav-item">Servicios</a></li>
-                    <li><a href="#galeria" class="nav-item">Galería</a></li>
-                    <li><a href="#sobre" class="nav-item">Nosotros</a></li>
-                    <li><a href="#contacto" class="nav-item">Contacto</a></li>
-                </ul>
-                
-                <!-- Botones de utilidad -->
-                <div class="header-controls">
-                    <button id="soundToggle" class="control-btn" aria-label="Toggle sonidos">
-                        <i class="fas fa-volume-up"></i>
-                    </button>
-                    <button id="themeToggle" class="control-btn" aria-label="Toggle tema">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    
-                    <!-- Menú móvil toggle -->
-                    <button id="mobileToggle" class="mobile-toggle" aria-label="Menú móvil">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </nav>
+                <a href="#contacto" class="cta-secondary">
+                    <span class="cta-text">COTIZACIÓN PREMIUM</span>
+                    <span class="cta-badge">EXCLUSIVO</span>
+                </a>
+            </div>
             
-            <!-- Indicador de scroll -->
-            <div class="nav-indicator"></div>
+            <div class="hero-scroll">
+                <div class="scroll-line"></div>
+                <span>SCROLL</span>
+            </div>
         </div>
-    </header>
+        
+        <!-- Elementos flotantes premium -->
+        <div class="floating-elements">
+            <div class="floating-cube"><i class="fas fa-cube"></i></div>
+            <div class="floating-spray"><i class="fas fa-spray-can"></i></div>
+            <div class="floating-diamond"><i class="fas fa-gem"></i></div>
+        </div>
+    </section>
 
-    <!-- ===== HERO SECTION ===== -->
-    <section id="home" class="hero">
-        <div class="container">
-            <!-- Elementos decorativos -->
-            <div class="decoration-cube"><i class="fas fa-cube"></i></div>
-            <div class="decoration-spray"><i class="fas fa-spray-can"></i></div>
-            <div class="decoration-phone"><i class="fas fa-mobile-alt"></i></div>
-            <div class="decoration-film"><i class="fas fa-film"></i></div>
-            
-            <!-- Contenido principal -->
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <span class="badge-text">PREMIUM</span>
+    <!-- Sección de Servicios (Lujo) -->
+    <section id="servicios" class="section-luxury">
+        <div class="section-header">
+            <div class="section-number">02</div>
+            <h2 class="section-title">SERVICIOS <span class="title-accent">PREMIUM</span></h2>
+            <p class="section-subtitle">Tecnología de vanguardia con toque urbano exclusivo</p>
+        </div>
+        
+        <div class="services-grid">
+            <!-- Servicio 1 - 3D Printing -->
+            <div class="service-card luxury">
+                <div class="service-icon">
+                    <div class="icon-3d">3D</div>
                 </div>
-                
-                <h1 class="hero-title">
-                    <span class="title-line">CREATIVIDAD</span>
-                    <span class="title-line highlight">URBANA</span>
-                    <span class="title-line">TECNOLOGÍA</span>
-                    <span class="title-line accent">PREMIUM</span>
-                </h1>
-                
-                <div class="typewriter-container">
-                    <p class="hero-subtitle">
-                        <span class="typewriter-text">Impresión 3D • Reparación Expert • Publicidad Impactante</span>
+                <div class="service-content">
+                    <div class="service-header">
+                        <h3>IMPRESIÓN 3D DE LUXE</h3>
+                        <span class="service-price">$$$</span>
+                    </div>
+                    <p class="service-description">
+                        Piezas únicas con filamentos premium (cobre, madera, mármol sintético).
+                        Desde prototipos industriales hasta arte escultórico.
                     </p>
-                </div>
-                
-                <p class="hero-description">
-                    Transformamos ideas en realidad con tecnología de vanguardia y estilo callejero.
-                    Calidad premium, acabados perfectos y creatividad sin límites.
-                </p>
-                
-                <div class="hero-buttons">
-                    <a href="#contacto" class="btn btn-primary" id="exploreBtn" data-sound="click">
-                        <span class="btn-text">COTIZAR PROYECTO</span>
-                        <span class="btn-ripple"></span>
-                    </a>
-                    <a href="#galeria" class="btn btn-secondary" id="quoteBtn" data-sound="click">
-                        <span class="btn-text">VER TRABAJOS</span>
-                    </a>
-                </div>
-                
-                <!-- Stats en Hero -->
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-value" data-count="250">0</span>
-                        <span class="stat-label">Proyectos 3D</span>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check-circle"></i> Resolución industrial 0.05mm</li>
+                        <li><i class="fas fa-check-circle"></i> Materiales exclusivos</li>
+                        <li><i class="fas fa-check-circle"></i> Acabados personalizados</li>
+                    </ul>
+                    <div class="service-footer">
+                        <a href="#contacto" class="service-link">SOLICITAR COTIZACIÓN <i class="fas fa-arrow-right"></i></a>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-value" data-count="99">0</span>
-                        <span class="stat-label">% Satisfacción</span>
+                </div>
+                <div class="service-3d"></div>
+            </div>
+
+            <!-- Servicio 2 - Publicidad -->
+            <div class="service-card luxury">
+                <div class="service-icon">
+                    <div class="icon-ad">AD</div>
+                </div>
+                <div class="service-content">
+                    <div class="service-header">
+                        <h3>PUBLICIDAD URBAN LUXURY</h3>
+                        <span class="service-tag">TRENDING</span>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-value" data-count="500">0</span>
-                        <span class="stat-label">Reparaciones</span>
+                    <p class="service-description">
+                        Campañas que combinan street art con marketing de lujo.
+                        Vallas, murales digitales, experiencias inmersivas.
+                    </p>
+                    <div class="service-stats">
+                        <div class="stat">
+                            <span class="stat-number">+250%</span>
+                            <span class="stat-label">Engagement</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">48h</span>
+                            <span class="stat-label">Producción</span>
+                        </div>
+                    </div>
+                    <div class="service-footer">
+                        <a href="#contacto" class="service-link">VER PORTFOLIO <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicio 3 - Branding -->
+            <div class="service-card luxury">
+                <div class="service-icon">
+                    <div class="icon-brand">B</div>
+                </div>
+                <div class="service-content">
+                    <div class="service-header">
+                        <h3>BRANDING CALLEJERO</h3>
+                        <span class="service-badge">EXCLUSIVO</span>
+                    </div>
+                    <p class="service-description">
+                        Identidad visual que habla el lenguaje de la calle pero se viste de gala.
+                        Logos, packaging, experiencias físicas.
+                    </p>
+                    <div class="service-process">
+                        <div class="process-step">
+                            <span>1. Concept</span>
+                            <div class="process-bar"><div class="process-fill" style="width: 100%"></div></div>
+                        </div>
+                        <div class="process-step">
+                            <span>2. Design</span>
+                            <div class="process-bar"><div class="process-fill" style="width: 80%"></div></div>
+                        </div>
+                    </div>
+                    <div class="service-footer">
+                        <a href="#contacto" class="service-link premium">SOLICITAR AUDITORÍA <i class="fas fa-crown"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería de Proyectos -->
+    <section id="proyectos" class="gallery-section">
+        <div class="gallery-header">
+            <h2>PROYECTOS <span class="highlight">ICÓNICOS</span></h2>
+            <p>Donde el arte callejero encuentra la excelencia</p>
+        </div>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item large">
+                <div class="gallery-image">
+                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200" alt="3D Printing Luxury">
+                    <div class="gallery-overlay">
+                        <h3>ESCULTURA 3D URBANA</h3>
+                        <p>Bronce sintético • 2.5m altura</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-item">
+                <div class="gallery-image">
+                    <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w-800" alt="Street Advertising">
+                    <div class="gallery-overlay">
+                        <h3>CAMPANA MURAL DIGITAL</h3>
+                        <p>Times Square • NYC</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-item">
+                <div class="gallery-image">
+                    <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?auto=format&fit=crop&w=800" alt="Industrial Design">
+                    <div class="gallery-overlay">
+                        <h3>MOBILIARIO URBANO</h3>
+                        <p>Acero + Concreto • Serie limitada</p>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Scroll indicator -->
-        <a href="#servicios" class="scroll-indicator" data-sound="click">
-            <i class="fas fa-chevron-down"></i>
-        </a>
+        <div class="gallery-cta">
+            <a href="#contacto" class="gallery-link">
+                VER MÁS PROYECTOS
+                <span class="link-arrow">⟶</span>
+            </a>
+        </div>
     </section>
 
-    <!-- ===== SERVICIOS ===== -->
-    <section id="servicios" class="section services">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">ESPECIALIDADES</span>
-                <h2 class="section-title">SERVICIOS <span class="highlight">PREMIUM</span></h2>
-                <p class="section-description">
-                    Soluciones tecnológicas con esencia urbana y acabados de alta gama
-                </p>
+    <!-- Filosofía / About -->
+    <section id="about" class="philosophy-section">
+        <div class="philosophy-container">
+            <div class="philosophy-quote">
+                <div class="quote-mark">"</div>
+                <h2>NO CREAMOS PRODUCTOS,</h2>
+                <h2>CREAMOS <span class="quote-accent">LEGADO URBANO</span></h2>
+                <div class="quote-author">— ODA STUDIO</div>
             </div>
             
-            <div class="services-grid">
-                <!-- Servicio 1: Impresión 3D -->
-                <div class="service-card reveal">
-                    <div class="service-icon">
-                        <i class="fas fa-print"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3 class="service-title">IMPRESIÓN 3D</h3>
-                        <p class="service-description">
-                            Prototipos, figuras personalizadas, piezas técnicas y proyectos artísticos.
-                            Alta precisión y múltiples materiales disponibles.
-                        </p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check"></i> Prototipado rápido</li>
-                            <li><i class="fas fa-check"></i> Figuras personalizadas</li>
-                            <li><i class="fas fa-check"></i> Piezas técnicas</li>
-                            <li><i class="fas fa-check"></i> Modelado 3D</li>
-                        </ul>
-                        <div class="service-tags">
-                            <span class="tag">PLA</span>
-                            <span class="tag">ABS</span>
-                            <span class="tag">RESINA</span>
-                        </div>
-                    </div>
+            <div class="philosophy-content">
+                <div class="philosophy-item">
+                    <div class="philosophy-number">01</div>
+                    <h3>PRECISIÓN INDUSTRIAL</h3>
+                    <p>Tecnología de punta con tolerancias milimétricas. Cada pieza es perfecta.</p>
                 </div>
                 
-                <!-- Servicio 2: Reparación -->
-                <div class="service-card reveal">
-                    <div class="service-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3 class="service-title">REPARACIÓN EXPERTA</h3>
-                        <p class="service-description">
-                            Reparación profesional de celulares, tablets y dispositivos electrónicos.
-                            Diagnóstico preciso y garantía en todos nuestros trabajos.
-                        </p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check"></i> Cambio de pantallas</li>
-                            <li><i class="fas fa-check"></i> Reparación de placas</li>
-                            <li><i class="fas fa-check"></i> Recuperación de datos</li>
-                            <li><i class="fas fa-check"></i> Mantenimiento</li>
-                        </ul>
-                        <div class="service-tags">
-                            <span class="tag">CELULARES</span>
-                            <span class="tag">TABLETS</span>
-                            <span class="tag">GARANTÍA</span>
-                        </div>
-                    </div>
+                <div class="philosophy-item">
+                    <div class="philosophy-number">02</div>
+                    <h3>ALMA CALLEJERA</h3>
+                    <p>La autenticidad del grafiti, la energía urbana, la voz de la ciudad.</p>
                 </div>
                 
-                <!-- Servicio 3: Publicidad -->
-                <div class="service-card reveal">
-                    <div class="service-icon">
-                        <i class="fas fa-bullhorn"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3 class="service-title">PUBLICIDAD IMPACTANTE</h3>
-                        <p class="service-description">
-                            Diseño gráfico, rotulación, letreros y materiales publicitarios.
-                            Creatividad urbana que hace destacar tu marca.
-                        </p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check"></i> Diseño gráfico</li>
-                            <li><i class="fas fa-check"></i> Rotulación vehicular</li>
-                            <li><i class="fas fa-check"></i> Letreros LED</li>
-                            <li><i class="fas fa-check"></i> Material POP</li>
-                        </ul>
-                        <div class="service-tags">
-                            <span class="tag">DISEÑO</span>
-                            <span class="tag">ROTULACIÓN</span>
-                            <span class="tag">BRANDING</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Canvas de impresión 3D -->
-            <div class="printer-demo reveal">
-                <canvas id="printerCanvas"></canvas>
-                <div class="printer-info">
-                    <h3>TECNOLOGÍA DE IMPRESIÓN</h3>
-                    <p>Simulación en tiempo real de nuestro proceso de impresión 3D de alta precisión</p>
+                <div class="philosophy-item">
+                    <div class="philosophy-number">03</div>
+                    <h3>LUJO ACCESIBLE</h3>
+                    <p>Excelencia sin pretensiones. Calidad premium, actitud real.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ===== GALERÍA ===== -->
-    <section id="galeria" class="section gallery">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">PORTAFOLIO</span>
-                <h2 class="section-title">TRABAJOS <span class="highlight">DESTACADOS</span></h2>
-                <p class="section-description">
-                    Proyectos realizados con calidad premium y estilo urbano
-                </p>
-            </div>
-            
-            <div class="gallery-controls">
-                <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="3d">3D Prints</button>
-                <button class="filter-btn" data-filter="repair">Reparaciones</button>
-                <button class="filter-btn" data-filter="design">Diseño</button>
-            </div>
-            
-            <div class="gallery-grid">
-                <!-- Proyecto 1 -->
-                <div class="gallery-item reveal" data-category="3d">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800" 
-                             alt="Impresión 3D detalle" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <h3>FIGURA PERSONALIZADA</h3>
-                                <p>Resina de alta calidad</p>
-                                <a href="#" class="view-btn" data-sound="click">Ampliar</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-tag">3D PRINT</div>
-                </div>
-                
-                <!-- Proyecto 2 -->
-                <div class="gallery-item reveal" data-category="repair">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800" 
-                             alt="Reparación celular" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <h3>REPARACIÓN PRECISA</h3>
-                                <p>Cambio de pantalla</p>
-                                <a href="#" class="view-btn" data-sound="click">Ampliar</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-tag">REPAIR</div>
-                </div>
-                
-                <!-- Proyecto 3 -->
-                <div class="gallery-item reveal" data-category="design">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800" 
-                             alt="Diseño publicitario" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <h3>DISEÑO PUBLICITARIO</h3>
-                                <p>Identidad visual</p>
-                                <a href="#" class="view-btn" data-sound="click">Ampliar</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-tag">DESIGN</div>
-                </div>
-                
-                <!-- Proyecto 4 -->
-                <div class="gallery-item reveal" data-category="3d">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800" 
-                             alt="Prototipo 3D" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <h3>PROTOTIPO INDUSTRIAL</h3>
-                                <p>Ingeniería inversa</p>
-                                <a href="#" class="view-btn" data-sound="click">Ampliar</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-tag">3D PRINT</div>
-                </div>
-                
-                <!-- Proyecto 5 -->
-                <div class="gallery-item reveal" data-category="repair">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1565689221354-d87f85d4aee2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800" 
-                             alt="Reparación técnica" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <h3>DIAGNÓSTICO TÉCNICO</h3>
-                                <p>Reparación de placas</p>
-                                <a href="#" class="view-btn" data-sound="click">Ampliar</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-tag">REPAIR</div>
-                </div>
-                
-                <!-- Proyecto 6 -->
-                <div class="gallery-item reveal" data-category="design">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=800" 
-                             alt="Publicidad exterior" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <h3>PUBLICIDAD EXTERIOR</h3>
-                                <p>Rotulación vehicular</p>
-                                <a href="#" class="view-btn" data-sound="click">Ampliar</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-tag">DESIGN</div>
-                </div>
-            </div>
-            
-            <div class="gallery-cta">
-                <a href="#contacto" class="btn btn-primary" id="viewMoreBtn" data-sound="click">
-                    <span class="btn-text">VER MÁS PROYECTOS</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== SOBRE NOSOTROS ===== -->
-    <section id="sobre" class="section about">
-        <div class="container">
-            <div class="about-grid">
-                <div class="about-content reveal">
-                    <span class="section-subtitle">NUESTRA FILOSOFÍA</span>
-                    <h2 class="section-title">CREATIVIDAD <span class="highlight">URBANA</span></h2>
-                    
-                    <div class="about-text">
-                        <p>
-                            Fusionamos la esencia callejera del grafiti con la tecnología más avanzada
-                            para crear soluciones únicas y premium. Cada proyecto es una obra de arte
-                            tecnológica con atención meticulosa al detalle.
-                        </p>
-                        <p>
-                            Nuestra pasión por la innovación y el diseño se refleja en cada impresión 3D,
-                            reparación y proyecto publicitario. Calidad premium, acabados perfectos y
-                            un estilo que marca la diferencia.
-                        </p>
-                    </div>
-                    
-                    <div class="about-features">
-                        <div class="feature">
-                            <i class="fas fa-medal"></i>
-                            <div>
-                                <h4>Calidad Premium</h4>
-                                <p>Materiales de primera y acabados perfectos</p>
-                            </div>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-bolt"></i>
-                            <div>
-                                <h4>Rápido & Confiable</h4>
-                                <p>Entregas puntuales y garantía en todos los trabajos</p>
-                            </div>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-palette"></i>
-                            <div>
-                                <h4>Creatividad Única</h4>
-                                <p>Estilo urbano y diseños personalizados</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="about-stats reveal">
-                    <div class="stat-card">
-                        <span class="stat-value" data-count="3">0</span>
-                        <span class="stat-label">Años de Experiencia</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-value" data-count="500">0</span>
-                        <span class="stat-label">Clientes Satisfechos</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-value" data-count="99">0</span>
-                        <span class="stat-label">% Calificación</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-value" data-count="24">0</span>
-                        <span class="stat-label">Horas Respuesta</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== CONTACTO ===== -->
-    <section id="contacto" class="section contact">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-subtitle">CONECTA CON NOSOTROS</span>
-                <h2 class="section-title">CONTACTO <span class="highlight">PREMIUM</span></h2>
-                <p class="section-description">
-                    ¿Listo para dar vida a tu proyecto? Escríbenos y te responderemos en menos de 24 horas
-                </p>
+    <!-- Contacto Premium -->
+    <section id="contacto" class="contact-premium">
+        <div class="contact-container">
+            <div class="contact-header">
+                <h2>¿LISTO PARA ELEVAR TU MARCA?</h2>
+                <p class="contact-subtitle">Solicita una consulta privada</p>
             </div>
             
             <div class="contact-grid">
-                <!-- Formulario -->
-                <div class="contact-form-container reveal">
-                    <form id="contactForm" class="contact-form">
+                <div class="contact-form">
+                    <div class="form-header">
+                        <h3>SOLICITUD DE COTIZACIÓN</h3>
+                        <p>Reservado para proyectos serios</p>
+                    </div>
+                    
+                    <form id="premiumForm">
                         <div class="form-group">
-                            <input type="text" id="name" name="name" required 
-                                   placeholder="Tu nombre completo">
-                            <label for="name">Nombre</label>
+                            <input type="text" placeholder="Nombre completo" required>
+                            <div class="form-line"></div>
                         </div>
                         
                         <div class="form-group">
-                            <input type="email" id="email" name="email" required 
-                                   placeholder="correo@ejemplo.com">
-                            <label for="email">Email</label>
+                            <input type="email" placeholder="Email corporativo" required>
+                            <div class="form-line"></div>
                         </div>
                         
                         <div class="form-group">
-                            <input type="tel" id="phone" name="phone" 
-                                   placeholder="+52 123 456 7890">
-                            <label for="phone">Teléfono</label>
-                        </div>
-                        
-                        <div class="form-group">
-                            <select id="service" name="service" required>
-                                <option value="" disabled selected>Selecciona un servicio</option>
-                                <option value="3d">Impresión 3D</option>
-                                <option value="repair">Reparación</option>
-                                <option value="design">Diseño Publicitario</option>
-                                <option value="other">Otro</option>
+                            <select required>
+                                <option value="">Tipo de proyecto</option>
+                                <option value="3d">Impresión 3D Premium</option>
+                                <option value="ad">Publicidad Urban Luxury</option>
+                                <option value="brand">Branding Callejero</option>
+                                <option value="other">Proyecto personalizado</option>
                             </select>
-                            <label for="service">Servicio</label>
+                            <div class="form-line"></div>
                         </div>
                         
-                        <div class="form-group full-width">
-                            <textarea id="message" name="message" rows="5" required 
-                                      placeholder="Describe tu proyecto, ideas, dimensiones, materiales..."></textarea>
-                            <label for="message">Mensaje</label>
+                        <div class="form-group">
+                            <textarea placeholder="Describe tu visión... (mín. 50 caracteres)" rows="4" required></textarea>
+                            <div class="form-line"></div>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary">
-                            <span class="btn-text">ENVIAR MENSAJE</span>
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
+                        <div class="form-footer">
+                            <div class="form-disclaimer">
+                                <i class="fas fa-lock"></i> Información confidencial
+                            </div>
+                            <button type="submit" class="form-submit">
+                                ENVIAR SOLICITUD
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
                     </form>
                 </div>
                 
-                <!-- Info de contacto -->
-                <div class="contact-info reveal">
+                <div class="contact-info">
                     <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="info-content">
-                            <h3>Ubicación</h3>
-                            <p>Ciudad, Estado, México</p>
-                            <a href="#" class="info-link">Ver en mapa</a>
-                        </div>
+                        <div class="info-icon"><i class="fas fa-crown"></i></div>
+                        <h4>CONSULTA PRIVADA</h4>
+                        <p>Reunión 1:1 con nuestro director creativo</p>
+                        <a href="https://calendly.com" target="_blank" class="info-link">
+                            AGENDAR REUNIÓN
+                            <i class="fas fa-calendar-alt"></i>
+                        </a>
                     </div>
                     
                     <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="info-content">
-                            <h3>Teléfono</h3>
-                            <p>+52 123 456 7890</p>
-                            <a href="tel:+521234567890" class="info-link">Llamar ahora</a>
-                        </div>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="info-content">
-                            <h3>Email</h3>
-                            <p>contacto@urbantech.com</p>
-                            <button class="copy-btn" data-text="contacto@urbantech.com">
-                                <i class="fas fa-copy"></i> Copiar email
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="info-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="info-content">
-                            <h3>Horarios</h3>
-                            <p>Lun - Vie: 9:00 - 19:00</p>
-                            <p>Sáb: 10:00 - 15:00</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Redes sociales -->
-                    <div class="social-links">
-                        <a href="#" class="social-link" aria-label="WhatsApp" data-sound="click">
+                        <div class="info-icon"><i class="fab fa-whatsapp"></i></div>
+                        <h4>WHATSAPP EXCLUSIVO</h4>
+                        <p>Respuesta en menos de 2 horas</p>
+                        <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="info-link whatsapp">
+                            +52 1 XXX XXX XXXX
                             <i class="fab fa-whatsapp"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="Instagram" data-sound="click">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="social-link" aria-label="Facebook" data-sound="click">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="#" class="social-link" aria-label="TikTok" data-sound="click">
-                            <i class="fab fa-tiktok"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ===== FOOTER ===== -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <a href="#home" class="logo">
-                        <span class="logo-text">URBAN</span>
-                        <span class="logo-highlight">TECH</span>
-                    </a>
-                    <p class="footer-tagline">
-                        Tecnología con esencia urbana, calidad premium
-                    </p>
-                </div>
-                
-                <div class="footer-links">
-                    <div class="footer-column">
-                        <h4>Servicios</h4>
-                        <ul>
-                            <li><a href="#servicios">Impresión 3D</a></li>
-                            <li><a href="#servicios">Reparación</a></li>
-                            <li><a href="#servicios">Publicidad</a></li>
-                            <li><a href="#servicios">Diseño Gráfico</a></li>
-                        </ul>
                     </div>
                     
-                    <div class="footer-column">
-                        <h4>Enlaces</h4>
-                        <ul>
-                            <li><a href="#home">Inicio</a></li>
-                            <li><a href="#galeria">Galería</a></li>
-                            <li><a href="#sobre">Nosotros</a></li>
-                            <li><a href="#contacto">Contacto</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="footer-column">
-                        <h4>Legal</h4>
-                        <ul>
-                            <li><a href="#">Términos</a></li>
-                            <li><a href="#">Privacidad</a></li>
-                            <li><a href="#">Garantías</a></li>
-                            <li><a href="#">FAQ</a></li>
-                        </ul>
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <h4>STUDIO ODA</h4>
+                        <p>Dirección exclusiva para clientes</p>
+                        <div class="info-discreet">
+                            <i class="fas fa-eye-slash"></i> Se revela tras confirmación
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class="footer-bottom">
-                <p class="copyright">
-                    &copy; 2024 <span class="highlight">URBAN TECH</span>. Todos los derechos reservados.
-                    <span class="footer-badge">CALIDAD PREMIUM</span>
-                </p>
-                
-                <div class="footer-credits">
-                    <span>Diseñado con</span>
-                    <i class="fas fa-heart"></i>
-                    <span>y estilo urbano</span>
-                </div>
+            <div class="contact-footer">
+                <p>Proceso de selección exclusivo • Tiempo mínimo de proyecto: 2 semanas • Presupuestos desde $50,000 MXN</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer de Lujo -->
+    <footer class="footer-premium">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-logo">ODA</div>
+                <div class="footer-tagline">LUXURY URBAN DESIGN</div>
+            </div>
+            
+            <div class="footer-social">
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-behance"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-link premium"><i class="fab fa-pinterest"></i></a>
+            </div>
+            
+            <div class="footer-legal">
+                <p>&copy; 2024 ODA STUDIO. Todos los derechos reservados.</p>
+                <p class="footer-discreet">Proyectos confidenciales • Clientes selectos • Calidad certificada</p>
             </div>
         </div>
     </footer>
 
-    <!-- ===== BOTONES FLOTANTES ===== -->
-    <div class="floating-buttons">
-        <!-- WhatsApp -->
-        <a href="https://wa.me/521234567890" class="whatsapp-float" target="_blank" 
-           aria-label="Contactar por WhatsApp" data-sound="click">
-            <i class="fab fa-whatsapp"></i>
-            <span class="float-tooltip">¡Escríbenos!</span>
-        </a>
-        
-        <!-- Volver arriba -->
-        <button id="backTop" class="back-top" aria-label="Volver arriba" data-sound="click">
-            <i class="fas fa-chevron-up"></i>
-        </button>
-    </div>
+    <!-- Botón de WhatsApp flotante -->
+    <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+        <span class="float-text">COTIZAR</span>
+    </a>
 
-    <!-- ===== MODAL PARA PROYECTOS ===== -->
-    <div id="projectModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" aria-label="Cerrar modal" data-sound="click">
-                <i class="fas fa-times"></i>
-            </button>
-            
-            <div class="modal-body">
-                <!-- Contenido dinámico -->
+    <!-- Loader de lujo -->
+    <div class="luxury-loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">ODA</div>
+            <div class="loader-progress">
+                <div class="progress-bar"></div>
             </div>
+            <div class="loader-text">CARGANDO EXPERIENCIA PREMIUM</div>
         </div>
     </div>
 
-    <!-- ===== SONIDOS (ocultos) ===== -->
-    <audio id="spraySound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-spray-paint-967.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="shakeSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-shaking-a-spray-can-298.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="printSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-3d-printer-working-2654.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="clickSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- ===== SCRIPTS ===== -->
-    <script src="index_script.js"></script>
-    
-    <!-- Scripts adicionales para efectos -->
-    <script>
-        // Script para el efecto de filtrado de galería
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const galleryItems = document.querySelectorAll('.gallery-item');
-            
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remover active de todos los botones
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Agregar active al botón clickeado
-                    this.classList.add('active');
-                    
-                    const filterValue = this.getAttribute('data-filter');
-                    
-                    // Filtrar items
-                    galleryItems.forEach(item => {
-                        if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
-                            item.style.display = 'block';
-                            setTimeout(() => {
-                                item.style.opacity = '1';
-                                item.style.transform = 'scale(1)';
-                            }, 50);
-                        } else {
-                            item.style.opacity = '0';
-                            item.style.transform = 'scale(0.8)';
-                            setTimeout(() => {
-                                item.style.display = 'none';
-                            }, 300);
-                        }
-                    });
-                });
-            });
-            
-            // Efecto hover en tarjetas de servicio
-            const serviceCards = document.querySelectorAll('.service-card');
-            serviceCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-10px)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
-            
-            // Copiar email al portapapeles
-            const copyBtn = document.querySelector('.copy-btn');
-            if (copyBtn) {
-                copyBtn.addEventListener('click', function() {
-                    const email = this.getAttribute('data-text');
-                    navigator.clipboard.writeText(email).then(() => {
-                        this.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
-                        setTimeout(() => {
-                            this.innerHTML = '<i class="fas fa-copy"></i> Copiar email';
-                        }, 2000);
-                    });
-                });
-            }
-            
-            // Efecto de escritura para el subtítulo
-            const typewriterText = document.querySelector('.typewriter-text');
-            if (typewriterText) {
-                const texts = [
-                    "Impresión 3D • Reparación Expert • Publicidad Impactante",
-                    "Calidad Premium • Estilo Urbano • Garantía Total",
-                    "Innovación Tecnológica • Creatividad Sin Límites",
-                    "Soluciones Personalizadas • Acabados Perfectos"
-                ];
-                
-                let textIndex = 0;
-                let charIndex = 0;
-                let isDeleting = false;
-                
-                function type() {
-                    const currentText = texts[textIndex];
-                    
-                    if (isDeleting) {
-                        typewriterText.textContent = currentText.substring(0, charIndex - 1);
-                        charIndex--;
-                    } else {
-                        typewriterText.textContent = currentText.substring(0, charIndex + 1);
-                        charIndex++;
-                    }
-                    
-                    if (!isDeleting && charIndex === currentText.length) {
-                        isDeleting = true;
-                        setTimeout(type, 2000);
-                    } else if (isDeleting && charIndex === 0) {
-                        isDeleting = false;
-                        textIndex = (textIndex + 1) % texts.length;
-                        setTimeout(type, 500);
-                    } else {
-                        setTimeout(type, isDeleting ? 50 : 100);
-                    }
-                }
-                
-                setTimeout(type, 1000);
-            }
-        });
-    </script>
+    <script src="index.script.js"></script>
 </body>
 </html>
