@@ -7,9 +7,9 @@
 
 <!-- Fuentes urbanas -->
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="index_estilo.css">
+<link rel="stylesheet" href="index.estilo.css">
 
-<!-- Lottie -->
+<!-- Lottie (por si quieres animaciones extra) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
 </head>
 <body>
@@ -17,14 +17,12 @@
 <!-- PARTICULAS DE FONDO -->
 <canvas id="particle-canvas"></canvas>
 
+<!-- HEADER / MENU -->
 <header>
     <div class="logo">ODA</div>
     <div class="menu-icon" id="menu-icon">&#9776;</div>
 
     <nav id="nav">
-        <div class="menu-machine" id="menu-machine">
-            <img src="img/plotter.svg" alt="maquinita">
-        </div>
         <ul>
             <li><a href="#inicio">Inicio <span class="emoji">🏠</span></a></li>
             <li><a href="#servicios">Servicios <span class="emoji">🛠️</span></a></li>
@@ -35,12 +33,14 @@
     </nav>
 </header>
 
+<!-- HERO -->
 <section id="inicio" class="hero">
     <h1 class="glow">ODA</h1>
     <p class="subtitulo">Servicios urbanos • Estilo callejero</p>
     <button class="btn" onclick="scrollToSection('servicios')">Ver Servicios</button>
 </section>
 
+<!-- SERVICIOS -->
 <section id="servicios" class="bloque">
     <h2>Servicios</h2>
     <div class="cards">
@@ -57,16 +57,19 @@
     </div>
 </section>
 
+<!-- CONTACTO -->
 <section id="contacto" class="bloque">
     <h2>Contacto</h2>
     <p>Comunícate con nosotros o manda un mensaje a WhatsApp</p>
     <a href="https://wa.me/521XXXXXXXXXX" target="_blank" class="btn">Enviar mensaje</a>
 </section>
 
+<!-- FOOTER -->
 <footer>
     &copy; 2026 ODA • Estilo urbano grafitero
 </footer>
 
+<!-- JS -->
 <script src="index_script.js"></script>
 </body>
 </html>
