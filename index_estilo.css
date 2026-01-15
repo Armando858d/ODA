@@ -1,4 +1,46 @@
 /* ===== VARIABLES - TEMA GRAFITI PREMIUM ===== */
+/* Optimización para móviles */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .service-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+    }
+    
+    .nav-menu.active {
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    .floating-buttons {
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hero-title {
+        font-size: 3.5rem;
+    }
+    
+    .container {
+        padding: 0 30px;
+    }
+}
 :root {
     /* Base oscura urbana */
     --bg-primary: #0a0a0a;
