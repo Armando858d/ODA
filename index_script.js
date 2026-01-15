@@ -1,9 +1,7 @@
 // scroll reveal
 const sections = document.querySelectorAll('.bloque');
 const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if(entry.isIntersecting){ entry.target.classList.add('visible'); }
-    });
+    entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('visible'); } });
 }, { threshold:0.2 });
 sections.forEach(section => observer.observe(section));
 
@@ -13,20 +11,26 @@ function scrollToSection(id){ document.getElementById(id).scrollIntoView({ behav
 // menú desplegable + animación impresión
 const menuIcon = document.getElementById('menu-icon');
 const nav = document.getElementById('nav');
-const menuLinks = document.querySelectorAll('header nav a');
+const menuLinks = document.querySelectorAll('nav ul li a');
 
-function animateMachine(){ document.getElementById('menu-machine').classList.add('show'); }
 function animateMenu(){
-    menuLinks.forEach((link,i)=>{ setTimeout(()=>{ link.classList.add('show'); }, i*200); });
+    menuLinks.forEach((link,i)=>{
+        setTimeout(()=>{ link.classList.add('show'); }, i*200);
+    });
 }
 
 menuIcon.addEventListener('click', ()=>{
     nav.classList.toggle('active');
-    if(nav.classList.contains('active')){ animateMachine(); animateMenu(); }
-    else{ menuLinks.forEach(link=>link.classList.remove('show')); document.getElementById('menu-machine').classList.remove('show'); }
+    if(nav.classList.contains('active')){
+        document.getElementById('menu-machine').classList.add('show');
+        animateMenu();
+    } else {
+        menuLinks.forEach(link=>link.classList.remove('show'));
+        document.getElementById('menu-machine').classList.remove('show');
+    }
 });
 
-// PARTICULAS amarillas
+// PARTICULAS AMARILLAS
 const canvas=document.getElementById('particle-canvas');
 const ctx=canvas.getContext('2d');
 canvas.width=window.innerWidth;
@@ -52,16 +56,3 @@ function animateParticles(){
 }
 animateParticles();
 window.addEventListener('resize',()=>{ canvas.width=window.innerWidth; canvas.height=window.innerHeight; });
-
-// LOTTIE EMOJIS (simple emoji animado flotante)
-document.querySelectorAll('.emoji').forEach(el=>{
-    lottie.loadAnimation({
-        container:el,
-        renderer:'svg',
-        loop:true,
-        autoplay:true,
-        animationData: {
-            "v":"5.9.6","fr":30,"ip":0,"op":60,"w":50,"h":50,"nm":"emoji","ddd":0,
-            "assets":[],"layers":[{"ty":5,"t":{"d":{"k":[{"s":{"s":20,"f":"Arial","t":el.dataset.lottie,"j":0,"tr":0,"lh":20,"fc":[1,1,0]},"t":0}]}},"ip":0,"op":60,"st":0,"bm":0}]}
-    });
-});
