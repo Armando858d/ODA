@@ -1,17 +1,19 @@
-// ===== ODA 3D - EXPERIENCIA OPTIMIZADA =====
+// ===== ODA 3D - EXPERIENCIA RESPONSIVE OPTIMIZADA =====
 
 class ODAExperience {
     constructor() {
         this.isMobile = window.innerWidth < 768;
         this.isTablet = window.innerWidth < 1024;
+        this.isTouchDevice = 'ontouchstart' in window;
         this.scrollPosition = 0;
         this.isMenuOpen = false;
         this.init();
     }
 
     init() {
-        console.log('🚀 ODA EXPERIENCE - VERSIÓN OPTIMIZADA');
+        console.log('🚀 ODA EXPERIENCE - VERSIÓN RESPONSIVE');
         console.log(`📱 Dispositivo: ${this.isMobile ? 'Móvil' : this.isTablet ? 'Tablet' : 'Desktop'}`);
+        console.log(`👆 Touch: ${this.isTouchDevice ? 'Sí' : 'No'}`);
         
         this.setupLoader();
         this.setupNavigation();
@@ -21,8 +23,8 @@ class ODAExperience {
         this.setupForms();
         this.setupVideo();
         this.setupIntersectionObservers();
+        this.setupTouchEvents();
         
-        // Solo en desktop
         if (!this.isMobile) {
             this.setupCursorEffects();
         }
@@ -50,6 +52,8 @@ class ODAExperience {
         // Simular progreso de impresión
         let progress = 0;
         let global = 0;
+        const isSlowDevice = this.isMobile || this.isTablet;
+        const intervalTime = isSlowDevice ? 40 : 30; // Más lento en móviles
         
         const progressInterval = setInterval(() => {
             progress += 1;
@@ -73,8 +77,8 @@ class ODAExperience {
                 loadingStatus.textContent = 'FINALIZANDO...';
             }
             
-            // Animar figura ODA
-            if (printingFigure) {
+            // Animar figura ODA (solo si no es móvil lento)
+            if (printingFigure && !isSlowDevice) {
                 const height = (progress / 100) * 120;
                 printingFigure.style.height = `${height}px`;
                 printingFigure.style.opacity = 0.3 + (progress / 150);
@@ -99,7 +103,7 @@ class ODAExperience {
                     }, 500);
                 }, 800);
             }
-        }, 30);
+        }, intervalTime);
     }
 
     createODAFigure(container) {
@@ -190,6 +194,7 @@ class ODAExperience {
             e.stopPropagation();
             this.isMenuOpen = !this.isMenuOpen;
             toggle.classList.toggle('active');
+            toggle.setAttribute('aria-expanded', this.isMenuOpen);
             navMenu.classList.toggle('active');
             document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
         });
@@ -199,6 +204,7 @@ class ODAExperience {
             link.addEventListener('click', () => {
                 this.isMenuOpen = false;
                 toggle.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
                 navMenu.classList.remove('active');
                 document.body.style.overflow = '';
             });
@@ -209,12 +215,13 @@ class ODAExperience {
             if (!nav.contains(e.target) && this.isMenuOpen) {
                 this.isMenuOpen = false;
                 toggle.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
                 navMenu.classList.remove('active');
                 document.body.style.overflow = '';
             }
         });
 
-        // Smooth scroll
+        // Smooth scroll optimizado
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
@@ -227,14 +234,18 @@ class ODAExperience {
                     // Cerrar menú en móviles
                     if (window.innerWidth < 1024) {
                         toggle.classList.remove('active');
+                        toggle.setAttribute('aria-expanded', 'false');
                         navMenu.classList.remove('active');
                         document.body.style.overflow = '';
                         this.isMenuOpen = false;
                     }
                     
-                    // Scroll suave
+                    // Scroll suave con offset para navegación fija
+                    const offset = 80;
+                    const targetPosition = target.offsetTop - offset;
+                    
                     window.scrollTo({
-                        top: target.offsetTop - 80,
+                        top: targetPosition,
                         behavior: 'smooth'
                     });
                 }
@@ -243,15 +254,24 @@ class ODAExperience {
 
         // Progress bar en navegación
         if (navProgress) {
-            window.addEventListener('scroll', () => {
+            const updateProgress = () => {
                 const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
                 const scrolled = (window.scrollY / windowHeight) * 100;
                 navProgress.style.width = `${scrolled}%`;
+            };
+            
+            // Debounce para mejor rendimiento
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                if (scrollTimeout) {
+                    window.cancelAnimationFrame(scrollTimeout);
+                }
+                scrollTimeout = window.requestAnimationFrame(updateProgress);
             });
         }
 
         // Cambiar estilo de navegación al hacer scroll
-        window.addEventListener('scroll', () => {
+        const updateNavStyle = () => {
             this.scrollPosition = window.scrollY;
             
             if (this.scrollPosition > 50) {
@@ -262,6 +282,17 @@ class ODAExperience {
                 nav.style.background = 'rgba(10, 10, 10, 0.9)';
                 nav.style.backdropFilter = 'blur(20px)';
                 nav.style.borderBottomColor = 'rgba(255, 255, 255, 0.1)';
+            }
+        };
+        
+        // Throttle para mejor rendimiento
+        let navScrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!navScrollTimeout) {
+                navScrollTimeout = setTimeout(() => {
+                    updateNavStyle();
+                    navScrollTimeout = null;
+                }, 100);
             }
         });
     }
@@ -293,21 +324,21 @@ class ODAExperience {
                     observer.unobserve(stat);
                 }
             });
-        }, { threshold: 0.5 });
+        }, { threshold: 0.5, rootMargin: '50px' });
         
         stats.forEach(stat => observer.observe(stat));
     }
 
     animateCounter(element, target, suffix, duration) {
         let start = 0;
-        const increment = target / (duration / 16); // 60fps
+        const increment = target / (duration / 16);
         const startTime = Date.now();
         
         const updateCounter = () => {
             const elapsed = Date.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
             
-            // Easing function
+            // Easing function para mejor animación
             const easeOutQuart = 1 - Math.pow(1 - progress, 4);
             const current = Math.floor(target * easeOutQuart);
             
@@ -375,7 +406,7 @@ class ODAExperience {
         if (typeof gsap !== 'undefined' && gsap.utils && gsap.registerPlugin) {
             gsap.registerPlugin(ScrollTrigger);
             
-            // Parallax en elementos de fondo
+            // Parallax optimizado para performance
             const bgElements = document.querySelectorAll('.grid-line, .scan-effect');
             bgElements.forEach(el => {
                 gsap.to(el, {
@@ -385,12 +416,13 @@ class ODAExperience {
                         trigger: "body",
                         start: "top top",
                         end: "bottom bottom",
-                        scrub: true
+                        scrub: true,
+                        markers: false // Desactivar markers en producción
                     }
                 });
             });
             
-            // Reveal animations
+            // Reveal animations optimizadas
             const revealSections = document.querySelectorAll('.cyber-services, .cyber-process, .cyber-projects, .cyber-contact');
             
             revealSections.forEach(section => {
@@ -401,7 +433,8 @@ class ODAExperience {
                     scrollTrigger: {
                         trigger: section,
                         start: "top 80%",
-                        toggleActions: "play none none reverse"
+                        toggleActions: "play none none reverse",
+                        once: true // Solo animar una vez
                     }
                 });
             });
@@ -412,17 +445,15 @@ class ODAExperience {
         const container = document.getElementById('particles');
         if (!container || this.isMobile) return; // Menos partículas en móviles
 
-        const particleCount = this.isTablet ? 30 : 80;
+        const particleCount = this.isTablet ? 20 : 50; // Reducido para mejor rendimiento
         
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
             particle.className = 'cyber-particle';
             
-            const size = Math.random() * 3 + 1;
+            const size = Math.random() * 2 + 1; // Más pequeño
             const posX = Math.random() * 100;
             const posY = Math.random() * 100;
-            const duration = Math.random() * 10 + 10;
-            const delay = Math.random() * 5;
             const colors = ['#ff3e7a', '#00d9ff', '#9d4edd'];
             const color = colors[Math.floor(Math.random() * colors.length)];
             
@@ -434,7 +465,7 @@ class ODAExperience {
                 border-radius: 50%;
                 left: ${posX}%;
                 top: ${posY}%;
-                opacity: ${Math.random() * 0.3 + 0.1};
+                opacity: ${Math.random() * 0.2 + 0.1};
                 pointer-events: none;
                 filter: blur(${size / 2}px);
             `;
@@ -444,8 +475,8 @@ class ODAExperience {
             // Animación simple para mejor rendimiento
             const animate = () => {
                 const time = Date.now() * 0.001;
-                const x = Math.sin(time + i) * 100;
-                const y = Math.cos(time * 0.7 + i) * 100;
+                const x = Math.sin(time + i) * 50; // Movimiento reducido
+                const y = Math.cos(time * 0.5 + i) * 50;
                 
                 particle.style.transform = `translate(${x}px, ${y}px)`;
                 requestAnimationFrame(animate);
@@ -569,21 +600,16 @@ class ODAExperience {
     setupVideo() {
         // Optimizar video para móviles
         if (this.isMobile) {
-            const iframe = document.querySelector('.video-wrapper iframe');
-            if (iframe) {
+            const videoWrapper = document.querySelector('.video-wrapper');
+            if (videoWrapper) {
                 // Reducir calidad para mejor rendimiento en móviles
-                iframe.src = iframe.src.replace('autoplay=1', 'autoplay=0');
+                videoWrapper.style.filter = 'grayscale(100%) contrast(150%) brightness(0.3) blur(1px)';
                 
-                // Opcional: Pausar video en móviles
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (!entry.isIntersecting) {
-                            // Aquí podrías pausar el video si fuera necesario
-                        }
-                    });
-                }, { threshold: 0.1 });
-                
-                observer.observe(iframe);
+                // Pausar efectos pesados en móviles
+                const heavyEffects = document.querySelectorAll('.grid-overlay, .hologram-effect');
+                heavyEffects.forEach(effect => {
+                    effect.style.animationPlayState = 'paused';
+                });
             }
         }
     }
@@ -599,7 +625,10 @@ class ODAExperience {
                     }, index * 100);
                 }
             });
-        }, { threshold: 0.1 });
+        }, { 
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px' // Cargar antes de entrar en viewport
+        });
         
         cards.forEach(card => {
             card.classList.remove('animated');
@@ -622,6 +651,39 @@ class ODAExperience {
             step.classList.remove('animated');
             stepObserver.observe(step);
         });
+    }
+
+    setupTouchEvents() {
+        if (!this.isMobile) return;
+        
+        // Mejora la experiencia táctil
+        document.addEventListener('touchstart', () => {}, { passive: true });
+        
+        // Evita el zoom doble tap en botones
+        const buttons = document.querySelectorAll('button, a, input, textarea, select');
+        buttons.forEach(btn => {
+            btn.style.touchAction = 'manipulation';
+        });
+        
+        // Optimiza animaciones para móviles
+        this.optimizeForMobile();
+    }
+
+    optimizeForMobile() {
+        // Reduce efectos visuales en móviles para mejor rendimiento
+        if (this.isMobile) {
+            const heavyEffects = document.querySelectorAll('.grid-overlay, .hologram-effect, .scan-effect');
+            heavyEffects.forEach(effect => {
+                effect.style.animation = 'none';
+                effect.style.opacity = '0.05';
+            });
+            
+            // Desactiva animaciones complejas
+            const complexAnimations = document.querySelectorAll('.floating-shape, .printer-light, .head-glow');
+            complexAnimations.forEach(anim => {
+                anim.style.animation = 'none';
+            });
+        }
     }
 
     setupCursorEffects() {
@@ -689,6 +751,10 @@ class ODAExperience {
         document.addEventListener('mouseleave', () => {
             cursor.style.opacity = '0';
         });
+        
+        document.addEventListener('mouseenter', () => {
+            cursor.style.opacity = '1';
+        });
     }
 
     startMainAnimations() {
@@ -707,23 +773,25 @@ class ODAExperience {
             logoCube.style.animation = 'rotateCube 10s linear infinite';
         }
 
-        // Mostrar elementos con delay
-        const elementsToShow = [
-            '.hero-badge',
-            '.hero-description',
-            '.hero-stats',
-            '.hero-cta'
-        ];
-        
-        elementsToShow.forEach((selector, index) => {
-            const element = document.querySelector(selector);
-            if (element) {
-                setTimeout(() => {
-                    element.style.opacity = '1';
-                    element.style.transform = 'translateY(0)';
-                }, 300 + (index * 200));
-            }
-        });
+        // Mostrar elementos con delay (solo en desktop)
+        if (!this.isMobile) {
+            const elementsToShow = [
+                '.hero-badge',
+                '.hero-description',
+                '.hero-stats',
+                '.hero-cta'
+            ];
+            
+            elementsToShow.forEach((selector, index) => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }, 300 + (index * 200));
+                }
+            });
+        }
     }
 
     onLoad() {
@@ -750,7 +818,10 @@ class ODAExperience {
             const toggle = document.getElementById('mobileToggle');
             const navMenu = document.getElementById('navMenu');
             
-            if (toggle) toggle.classList.remove('active');
+            if (toggle) {
+                toggle.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
             if (navMenu) navMenu.classList.remove('active');
             document.body.style.overflow = '';
         }
@@ -759,6 +830,9 @@ class ODAExperience {
         if (typeof ScrollTrigger !== 'undefined') {
             ScrollTrigger.refresh();
         }
+        
+        // Re-optimizar para el nuevo tamaño
+        this.optimizeForMobile();
     }
 }
 
@@ -768,10 +842,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.visibility = 'hidden';
     
     // Iniciar experiencia
-    window.odaExp = new ODAExperience();
+    try {
+        window.odaExp = new ODAExperience();
+    } catch (error) {
+        console.error('Error al inicializar ODAExperience:', error);
+        document.body.style.visibility = 'visible';
+    }
 });
 
-// Agregar estilos adicionales
+// Agregar estilos adicionales dinámicamente
 const additionalStyles = `
     .service-card, .info-card, .project-card {
         opacity: 0;
@@ -814,6 +893,35 @@ const additionalStyles = `
             opacity: 1;
             transform: none;
             transition: none;
+        }
+    }
+    
+    /* Mejoras de accesibilidad */
+    @media (prefers-reduced-motion: reduce) {
+        .service-card, .info-card, .project-card,
+        .process-step,
+        .hero-badge,
+        .hero-description,
+        .hero-stats,
+        .hero-cta {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+    
+    /* Mejora de foco para accesibilidad */
+    *:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+    
+    /* Mejora de contraste para enlaces */
+    @media (prefers-contrast: high) {
+        .nav-link,
+        .card-link,
+        .info-link {
+            text-decoration: underline;
         }
     }
 `;
