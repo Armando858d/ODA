@@ -1,119 +1,307 @@
-/* mobile-optimize.css */
-/* Optimizaciones específicas para móviles y tablets */
+/* ===== RESPONSIVE - MEDIA QUERIES ===== */
 
-/* Mejora rendimiento táctil */
-* {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-}
-
-/* Optimiza animaciones para móviles */
-@media (max-width: 768px) {
-    .printer-3d,
-    .floating-shape,
-    .grid-overlay,
-    .hologram-effect {
-        will-change: transform;
-        backface-visibility: hidden;
-        transform: translateZ(0);
-    }
-    
-    /* Reduce animaciones pesadas */
-    .print-surface,
-    .printer-head,
-    .filament-spool {
-        animation-duration: 3s !important;
-    }
-    
-    /* Reduce partículas para mejor rendimiento */
-    .particle-field {
-        display: none;
-    }
-    
-    /* Desactiva efectos pesados */
-    .hologram-effect,
-    .grid-overlay {
-        opacity: 0.1;
-    }
-    
-    /* Mejora scroll en iOS */
-    .nav-menu {
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;
-    }
-}
-
-/* Tablets medianas (768px - 1023px) optimizadas */
-@media (max-width: 1023px) and (min-width: 768px) {
+/* Desktop grande (1200px+) */
+@media (min-width: 1200px) {
     .hero-container {
-        padding: 0 var(--space-lg);
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
     }
     
-    .hero-title {
-        text-align: center;
+    .hero-visual {
+        display: block;
     }
     
-    .hero-description {
-        text-align: center;
+    .contact-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Tablet grande y laptops pequeñas (992px - 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .projects-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .contact-info {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Tablet (768px - 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    .nav-menu {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        padding: var(--space-xl);
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-lg);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 999;
+    }
+    
+    .nav-menu.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .mobile-toggle {
+        display: block;
+    }
+    
+    .menu-container {
+        flex-direction: column;
+        gap: var(--space-xl);
+        width: 100%;
+        max-width: 400px;
         margin: 0 auto;
     }
     
     .services-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .hero-title .title-word {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+    }
+}
+
+/* Móvil grande (576px - 767px) */
+@media (max-width: 767px) and (min-width: 576px) {
+    .cyber-nav {
+        height: 70px;
+    }
+    
+    .nav-container {
+        height: 70px;
+        padding: 0 var(--space-sm);
+    }
+    
+    .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: var(--space-xl) var(--space-md);
+        overflow-y: auto;
+    }
+    
+    .nav-menu.active {
+        transform: translateX(0);
+    }
+    
+    .mobile-toggle {
+        display: block;
+    }
+    
+    .cyber-hero {
+        padding-top: 120px;
+        padding-bottom: 60px;
+    }
+    
+    .hero-title .title-word {
+        font-size: clamp(2rem, 7vw, 3rem);
+    }
+    
+    .hero-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-sm);
+    }
+    
+    .services-grid,
+    .projects-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .service-card,
+    .project-card {
+        padding: var(--space-lg);
     }
     
     .contact-info {
         grid-template-columns: repeat(2, 1fr);
     }
-}
-
-/* Tablets pequeñas y móviles grandes (600px - 767px) */
-@media (max-width: 767px) and (min-width: 600px) {
-    .section-container {
-        padding: 0 var(--space-md);
-    }
     
-    .hero-title .title-word {
-        font-size: clamp(2rem, 8vw, 3rem);
-    }
-    
-    .projects-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-md);
+    .whatsapp-float .float-text {
+        display: none;
     }
 }
 
-/* Móviles pequeños (480px y menos) */
-@media (max-width: 480px) {
+/* Móvil pequeño (575px y menos) */
+@media (max-width: 575px) {
     :root {
-        --space-unit: 0.8rem; /* Reduce espaciado en móviles */
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-xxl: 3rem;
     }
     
-    body {
-        font-size: 15px; /* Texto ligeramente más pequeño */
+    .cyber-nav {
+        height: 60px;
     }
     
-    .hero-container,
-    .section-container {
+    .nav-container {
+        height: 60px;
         padding: 0 var(--space-sm);
     }
     
-    .cta-button {
-        min-width: auto;
+    .nav-logo .logo-subtitle {
+        display: none;
+    }
+    
+    .nav-menu {
+        position: fixed;
+        top: 60px;
+        left: 0;
         width: 100%;
-        justify-content: space-between;
-        padding: var(--space-sm) var(--space-md);
+        height: calc(100vh - 60px);
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: var(--space-xl) var(--space-sm);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .nav-menu.active {
+        transform: translateX(0);
+    }
+    
+    .menu-container {
+        flex-direction: column;
+        gap: var(--space-xl);
+        width: 100%;
+        padding: var(--space-xl) 0;
+    }
+    
+    .nav-link {
+        width: 100%;
+        justify-content: center;
+        padding: var(--space-md);
+        font-size: 1.1rem;
+    }
+    
+    .mobile-toggle {
+        display: block;
+    }
+    
+    .cyber-hero {
+        padding-top: 100px;
+        padding-bottom: 40px;
+        min-height: auto;
+    }
+    
+    .hero-title .title-word {
+        font-size: clamp(1.8rem, 6vw, 2.5rem);
+    }
+    
+    .title-line {
+        display: block;
+        text-align: center;
+    }
+    
+    .hero-description {
+        text-align: center;
+    }
+    
+    .description-line {
+        margin: 0 auto;
+    }
+    
+    .hero-stats {
+        grid-template-columns: 1fr;
+        max-width: 250px;
+        margin: var(--space-xl) auto;
     }
     
     .hero-cta {
         flex-direction: column;
         gap: var(--space-sm);
+        max-width: 280px;
+        margin: var(--space-xl) auto;
     }
     
-    .footer-links {
-        flex-direction: column;
-        gap: var(--space-md);
+    .cta-button {
+        width: 100%;
+        min-width: auto;
+        justify-content: space-between;
+        padding: var(--space-md);
+    }
+    
+    .services-grid,
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+        padding: 0 var(--space-sm);
+    }
+    
+    .service-card,
+    .project-card {
+        padding: var(--space-md);
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+        padding: 0 var(--space-sm);
+    }
+    
+    .process-step {
+        padding: var(--space-lg);
         text-align: center;
+    }
+    
+    .contact-grid {
+        gap: var(--space-lg);
+    }
+    
+    .contact-form {
+        padding: var(--space-lg);
+    }
+    
+    .contact-info {
+        grid-template-columns: 1fr;
+        padding: 0 var(--space-sm);
+    }
+    
+    .info-card {
+        padding: var(--space-md);
     }
     
     .footer-main {
@@ -121,46 +309,127 @@
         align-items: center;
     }
     
-    /* Mejora formularios en móviles */
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        font-size: 16px; /* Evita zoom automático en iOS */
+    .footer-links {
+        flex-direction: column;
+        gap: var(--space-md);
     }
     
-    .submit-button {
-        padding: var(--space-md);
+    .whatsapp-float {
+        bottom: 20px;
+        right: 20px;
+        padding: var(--space-sm);
+    }
+    
+    .whatsapp-float .float-text {
+        display: none;
+    }
+    
+    /* Optimizar loader para móviles */
+    .printer-3d {
+        height: 200px;
+        max-width: 350px;
+    }
+    
+    .logo-hologram {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+        letter-spacing: 0.2em;
+        gap: 0.2rem;
+    }
+    
+    .loading-details {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    /* Optimizar video para móviles */
+    #bgVideo {
+        display: block;
+    }
+    
+    .mobile-blur {
+        display: block;
+    }
+    
+    /* Reducir animaciones en móviles */
+    .grid-overlay,
+    .hologram-effect,
+    .scan-effect {
+        opacity: 0.1;
+    }
+    
+    .floating-shape {
+        display: none;
     }
 }
 
 /* Dispositivos muy pequeños (360px y menos) */
 @media (max-width: 360px) {
-    :root {
-        --fs-hero: clamp(1.8rem, 7vw, 2.5rem);
-        --fs-xxl: clamp(1.5rem, 6vw, 2rem);
+    .hero-title .title-word {
+        font-size: 1.5rem;
     }
     
-    .service-card,
-    .info-card,
-    .project-card {
-        padding: var(--space-md);
-    }
-    
-    .logo-hologram {
-        font-size: clamp(1.2rem, 5vw, 2rem);
-        letter-spacing: 0.1em;
-    }
-    
-    .hero-stats .stat-value {
-        font-size: 2rem;
+    .stat-value {
+        font-size: 1.8rem;
     }
     
     .section-title {
-        font-size: var(--fs-xl);
+        font-size: 1.5rem;
+    }
+    
+    .service-card,
+    .project-card,
+    .info-card {
+        padding: var(--space-sm);
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .card-tag {
+        margin-top: var(--space-sm);
     }
 }
 
-/* Arregla problemas específicos de iOS */
+/* ===== OPTIMIZACIONES ESPECÍFICAS ===== */
+
+/* Mejorar rendimiento en móviles */
+@media (max-width: 768px) {
+    /* Desactivar efectos pesados */
+    .grid-overlay {
+        animation: none;
+        opacity: 0.05;
+    }
+    
+    .hologram-effect,
+    .scan-effect {
+        display: none;
+    }
+    
+    /* Reducir calidad de video */
+    #bgVideo {
+        filter: brightness(0.3) contrast(1.1);
+    }
+    
+    /* Optimizar animaciones */
+    .printer-3d,
+    .printing-figure,
+    .printer-head {
+        will-change: transform;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+    
+    /* Mejorar scroll */
+    .nav-menu {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+}
+
+/* Correcciones para iOS */
 @supports (-webkit-touch-callout: none) {
     .cyber-hero {
         min-height: -webkit-fill-available;
@@ -171,29 +440,23 @@
     }
     
     .whatsapp-float {
-        bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
+        bottom: calc(20px + env(safe-area-inset-bottom));
     }
     
-    /* Mejora scroll en iOS */
-    body {
-        -webkit-overflow-scrolling: touch;
+    /* Evitar zoom en inputs */
+    input, textarea, select {
+        font-size: 16px !important;
     }
 }
 
-/* Mejora para Android Chrome */
+/* Correcciones para Android Chrome */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
     .cyber-background {
         transform: translateZ(0);
     }
-    
-    /* Mejora rendimiento de animaciones */
-    .printer-loader,
-    .cyber-nav {
-        will-change: transform;
-    }
 }
 
-/* Deshabilita animaciones si el usuario prefiere reducidas */
+/* Preferencias de usuario */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -202,23 +465,10 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-    
-    .printer-loader,
-    .cyber-hero,
-    .service-card,
-    .process-step {
-        transition: none !important;
-    }
 }
 
-/* Mejora de contraste para accesibilidad */
+/* Alto contraste */
 @media (prefers-contrast: high) {
-    :root {
-        --color-primary: #ff1a5e;
-        --color-secondary: #00b8e6;
-        --color-accent: #8a2be2;
-    }
-    
     .nav-link,
     .card-link,
     .info-link {
@@ -226,14 +476,14 @@
     }
 }
 
-/* Modo oscuro forzado */
+/* Modo oscuro */
 @media (prefers-color-scheme: dark) {
     .cyber-background {
         filter: brightness(0.8);
     }
 }
 
-/* Optimización de impresión */
+/* Impresión */
 @media print {
     .printer-loader,
     .cyber-background,
@@ -248,7 +498,6 @@
     body {
         background: white !important;
         color: black !important;
-        font-size: 12pt !important;
     }
     
     .cyber-hero,
@@ -257,11 +506,5 @@
     .cyber-projects,
     .cyber-contact {
         padding: 1cm 0 !important;
-        break-inside: avoid;
-    }
-    
-    a {
-        color: black !important;
-        text-decoration: underline !important;
     }
 }
