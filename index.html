@@ -3,591 +3,779 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servicios ODA - Impresión 3D Premium</title>
+    <title>ODA STUDIO | Impresión 3D Premium</title>
     
-    <!-- Fonts -->
+    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;700;900&family=Dancing+Script&family=Bebas+Neue&family=Orbitron:wght@400;700&family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Archivo:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Particles.js -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
     <link rel="stylesheet" href="index_estilo.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23FFD700%22>⚡</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23FF6B35%22>◼</text></svg>">
 </head>
 <body>
-    <!-- Partículas de fondo -->
-    <div id="particles-js"></div>
-    
-    <!-- Textura overlay premium -->
-    <div class="texture-overlay"></div>
-    
-    <!-- Navegación combinada -->
-    <header class="main-nav-combined">
-        <div class="nav-container">
-            <!-- Logo 3D premium -->
-            <div class="logo-container">
-                <div class="logo-3d-premium" id="logo3d">
-                    <span class="layer-1">ODA</span>
-                    <span class="layer-2">ODA</span>
-                    <span class="layer-3">ODA</span>
-                </div>
-                <div class="logo-tag">Excelencia en cada servicio, elige calidad.</div>
-            </div>
-            
-            <!-- Navegación premium con números -->
-            <nav class="nav-desktop">
-                <a href="#hero" class="nav-link active"><span class="link-number">01</span>Inicio</a>
-                <a href="#servicios" class="nav-link"><span class="link-number">02</span>Servicios</a>
-                <a href="#procesos" class="nav-link"><span class="link-number">03</span>Proceso</a>
-                <a href="#proyectos" class="nav-link"><span class="link-number">04</span>Proyectos</a>
-                <a href="#contacto" class="nav-link premium"><span class="link-number">05</span>Contacto</a>
-            </nav>
-            
-            <!-- Menú móvil -->
-            <button class="menu-toggle" id="menuToggle" aria-label="Menú principal">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <div class="nav-mobile" id="navMobile">
-                <div class="mobile-header">
-                    <div class="mobile-brand">ODA</div>
-                    <button class="mobile-close" aria-label="Cerrar menú">&times;</button>
-                </div>
-                <div class="mobile-links">
-                    <a href="#hero"><i class="fas fa-spray-can"></i> Inicio</a>
-                    <a href="#servicios"><i class="fas fa-cube"></i> Servicios</a>
-                    <a href="#procesos"><i class="fas fa-cogs"></i> Proceso</a>
-                    <a href="#proyectos"><i class="fas fa-paint-roller"></i> Proyectos</a>
-                    <a href="#contacto" class="premium"><i class="fas fa-gem"></i> Contacto Premium</a>
-                </div>
-                <div class="mobile-footer">
-                    <p>"Arte urbano con tecnología de lujo"</p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Hero combinado -->
-    <section id="hero" class="hero-combined">
-        <div class="parallax-layer" data-speed="0.1"></div>
-        <div class="parallax-layer" data-speed="0.3"></div>
-        
-        <div class="hero-overlay"></div>
-        
-        <div class="container hero-container">
-            <div class="hero-content">
-                <div class="hero-tag">TECNOLOGÍA & CREATIVIDAD</div>
-                
-                <h1 class="hero-title">
-                    <span class="title-line" data-text="IMPRESIONES">IMPRESIONES</span>
-                    <span class="title-line accent" data-text="EN 3D">EN 3D</span>
-                </h1>
-                
-                <div class="hero-subtitle">
-                    <h2>Creando piezas únicas a tu medida</h2>
-                    <p>En ODA realizamos impresión 3D con materiales de calidad, creando piezas a medida según tus necesidades o ofreciendo productos listos en nuestro catálogo. Desde prototipos funcionales hasta estatuas y decoraciones, cada proyecto se puede personalizar: pintar, modelar o ajustar según lo que busques, pero también puedes elegir entre nuestras piezas ya disponibles para compra inmediata.</p>
-                    <p>Nos enfocamos en detalles y acabados cuidados, para que cada pieza tenga un resultado atractivo y funcional, adaptado a tu idea o lista para disfrutar directamente de nuestro catálogo.</p>
-                </div>
-                
-                <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-number" data-count="143">0</div>
-                        <div class="stat-label">IMPRESIONES 3D</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number" data-count="122">0</div>
-                        <div class="stat-label">Modelados 3D</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number" data-count="97">0<span class="percent">%</span></div>
-                        <div class="stat-label">Satisfacción</div>
-                    </div>
-                </div>
-                
-                <div class="hero-cta">
-                    <a href="#servicios" class="cta-primary">
-                        <i class="fas fa-cube"></i>
-                        <span class="cta-text">EXPLORAR SERVICIOS</span>
-                        <span class="cta-icon">→</span>
-                    </a>
-                    <a href="#contacto" class="cta-secondary">
-                        <i class="fas fa-gem"></i>
-                        <span class="cta-text">COTIZACIÓN EXPRESS</span>
-                        <span class="cta-badge">EXCLUSIVO</span>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Impresora 3D animada -->
-            <div class="printer-animation">
-                <div class="printer">
-                    <div class="printer-body"></div>
+    <!-- Loader con impresora 3D que crea una figura -->
+    <div class="printer-loader" id="printerLoader">
+        <div class="loader-container">
+            <!-- Impresora 3D mejorada -->
+            <div class="printer-3d">
+                <div class="printer-frame">
                     <div class="printer-bed">
-                        <div class="printing-object" id="printingObject"></div>
+                        <!-- Base donde se imprime -->
+                        <div class="print-surface">
+                            <!-- Aquí se creará la figura ODA -->
+                            <div class="printing-figure" id="printingFigure">
+                                <!-- La figura se generará con JS -->
+                            </div>
+                        </div>
                     </div>
+                    
+                    <!-- Cabezal de impresión -->
                     <div class="printer-head">
-                        <div class="nozzle"></div>
+                        <div class="extruder">
+                            <div class="nozzle">
+                                <div class="filament-flow"></div>
+                            </div>
+                        </div>
+                        <div class="head-glow"></div>
                     </div>
-                    <div class="filament-spool">
-                        <div class="filament"></div>
+                    
+                    <!-- Controles de la impresora -->
+                    <div class="printer-controls">
+                        <div class="temp-display">
+                            <span class="temp-value">215°C</span>
+                            <div class="temp-bar">
+                                <div class="temp-fill"></div>
+                            </div>
+                        </div>
+                        <div class="progress-display">
+                            <div class="progress-text">IMPRIMIENDO</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="printProgress"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
+                <!-- Carrete de filamento -->
+                <div class="filament-spool">
+                    <div class="spool-core"></div>
+                    <div class="spool-filament"></div>
+                    <div class="spool-rotation"></div>
+                </div>
+                
+                <!-- Luz de impresora -->
+                <div class="printer-light"></div>
+            </div>
+            
+            <!-- Texto del loader -->
+            <div class="loader-text">
+                <div class="logo-hologram">
+                    <span class="logo-char" data-char="O">O</span>
+                    <span class="logo-char" data-char="D">D</span>
+                    <span class="logo-char" data-char="A">A</span>
+                </div>
+                <div class="tagline">STUDIO 3D</div>
+                <div class="loading-status" id="loadingStatus">INICIALIZANDO IMPRESORA...</div>
+                <div class="loading-details">
+                    <span class="detail">PRECISIÓN: 0.1mm</span>
+                    <span class="detail">MATERIAL: PLA PREMIUM</span>
+                </div>
+            </div>
+            
+            <!-- Barra de progreso general -->
+            <div class="global-progress">
+                <div class="global-bar">
+                    <div class="global-fill" id="globalProgress"></div>
+                </div>
+                <div class="global-text">CARGANDO EXPERIENCIA 3D</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fondo futurista con video -->
+    <div class="cyber-background">
+        <!-- Video de impresión 3D de fondo -->
+        <div class="video-background">
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/watch?v=Gb_-rZB2Foc&list=RDphaJXp_zMYM&index=13"
+                    title="Impresión 3D"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+                <div class="video-filter"></div>
             </div>
         </div>
         
-        <!-- Elementos flotantes -->
-        <div class="floating-elements">
-            <div class="floating-cube"><i class="fas fa-cube"></i></div>
-            <div class="floating-spray"><i class="fas fa-spray-can"></i></div>
-            <div class="floating-diamond"><i class="fas fa-gem"></i></div>
+        <!-- Efectos futuristas superpuestos -->
+        <div class="grid-overlay">
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
         </div>
         
-        <!-- Scroll indicator -->
+        <div class="particle-field" id="particles"></div>
+        <div class="scan-effect"></div>
+        <div class="hologram-effect"></div>
+        
+        <!-- Capa de desenfoque para móviles -->
+        <div class="mobile-blur"></div>
+    </div>
+
+    <!-- Navegación optimizada -->
+    <nav class="cyber-nav" id="cyberNav">
+        <div class="nav-container">
+            <!-- Logo responsive -->
+            <div class="nav-logo">
+                <a href="#hero" class="logo-link">
+                    <div class="logo-3d">
+                        <span class="logo-cube">◼</span>
+                        <span class="logo-text">ODA</span>
+                        <div class="logo-glow"></div>
+                    </div>
+                    <div class="logo-subtitle">3D PRINT STUDIO</div>
+                </a>
+            </div>
+
+            <!-- Menú principal responsive -->
+            <div class="nav-menu" id="navMenu">
+                <div class="menu-container">
+                    <a href="#hero" class="nav-link active">
+                        <span class="link-indicator"></span>
+                        <span class="link-number">01</span>
+                        <span class="link-text">INICIO</span>
+                    </a>
+                    <a href="#servicios" class="nav-link">
+                        <span class="link-indicator"></span>
+                        <span class="link-number">02</span>
+                        <span class="link-text">SERVICIOS</span>
+                    </a>
+                    <a href="#proceso" class="nav-link">
+                        <span class="link-indicator"></span>
+                        <span class="link-number">03</span>
+                        <span class="link-text">PROCESO</span>
+                    </a>
+                    <a href="#proyectos" class="nav-link">
+                        <span class="link-indicator"></span>
+                        <span class="link-number">04</span>
+                        <span class="link-text">PROYECTOS</span>
+                    </a>
+                    <a href="#contacto" class="nav-link cta-button">
+                        <span class="link-indicator"></span>
+                        <span class="link-number">05</span>
+                        <span class="link-text">CONTACTO</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Botón menú móvil -->
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Menú">
+                <span class="toggle-bar"></span>
+                <span class="toggle-bar"></span>
+                <span class="toggle-bar"></span>
+                <div class="toggle-glow"></div>
+            </button>
+        </div>
+        
+        <!-- Indicador de scroll -->
+        <div class="nav-progress" id="navProgress"></div>
+    </nav>
+
+    <!-- Hero Section optimizada -->
+    <section id="hero" class="cyber-hero">
+        <div class="hero-container">
+            <!-- Contenido principal -->
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-text">TECNOLOGÍA DE VANGUARDIA</span>
+                    <div class="badge-line"></div>
+                </div>
+
+                <h1 class="hero-title">
+                    <div class="title-line line-1">
+                        <span class="title-word word-1">IMPRESIÓN</span>
+                    </div>
+                    <div class="title-line line-2">
+                        <span class="title-word word-2">3D</span>
+                        <span class="title-word word-3">PREMIUM</span>
+                    </div>
+                </h1>
+
+                <div class="hero-description">
+                    <p class="description-text">
+                        Transformamos ideas en realidades tangibles. Impresión 3D de alta precisión 
+                        con materiales premium y acabados profesionales.
+                    </p>
+                    <div class="description-line"></div>
+                </div>
+
+                <!-- Estadísticas animadas -->
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" data-count="250">0</div>
+                        <div class="stat-label">PROYECTOS</div>
+                        <div class="stat-progress">
+                            <div class="progress-track"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" data-count="99">0<span class="percent">%</span></div>
+                        <div class="stat-label">SATISFACCIÓN</div>
+                        <div class="stat-progress">
+                            <div class="progress-track"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" data-count="48">0</div>
+                        <div class="stat-label">HORAS</div>
+                        <div class="stat-label-sub">Tiempo promedio</div>
+                        <div class="stat-progress">
+                            <div class="progress-track"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="hero-cta">
+                    <a href="#servicios" class="cta-button primary">
+                        <span class="button-text">VER SERVICIOS</span>
+                        <div class="button-icon">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <div class="button-glow"></div>
+                    </a>
+                    <a href="#contacto" class="cta-button secondary">
+                        <span class="button-text">COTIZAR AHORA</span>
+                        <span class="button-badge">RÁPIDO</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Elemento visual flotante -->
+            <div class="hero-visual">
+                <div class="floating-shape shape-1"></div>
+                <div class="floating-shape shape-2"></div>
+                <div class="floating-shape shape-3"></div>
+            </div>
+        </div>
+
+        <!-- Indicador de scroll -->
         <div class="scroll-indicator">
-            <div class="mouse">
-                <div class="wheel"></div>
+            <div class="mouse-icon">
+                <div class="mouse-wheel"></div>
             </div>
-            <span>SCROLL</span>
+            <div class="scroll-text">DESPLAZAR</div>
         </div>
     </section>
 
-    <!-- Servicios Combinados -->
-    <section id="servicios" class="section-luxury">
-        <div class="container">
+    <!-- Servicios Section - Responsive -->
+    <section id="servicios" class="cyber-services">
+        <div class="section-container">
             <div class="section-header">
-                <div class="section-number">02</div>
-                <h2 class="section-title">CREACIÓN 3D <span class="title-accent">PREMIUM</span></h2>
-                <p class="section-subtitle">CREACIONES 3D EXCLUSIVAS A TU MEDIDA</p>
+                <div class="section-label">
+                    <span class="label-number">02</span>
+                    <span class="label-text">SERVICIOS</span>
+                </div>
+                <h2 class="section-title">
+                    <span class="title-main">CREACIÓN</span>
+                    <span class="title-accent">3D</span>
+                </h2>
+                <p class="section-subtitle">
+                    Soluciones de impresión 3D para cada necesidad
+                </p>
+                <div class="section-divider">
+                    <div class="divider-line"></div>
+                    <div class="divider-dot"></div>
+                </div>
             </div>
-            
+
             <div class="services-grid">
-                <!-- Servicio 1 -->
-                <div class="service-card luxury">
-                    <div class="service-icon">
-                        <div class="icon-3d-animated">
+                <!-- Tarjeta 1 -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-print"></i>
+                            <div class="icon-pulse"></div>
+                        </div>
+                        <h3 class="card-title">IMPRESIÓN 3D</h3>
+                        <div class="card-tag">
+                            <span class="tag-text">PREMIUM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="card-features">
+                            <span class="feature">PLA+</span>
+                            <span class="feature">PETG</span>
+                            <span class="feature">ABS</span>
+                            <span class="feature">TPU</span>
+                        </div>
+                        
+                        <p class="card-description">
+                            Impresión de alta calidad con precisión de 0.1mm. 
+                            Piezas funcionales y decorativas con acabados perfectos.
+                        </p>
+                        
+                        <div class="card-specs">
+                            <div class="spec">
+                                <div class="spec-value">0.1mm</div>
+                                <div class="spec-label">Resolución</div>
+                            </div>
+                            <div class="spec">
+                                <div class="spec-value">±0.05mm</div>
+                                <div class="spec-label">Precisión</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <a href="#contacto" class="card-link">
+                            <span>Solicitar cotización</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="card-glow"></div>
+                </div>
+
+                <!-- Tarjeta 2 -->
+                <div class="service-card featured">
+                    <div class="card-header">
+                        <div class="card-icon">
                             <i class="fas fa-cube"></i>
-                            <div class="icon-glow"></div>
+                            <div class="icon-pulse"></div>
+                        </div>
+                        <h3 class="card-title">DISEÑO 3D</h3>
+                        <div class="card-tag">
+                            <span class="tag-text">POPULAR</span>
                         </div>
                     </div>
-                    <div class="service-content">
-                        <div class="service-header">
-                            <h3>IMPRESIÓN 3D</h3>
-                            <span class="service-price">$$$</span>
+                    
+                    <div class="card-content">
+                        <div class="card-features">
+                            <span class="feature">Fusion 360</span>
+                            <span class="feature">Blender</span>
+                            <span class="feature">SolidWorks</span>
                         </div>
-                        <div class="service-tags">
-                            <span class="tag">PLA PREMIUM</span>
-                            <span class="tag">PETG</span>
-                            <span class="tag">ABS</span>
-                            <span class="tag">TPU</span>
-                            <span class="tag">TPE</span>
-                            <span class="tag">FILAMENTOS ESPECIALES</span>
-                        </div>
-                        <p class="service-description">
-                            Piezas únicas con filamentos premium (PLA, PETG, TPU y acabados especiales). Desde prototipos funcionales hasta arte y decoración personalizada.
+                        
+                        <p class="card-description">
+                            Modelado profesional desde cero o optimización de archivos 
+                            existentes para impresión perfecta.
                         </p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check-circle"></i> Resolución fina hasta 0.2 mm</li>
-                            <li><i class="fas fa-check-circle"></i> Materiales de calidad con acabados personalizados</li>
-                            <li><i class="fas fa-check-circle"></i> Acabados personalizados</li>
-                        </ul>
-                        <div class="service-stats">
-                            <div class="mini-stat">
-                                <div class="mini-value">Producción rápida</div>
-                                <div class="mini-label">Según pedido</div>
-                            </div>
-                            <div class="mini-stat">
-                                <div class="mini-value">Calidad confiable</div>
-                                <div class="mini-label">En cada pieza</div>
-                            </div>
-                        </div>
-                        <div class="service-footer">
-                            <a href="#contacto" class="service-link">
-                                SOLICITAR COTIZACIÓN 
-                                <i class="fas fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="service-decoration">
-                        <div class="cube-3d"></div>
-                    </div>
-                </div>
-
-                <!-- Servicio 2 -->
-                <div class="service-card luxury">
-                    <div class="service-icon">
-                        <div class="icon-spray-animated">
-                            <i class="fas fa-spray-can"></i>
-                            <div class="icon-glow"></div>
-                        </div>
-                    </div>
-                    <div class="service-content">
-                        <div class="service-header">
-                            <h3>MODELADO Y OPTIMIZACIÓN DE PIEZAS (BÁSICO)</h3>
-                            <span class="service-tag">TRENDING</span>
-                        </div>
-                        <div class="service-tags">
-                            <span class="tag">DISEÑO</span>
-                            <span class="tag">MEJORA</span>
-                            <span class="tag">MEDIDAS EXACTAS</span>
-                        </div>
-                        <p class="service-description">
-                            Transformamos tus ideas en modelos 3D precisos. Podemos crear desde cero, mejorar archivos STL o ajustar tus piezas para que estén listas para producción o prototipado.
-                        </p>
-                        <div class="service-stats">
-                            <div class="stat">
-                                <span class="stat-number">97%</span>
-                                <span class="stat-label">Precisión en detalles</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-number">24</span>
-                                <span class="stat-label">Proyectos moldeados</span>
-                            </div>
-                        </div>
-                        <div class="service-footer">
-                            <a href="#proyectos" class="service-link">
-                                VER PORTFOLIO 
-                                <i class="fas fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Servicio 3 -->
-                <div class="service-card luxury">
-                    <div class="service-icon">
-                        <div class="icon-brand-animated">
-                            <i class="fas fa-paint-brush"></i>
-                            <div class="icon-glow"></div>
-                        </div>
-                    </div>
-                    <div class="service-content">
-                        <div class="service-header">
-                            <h3>ACABADO ARTÍSTICO</h3>
-                            <span class="service-badge">EXCLUSIVO</span>
-                        </div>
-                        <div class="service-tags">
-                            <span class="tag">IDENTIDAD</span>
-                            <span class="tag">DISEÑO</span>
-                            <span class="tag">ACABADO</span>
-                        </div>
-                        <p class="service-description">
-                            Transforma tus piezas 3D en verdaderas obras únicas. Pintura a mano sobre tus impresiones para lograr acabados exclusivos y detallados, totalmente personalizados.
-                        </p>
+                        
                         <div class="design-process">
                             <div class="process-step">
                                 <span>Concepto</span>
-                                <div class="process-bar"><div class="process-fill" style="width: 98%"></div></div>
+                                <div class="process-bar">
+                                    <div class="process-fill"></div>
+                                </div>
                             </div>
                             <div class="process-step">
-                                <span>Pintura a mano</span>
-                                <div class="process-bar"><div class="process-fill" style="width: 90%"></div></div>
+                                <span>Modelado</span>
+                                <div class="process-bar">
+                                    <div class="process-fill"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="service-footer">
-                            <a href="#contacto" class="service-link premium">
-                                SOLICITAR ACABADO ARTÍSTICO 
-                                <i class="fas fa-crown"></i>
-                            </a>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <a href="#proyectos" class="card-link">
+                            <span>Ver portfolio</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="card-glow"></div>
+                    <div class="featured-badge">
+                        <i class="fas fa-star"></i>
+                        <span>MÁS SOLICITADO</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3 -->
+                <div class="service-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-paint-brush"></i>
+                            <div class="icon-pulse"></div>
+                        </div>
+                        <h3 class="card-title">ACABADO PRO</h3>
+                        <div class="card-tag">
+                            <span class="tag-text">EXCLUSIVO</span>
                         </div>
                     </div>
+                    
+                    <div class="card-content">
+                        <div class="card-features">
+                            <span class="feature">Pintura</span>
+                            <span class="feature">Pulido</span>
+                            <span class="feature">Barnizado</span>
+                            <span class="feature">Ensamblaje</span>
+                        </div>
+                        
+                        <p class="card-description">
+                            Transformamos impresiones 3D en obras de arte. 
+                            Acabados profesionales que destacan cada detalle.
+                        </p>
+                        
+                        <div class="quality-indicator">
+                            <div class="quality-bar">
+                                <div class="quality-fill"></div>
+                            </div>
+                            <div class="quality-text">CALIDAD GARANTIZADA</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <a href="#contacto" class="card-link premium">
+                            <span>Solicitar acabado</span>
+                            <i class="fas fa-crown"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="card-glow"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Proceso de trabajo -->
-    <section id="procesos" class="process-section">
-        <div class="container">
+    <!-- Proceso Section -->
+    <section id="proceso" class="cyber-process">
+        <div class="section-container">
             <div class="section-header">
-                <h2 class="section-title">NUESTRO <span class="highlight">PROCESO</span></h2>
-                <p class="section-subtitle">Del archivo digital a tus manos</p>
+                <div class="section-label">
+                    <span class="label-number">03</span>
+                    <span class="label-text">PROCESO</span>
+                </div>
+                <h2 class="section-title">
+                    <span class="title-main">NUESTRO</span>
+                    <span class="title-accent">FLUJO</span>
+                </h2>
+                <p class="section-subtitle">
+                    Desde la idea hasta la pieza final
+                </p>
             </div>
-            
-            <div class="process-steps">
-                <div class="step" data-step="1">
-                    <div class="step-number">01</div>
-                    <div class="step-content">
-                        <h3>CONCEPTO</h3>
-                        <p>Platicamos tu idea, la bocetamos y le damos forma digital.</p>
+
+            <div class="process-timeline">
+                <!-- Paso 1 -->
+                <div class="process-step">
+                    <div class="step-marker">
+                        <div class="marker-number">01</div>
+                        <div class="marker-glow"></div>
                     </div>
-                    <div class="step-visual">
-                        <div class="visual-concept">
-                            <div class="sketch"></div>
-                            <div class="sketch"></div>
-                            <div class="sketch"></div>
-                        </div>
+                    <div class="step-content">
+                        <h3 class="step-title">CONSULTA</h3>
+                        <p class="step-description">
+                            Analizamos tu proyecto y definimos materiales, 
+                            técnicas y presupuesto.
+                        </p>
                     </div>
                 </div>
-                
-                <div class="step" data-step="2">
-                    <div class="step-number">02</div>
-                    <div class="step-content">
-                        <h3>MODELADO 3D</h3>
-                        <p>Convertimos el concepto en modelo 3D listo para imprimir.</p>
+
+                <!-- Paso 2 -->
+                <div class="process-step">
+                    <div class="step-marker">
+                        <div class="marker-number">02</div>
+                        <div class="marker-glow"></div>
                     </div>
-                    <div class="step-visual">
-                        <div class="visual-model">
-                            <div class="wireframe"></div>
-                            <div class="mesh"></div>
-                        </div>
+                    <div class="step-content">
+                        <h3 class="step-title">DISEÑO</h3>
+                        <p class="step-description">
+                            Creamos o optimizamos el modelo 3D 
+                            para impresión perfecta.
+                        </p>
                     </div>
                 </div>
-                
-                <div class="step" data-step="3">
-                    <div class="step-number">03</div>
-                    <div class="step-content">
-                        <h3>IMPRESIÓN</h3>
-                        <p>La máquina hace su magia, capa por capa, con precisión milimétrica.</p>
+
+                <!-- Paso 3 -->
+                <div class="process-step">
+                    <div class="step-marker">
+                        <div class="marker-number">03</div>
+                        <div class="marker-glow"></div>
                     </div>
-                    <div class="step-visual">
-                        <div class="visual-print">
-                            <div class="layer"></div>
-                            <div class="layer"></div>
-                            <div class="layer"></div>
-                        </div>
+                    <div class="step-content">
+                        <h3 class="step-title">IMPRESIÓN</h3>
+                        <p class="step-description">
+                            Proceso de impresión de alta precisión 
+                            con monitoreo constante.
+                        </p>
                     </div>
                 </div>
-                
-                <div class="step" data-step="4">
-                    <div class="step-number">04</div>
-                    <div class="step-content">
-                        <h3>ENTREGA</h3>
-                        <p>Post-producción y entrega. Listo para impactar.</p>
+
+                <!-- Paso 4 -->
+                <div class="process-step">
+                    <div class="step-marker">
+                        <div class="marker-number">04</div>
+                        <div class="marker-glow"></div>
                     </div>
-                    <div class="step-visual">
-                        <div class="visual-delivery">
-                            <div class="product"></div>
-                            <div class="sparkle"></div>
-                            <div class="sparkle"></div>
-                            <div class="sparkle"></div>
-                        </div>
+                    <div class="step-content">
+                        <h3 class="step-title">ENTREGA</h3>
+                        <p class="step-description">
+                            Acabado profesional y entrega 
+                            cuidadosamente empaquetada.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Galería de Proyectos -->
-    <section id="proyectos" class="gallery-section">
-        <div class="container">
-            <div class="gallery-header">
-                <h2>PROYECTOS <span class="highlight">ICÓNICOS</span></h2>
-                <p>Donde el arte impreso encuentra la excelencia</p>
+    <!-- Proyectos Section -->
+    <section id="proyectos" class="cyber-projects">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">
+                    <span class="label-number">04</span>
+                    <span class="label-text">PROYECTOS</span>
+                </div>
+                <h2 class="section-title">
+                    <span class="title-main">TRABAJOS</span>
+                    <span class="title-accent">DESTACADOS</span>
+                </h2>
+                <p class="section-subtitle">
+                    Innovación impresa en 3 dimensiones
+                </p>
             </div>
-            
-            <div class="gallery-grid">
-                <div class="gallery-item large">
-                    <div class="gallery-image">
+
+            <div class="projects-grid">
+                <!-- Proyecto 1 -->
+                <div class="project-card">
+                    <div class="project-image">
                         <div class="image-overlay">
-                            <h3>ESCULTURA 3D URBANA</h3>
-                            <p>Bronce sintético • 2.5m altura</p>
+                            <h3>ESCULTURA URBANA</h3>
+                            <p>Arte en 3D • 2.5 metros</p>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-number">01</div>
+                        <div class="project-tags">
+                            <span>PLA+</span>
+                            <span>PINTURA</span>
+                            <span>MONUMENTAL</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="gallery-item">
-                    <div class="gallery-image">
+
+                <!-- Proyecto 2 -->
+                <div class="project-card">
+                    <div class="project-image">
                         <div class="image-overlay">
-                            <h3>CAMPANA MURAL DIGITAL</h3>
-                            <p>Times Square • NYC</p>
+                            <h3>PROTOTIPO INDUSTRIAL</h3>
+                            <p>Ingeniería • Alta precisión</p>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-number">02</div>
+                        <div class="project-tags">
+                            <span>ABS</span>
+                            <span>FUNCIONAL</span>
+                            <span>PRECISO</span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="gallery-item">
-                    <div class="gallery-image">
+
+                <!-- Proyecto 3 -->
+                <div class="project-card">
+                    <div class="project-image">
                         <div class="image-overlay">
-                            <h3>BRANDING CALLEJERO</h3>
-                            <p>Identidad para marca de lujo</p>
+                            <h3>JOYERÍA 3D</h3>
+                            <p>Diseño • Lujo y detalle</p>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-number">03</div>
+                        <div class="project-tags">
+                            <span>RESINA</span>
+                            <span>DETALLE</span>
+                            <span>EXCLUSIVO</span>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="gallery-cta">
-                <a href="#contacto" class="gallery-link">
-                    VER MÁS PROYECTOS
-                    <span class="link-arrow">⟶</span>
+
+            <div class="projects-cta">
+                <a href="#contacto" class="projects-link">
+                    <span>VER MÁS PROYECTOS</span>
+                    <div class="link-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Filosofía combinada -->
-    <section class="philosophy-section">
-        <div class="philosophy-container">
-            <div class="philosophy-quote">
-                <div class="quote-mark">"</div>
-                <h2>NO CREAMOS PRODUCTOS,</h2>
-                <h2><span class="quote-accent">CREAMOS PIEZAS QUE CUENTAN HISTORIAS</span></h2>
-                <div class="quote-author">— ODA STUDIO</div>
+    <!-- Contacto Section -->
+    <section id="contacto" class="cyber-contact">
+        <div class="section-container">
+            <div class="section-header">
+                <div class="section-label">
+                    <span class="label-number">05</span>
+                    <span class="label-text">CONTACTO</span>
+                </div>
+                <h2 class="section-title">
+                    <span class="title-main">CONTÁCTANOS</span>
+                    <span class="title-accent">AHORA</span>
+                </h2>
+                <p class="section-subtitle">
+                    Convierte tus ideas en realidad
+                </p>
             </div>
-            
-            <div class="philosophy-content">
-                <div class="philosophy-item">
-                    <div class="philosophy-number">01</div>
-                    <h3>PRECISIÓN FUNCIONAL</h3>
-                    <p>Cada pieza se imprime cuidando la calidad y el acabado, lista para uso, decoración o prototipo.</p>
-                </div>
-                
-                <div class="philosophy-item">
-                    <div class="philosophy-number">02</div>
-                    <h3>CREATIVIDAD A MEDIDA</h3>
-                    <p>Diseñamos y adaptamos cada pieza según lo que busques, pudiendo personalizar formas, tamaños y detalles.</p>
-                </div>
-                
-                <div class="philosophy-item">
-                    <div class="philosophy-number">03</div>
-                    <h3>CALIDAD CONFIABLE</h3>
-                    <p>Piezas bien terminadas, con materiales de calidad y acabados que resaltan tu idea o proyecto.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Contacto Premium Mejorado -->
-    <section id="contacto" class="contact-premium">
-        <div class="contact-container">
-            <div class="contact-header">
-                <h2>¿LISTO PARA DAR VIDA A TU DISEÑO?</h2>
-                <p class="contact-subtitle">Solicita una consulta privada</p>
-            </div>
-            
             <div class="contact-grid">
+                <!-- Formulario -->
                 <div class="contact-form">
-                    <div class="form-header">
-                        <h3>SOLICITUD DE COTIZACIÓN</h3>
-                        <p>Reservado para proyectos serios</p>
-                    </div>
-                    
-                    <form id="premiumForm" action="https://formspree.io/f/mzddzvkj" method="POST">
-                        <div class="form-group">
-                            <input type="text" name="name" placeholder="Nombre completo" required>
-                            <div class="form-line"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="email" name="email" placeholder="Email" required>
-                            <div class="form-line"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <select name="project" required>
-                                <option value="">Tipo de proyecto</option>
-                                <option value="3d">Impresión 3D Premium</option>
-                                <option value="modelado">Modelado 3D</option>
-                                <option value="acabado">Acabado artístico</option>
-                                <option value="other">Otro</option>
-                            </select>
-                            <div class="form-line"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <textarea name="message" placeholder="Describe tu visión... (mín. 50 caracteres)" rows="4" required minlength="50"></textarea>
-                            <div class="form-line"></div>
-                            <div class="char-counter">0/500</div>
-                        </div>
-
-                        <div class="form-footer">
-                            <div class="form-disclaimer">
-                                <i class="fas fa-lock"></i> Información confidencial
+                    <div class="form-container">
+                        <h3 class="form-title">SOLICITA COTIZACIÓN</h3>
+                        <p class="form-subtitle">Completa el formulario para recibir una propuesta personalizada</p>
+                        
+                        <form id="contactForm" class="cyber-form">
+                            <div class="form-group">
+                                <input type="text" name="name" placeholder="Tu nombre" required>
+                                <div class="input-underline"></div>
                             </div>
-                            <button type="submit" class="form-submit">
-                                ENVIAR SOLICITUD
-                                <i class="fas fa-paper-plane"></i>
+                            
+                            <div class="form-group">
+                                <input type="email" name="email" placeholder="Correo electrónico" required>
+                                <div class="input-underline"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <select name="service" required>
+                                    <option value="">Selecciona un servicio</option>
+                                    <option value="impresion">Impresión 3D</option>
+                                    <option value="diseno">Diseño 3D</option>
+                                    <option value="acabado">Acabado Profesional</option>
+                                </select>
+                                <div class="input-underline"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <textarea name="message" placeholder="Describe tu proyecto..." rows="4" required></textarea>
+                                <div class="input-underline"></div>
+                                <div class="char-counter">
+                                    <span id="charCount">0</span>/500
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="submit-button">
+                                <span class="button-text">ENVIAR MENSAJE</span>
+                                <div class="button-icon">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                                <div class="button-glow"></div>
                             </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-                
+
+                <!-- Información de contacto -->
                 <div class="contact-info">
                     <div class="info-card">
-                        <div class="info-icon"><i class="fab fa-whatsapp"></i></div>
-                        <h4>WHATSAPP EXCLUSIVO</h4>
-                        <p>Contáctanos directamente y recibe respuesta garantizada en menos de 2 horas. Nuestro equipo está listo para ayudarte de manera rápida y segura.</p>
-                        <a href="https://wa.me/524492795557?text=Hola%2C%20vi%20su%20pagina%20de%20ODA%20y%20me%20interesan%20las%20impresiones%203D.%20%20Me%20podrian%20dar%20mas%20informacion%2C%20por%20favor%3F" target="_blank" class="info-link whatsapp">
-                            CONTACTAR POR WHATSAPP
-                            <i class="fas fa-arrow-right"></i>
+                        <div class="info-icon">
+                            <i class="fab fa-whatsapp"></i>
+                            <div class="icon-pulse"></div>
+                        </div>
+                        <h4 class="info-title">WHATSAPP</h4>
+                        <p class="info-text">Respuesta en menos de 30 minutos</p>
+                        <a href="https://wa.me/524492795557" target="_blank" class="info-link">
+                            <span>Enviar mensaje</span>
+                            <i class="fas fa-external-link-alt"></i>
                         </a>
                     </div>
                     
                     <div class="info-card">
-                        <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
-                        <h4>REALIZAR CITA POR MEET</h4>
-                        <p>Reunión por Meet con nuestro equipo de soporte de ODA, 100% segura y transparente, para ofrecerte la mejor atención.</p>
-                        <a href="mailto:daordaz18@gmail.com?subject=Solicitud%20de%20reunión&body=Hola,%20quiero%20agendar%20una%20reunión%20por%20videollamada%20con%20ustedes." target="_blank" class="info-link">
-                            AGENDAR REUNIÓN
-                            <i class="fas fa-arrow-right"></i>
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h4 class="info-title">EMAIL</h4>
+                        <p class="info-text">daordaz18@gmail.com</p>
+                        <a href="mailto:daordaz18@gmail.com" class="info-link">
+                            <span>Enviar correo</span>
+                            <i class="fas fa-external-link-alt"></i>
                         </a>
                     </div>
                     
-                    <div class="info-card">
-                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
-                        <h4>STUDIO ODA</h4>
-                        <p>AGS- Zona Urbana</p>
-                        <div class="location">
-                            <span>AGUASCALIENTES</span>
+                    <div class="info-card location">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h4 class="info-title">UBICACIÓN</h4>
+                        <p class="info-text">Aguascalientes, México</p>
+                        <div class="location-glow">
+                            <span>ZONA URBANA</span>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="contact-footer">
-                <p>Proceso de selección exclusivo • Tiempo mínimo de proyecto: 5 días • Presupuestos desde $50 MXN</p>
-            </div>
         </div>
     </section>
 
-    <!-- Footer combinado -->
-    <footer class="footer-premium">
+    <!-- Footer -->
+    <footer class="cyber-footer">
         <div class="footer-container">
-            <div class="footer-brand">
-                <div class="footer-logo">ODA</div>
-                <div class="footer-tagline">LOS MEJORES SERVICIOS DE AGUASCALIENTES</div>
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <div class="footer-logo">ODA</div>
+                    <p class="footer-tagline">TECNOLOGÍA 3D DE VANGUARDIA</p>
+                </div>
+                
+                <div class="footer-social">
+                    <a href="#" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://wa.me/524492795557" target="_blank" class="social-link whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
             </div>
             
-            <div class="footer-social">
-                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/524492795557?text=Hola%2C%20vi%20tu%20pagina%20y%20me%20interesan%20las%20impresiones%203D.%20Me%20podrias%20dar%20informes%3F" class="social-link" target="_blank" rel="noopener">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-                <a href="https://www.facebook.com/tuusuario" class="social-link" target="_blank" rel="noopener">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" class="social-link premium"><i class="fab fa-tiktok"></i></a>
-            </div>
-            
-            <div class="footer-legal">
-                <p>&copy; 2024 ODA STUDIO. Todos los derechos reservados.</p>
-                <p class="footer-discreet">Hecho con 🎨 y 💻 en AGUASCALIENTES</p>
+            <div class="footer-bottom">
+                <div class="footer-links">
+                    <a href="#hero">Inicio</a>
+                    <a href="#servicios">Servicios</a>
+                    <a href="#proceso">Proceso</a>
+                    <a href="#proyectos">Proyectos</a>
+                    <a href="#contacto">Contacto</a>
+                </div>
+                
+                <div class="footer-copyright">
+                    <p>© 2024 ODA STUDIO. Todos los derechos reservados.</p>
+                    <p class="copyright-note">Impresión 3D Premium en Aguascalientes</p>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Botón de WhatsApp flotante mejorado -->
-    <a href="https://wa.me/524492795557?text=Hola%2C%20vi%20su%20pagina%20de%20ODA%20y%20me%20interesan%20las%20impresiones%203D.%20%20Me%20podrian%20dar%20mas%20informacion%2C%20por%20favor%3F" target="_blank" class="whatsapp-float" aria-label="Contactar por WhatsApp">
-        <i class="fab fa-whatsapp"></i>
-        <span class="float-text">¿COTIZACIÓN EXPRESS?</span>
+    <!-- WhatsApp Float mejorado -->
+    <a href="https://wa.me/524492795557" target="_blank" class="whatsapp-float" id="whatsappFloat">
+        <div class="float-icon">
+            <i class="fab fa-whatsapp"></i>
+            <div class="float-pulse"></div>
+        </div>
+        <div class="float-text">
+            <span>COTIZACIÓN EXPRESS</span>
+            <div class="text-badge">24/7</div>
+        </div>
     </a>
 
-    <!-- Loader de lujo -->
-    <div class="luxury-loader" id="loader">
-        <div class="loader-content">
-            <div class="loader-logo">ODA</div>
-            <div class="loader-progress">
-                <div class="progress-bar"></div>
-            </div>
-            <div class="loader-text">IMPRIMIENDO EXPERIENCIA PREMIUM</div>
-        </div>
-    </div>
-
+    <!-- Scripts -->
     <script src="index_script.js"></script>
 </body>
 </html>
