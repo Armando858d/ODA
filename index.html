@@ -2,13 +2,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D STUDIO | Impresión 3D Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <title>ODA STUDIO | Impresión 3D Premium</title>
+    
+    <!-- Meta optimizados -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
     
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Archivo:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,28 +22,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
+    <!-- Estilos -->
     <link rel="stylesheet" href="index_estilo.css">
     <link rel="stylesheet" href="estilocel.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23FF6B35%22>◼</text></svg>">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    
+    <meta name="theme-color" content="#0a0a0a">
 </head>
 <body>
-    <!-- Loader con impresora 3D que crea una figura -->
+    <!-- Loader -->
     <div class="printer-loader" id="printerLoader">
         <div class="loader-container">
-            <!-- Impresora 3D mejorada -->
             <div class="printer-3d">
                 <div class="printer-frame">
-                    <div class="printer-bed">
-                        <!-- Base donde se imprime -->
-                        <div class="print-surface">
-                            <!-- Aquí se creará la figura ODA -->
-                            <div class="printing-figure" id="printingFigure">
-                                <!-- La figura se generará con JS -->
-                            </div>
-                        </div>
+                    <div class="print-surface">
+                        <div class="printing-figure" id="printingFigure"></div>
                     </div>
                     
-                    <!-- Cabezal de impresión -->
                     <div class="printer-head">
                         <div class="extruder">
                             <div class="nozzle">
@@ -48,7 +50,6 @@
                         <div class="head-glow"></div>
                     </div>
                     
-                    <!-- Controles de la impresora -->
                     <div class="printer-controls">
                         <div class="temp-display">
                             <span class="temp-value">215°C</span>
@@ -65,18 +66,14 @@
                     </div>
                 </div>
                 
-                <!-- Carrete de filamento -->
                 <div class="filament-spool">
                     <div class="spool-core"></div>
                     <div class="spool-filament"></div>
-                    <div class="spool-rotation"></div>
                 </div>
                 
-                <!-- Luz de impresora -->
                 <div class="printer-light"></div>
             </div>
             
-            <!-- Texto del loader -->
             <div class="loader-text">
                 <div class="logo-hologram">
                     <span class="logo-char" data-char="O">O</span>
@@ -91,7 +88,6 @@
                 </div>
             </div>
             
-            <!-- Barra de progreso general -->
             <div class="global-progress">
                 <div class="global-bar">
                     <div class="global-fill" id="globalProgress"></div>
@@ -101,23 +97,22 @@
         </div>
     </div>
 
-    <!-- Fondo futurista con video -->
+    <!-- Fondo con video -->
     <div class="cyber-background">
-        <!-- Video de impresión 3D de fondo -->
         <div class="video-background">
             <div class="video-wrapper">
-                <iframe 
-                    src="https://www.youtube.com/watch?v=Gb_-rZB2Foc&list=RDphaJXp_zMYM&index=13"
-                    title="Impresión 3D"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
+                <!-- Video real -->
+                <video autoplay muted loop playsinline id="bgVideo">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-3d-printer-printing-a-red-piece-41582-large.mp4" type="video/mp4">
+                    <!-- Video de respaldo -->
+                    <source src="https://cdn.pixabay.com/vimeo/740672659/3d-151942.mp4?width=1280&hash=6ac1f6b1a6443b77ee10b32d2d2d2d2d" type="video/mp4">
+                </video>
+                <div class="video-overlay"></div>
                 <div class="video-filter"></div>
             </div>
         </div>
         
-        <!-- Efectos futuristas superpuestos -->
+        <!-- Efectos superpuestos -->
         <div class="grid-overlay">
             <div class="grid-line"></div>
             <div class="grid-line"></div>
@@ -129,14 +124,14 @@
         <div class="scan-effect"></div>
         <div class="hologram-effect"></div>
         
-        <!-- Capa de desenfoque para móviles -->
+        <!-- Capa para móviles -->
         <div class="mobile-blur"></div>
     </div>
 
-    <!-- Navegación optimizada -->
+    <!-- Navegación mejorada -->
     <nav class="cyber-nav" id="cyberNav">
         <div class="nav-container">
-            <!-- Logo responsive -->
+            <!-- Logo -->
             <div class="nav-logo">
                 <a href="#hero" class="logo-link">
                     <div class="logo-3d">
@@ -148,7 +143,7 @@
                 </a>
             </div>
 
-            <!-- Menú principal responsive -->
+            <!-- Menú completo -->
             <div class="nav-menu" id="navMenu">
                 <div class="menu-container">
                     <a href="#hero" class="nav-link active">
@@ -192,10 +187,9 @@
         <div class="nav-progress" id="navProgress"></div>
     </nav>
 
-    <!-- Hero Section optimizada -->
+    <!-- Hero Section -->
     <section id="hero" class="cyber-hero">
         <div class="hero-container">
-            <!-- Contenido principal -->
             <div class="hero-content">
                 <div class="hero-badge">
                     <span class="badge-text">TECNOLOGÍA DE VANGUARDIA</span>
@@ -220,7 +214,7 @@
                     <div class="description-line"></div>
                 </div>
 
-                <!-- Estadísticas animadas -->
+                <!-- Estadísticas -->
                 <div class="hero-stats">
                     <div class="stat-card">
                         <div class="stat-value" data-count="250">0</div>
@@ -246,7 +240,7 @@
                     </div>
                 </div>
 
-                <!-- CTA Buttons -->
+                <!-- Botones CTA -->
                 <div class="hero-cta">
                     <a href="#servicios" class="cta-button primary">
                         <span class="button-text">VER SERVICIOS</span>
@@ -262,7 +256,7 @@
                 </div>
             </div>
 
-            <!-- Elemento visual flotante -->
+            <!-- Elementos visuales -->
             <div class="hero-visual">
                 <div class="floating-shape shape-1"></div>
                 <div class="floating-shape shape-2"></div>
@@ -279,7 +273,7 @@
         </div>
     </section>
 
-    <!-- Servicios Section - Responsive -->
+    <!-- Servicios -->
     <section id="servicios" class="cyber-services">
         <div class="section-container">
             <div class="section-header">
@@ -378,13 +372,13 @@
                             <div class="process-step">
                                 <span>Concepto</span>
                                 <div class="process-bar">
-                                    <div class="process-fill"></div>
+                                    <div class="process-fill" style="--width: 90%"></div>
                                 </div>
                             </div>
                             <div class="process-step">
                                 <span>Modelado</span>
                                 <div class="process-bar">
-                                    <div class="process-fill"></div>
+                                    <div class="process-fill" style="--width: 85%"></div>
                                 </div>
                             </div>
                         </div>
@@ -451,7 +445,7 @@
         </div>
     </section>
 
-    <!-- Proceso Section -->
+    <!-- Proceso -->
     <section id="proceso" class="cyber-process">
         <div class="section-container">
             <div class="section-header">
@@ -532,7 +526,7 @@
         </div>
     </section>
 
-    <!-- Proyectos Section -->
+    <!-- Proyectos -->
     <section id="proyectos" class="cyber-projects">
         <div class="section-container">
             <div class="section-header">
@@ -616,7 +610,7 @@
         </div>
     </section>
 
-    <!-- Contacto Section -->
+    <!-- Contacto -->
     <section id="contacto" class="cyber-contact">
         <div class="section-container">
             <div class="section-header">
@@ -764,7 +758,7 @@
         </div>
     </footer>
 
-    <!-- WhatsApp Float mejorado -->
+    <!-- WhatsApp Float -->
     <a href="https://wa.me/524492795557" target="_blank" class="whatsapp-float" id="whatsappFloat">
         <div class="float-icon">
             <i class="fab fa-whatsapp"></i>
