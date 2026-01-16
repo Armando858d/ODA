@@ -1,50 +1,76 @@
-// ===== ODA 3D - EXPERIENCIA RESPONSIVE OPTIMIZADA =====
+// ===== ODA STUDIO - EXPERIENCIA COMPLETA =====
 
 class ODAExperience {
     constructor() {
-        this.isMobile = window.innerWidth < 768;
-        this.isTablet = window.innerWidth < 1024;
-        this.isTouchDevice = 'ontouchstart' in window;
-        this.scrollPosition = 0;
+        this.isMobile = window.innerWidth <= 768;
+        this.isTablet = window.innerWidth <= 1024 && window.innerWidth > 768;
         this.isMenuOpen = false;
         this.init();
     }
 
     init() {
-        console.log('🚀 ODA EXPERIENCE - VERSIÓN RESPONSIVE');
-        console.log(`📱 Dispositivo: ${this.isMobile ? 'Móvil' : this.isTablet ? 'Tablet' : 'Desktop'}`);
-        console.log(`👆 Touch: ${this.isTouchDevice ? 'Sí' : 'No'}`);
+        console.log('🚀 ODA STUDIO - Inicializando experiencia premium');
         
+        // Configurar video de fondo
+        this.setupVideo();
+        
+        // Inicializar componentes
         this.setupLoader();
         this.setupNavigation();
         this.setupAnimations();
-        this.setupScrollEffects();
-        this.setupParticles();
         this.setupForms();
-        this.setupVideo();
-        this.setupIntersectionObservers();
-        this.setupTouchEvents();
+        this.setupParticles();
+        this.setupScrollEffects();
         
-        if (!this.isMobile) {
-            this.setupCursorEffects();
-        }
+        // Configuración responsive
+        this.setupResponsive();
         
-        window.addEventListener('load', () => this.onLoad());
+        // Eventos
+        window.addEventListener('load', () => this.onPageLoad());
         window.addEventListener('resize', () => this.onResize());
         
+        // Exportar para debugging
         window.ODA = this;
+    }
+
+    setupVideo() {
+        const video = document.getElementById('bgVideo');
+        if (!video) return;
+        
+        // Configurar video para mejor rendimiento
+        video.playsInline = true;
+        video.muted = true;
+        video.loop = true;
+        
+        // Intentar reproducir
+        const playPromise = video.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log('Video autoplay falló:', error);
+                // Fallback: mostrar placeholder
+                const placeholder = document.querySelector('.video-placeholder');
+                if (placeholder) {
+                    placeholder.style.display = 'block';
+                }
+            });
+        }
+        
+        // Optimizar para móviles
+        if (this.isMobile) {
+            video.poster = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+            video.preload = 'auto';
+        }
     }
 
     setupLoader() {
         const loader = document.getElementById('printerLoader');
-        if (!loader) return;
-
         const printProgress = document.getElementById('printProgress');
         const globalProgress = document.getElementById('globalProgress');
         const loadingStatus = document.getElementById('loadingStatus');
         const printingFigure = document.getElementById('printingFigure');
         
-        if (!printProgress || !globalProgress || !loadingStatus || !printingFigure) return;
+        if (!loader) return;
 
         // Crear figura ODA 3D
         this.createODAFigure(printingFigure);
@@ -53,37 +79,38 @@ class ODAExperience {
         let progress = 0;
         let global = 0;
         const isSlowDevice = this.isMobile || this.isTablet;
-        const intervalTime = isSlowDevice ? 40 : 30; // Más lento en móviles
+        const intervalTime = isSlowDevice ? 40 : 30;
         
         const progressInterval = setInterval(() => {
             progress += 1;
             global += 0.8;
             
-            printProgress.style.width = `${progress}%`;
-            globalProgress.style.width = `${global}%`;
+            if (printProgress) printProgress.style.width = `${progress}%`;
+            if (globalProgress) globalProgress.style.width = `${global}%`;
             
             // Actualizar texto del estado
-            if (progress < 20) {
-                loadingStatus.textContent = 'CALIBRANDO IMPRESORA...';
-            } else if (progress < 40) {
-                loadingStatus.textContent = 'CARGANDO FILAMENTO...';
-            } else if (progress < 60) {
-                loadingStatus.textContent = 'PREPARANDO MODELO ODA...';
-            } else if (progress < 80) {
-                loadingStatus.textContent = 'IMPRIMIENDO CAPAS...';
-            } else if (progress < 95) {
-                loadingStatus.textContent = 'ACABANDO PIEZA...';
-            } else {
-                loadingStatus.textContent = 'FINALIZANDO...';
+            if (loadingStatus) {
+                if (progress < 20) {
+                    loadingStatus.textContent = 'CALIBRANDO IMPRESORA...';
+                } else if (progress < 40) {
+                    loadingStatus.textContent = 'CARGANDO FILAMENTO...';
+                } else if (progress < 60) {
+                    loadingStatus.textContent = 'PREPARANDO MODELO ODA...';
+                } else if (progress < 80) {
+                    loadingStatus.textContent = 'IMPRIMIENDO CAPAS...';
+                } else if (progress < 95) {
+                    loadingStatus.textContent = 'ACABANDO PIEZA...';
+                } else {
+                    loadingStatus.textContent = 'FINALIZANDO...';
+                }
             }
             
-            // Animar figura ODA (solo si no es móvil lento)
+            // Animar figura ODA
             if (printingFigure && !isSlowDevice) {
                 const height = (progress / 100) * 120;
                 printingFigure.style.height = `${height}px`;
                 printingFigure.style.opacity = 0.3 + (progress / 150);
                 
-                // Efecto de brillo al final
                 if (progress > 90) {
                     printingFigure.style.filter = `blur(${2 - ((progress - 90) / 10)}px)`;
                     printingFigure.style.boxShadow = `0 0 ${20 + (progress - 90) * 2}px rgba(255, 62, 122, 0.5)`;
@@ -93,7 +120,6 @@ class ODAExperience {
             if (progress >= 100) {
                 clearInterval(progressInterval);
                 
-                // Esperar un momento para mostrar la figura completa
                 setTimeout(() => {
                     loader.classList.add('hidden');
                     
@@ -107,7 +133,8 @@ class ODAExperience {
     }
 
     createODAFigure(container) {
-        // Limpiar contenedor
+        if (!container) return;
+        
         container.innerHTML = '';
         
         // Crear cubo base (O)
@@ -159,7 +186,7 @@ class ODAExperience {
         `;
         container.appendChild(pyramid);
         
-        // Agregar estilos CSS para animaciones
+        // Agregar estilos CSS
         const style = document.createElement('style');
         style.textContent = `
             @keyframes cubePulse {
@@ -186,61 +213,85 @@ class ODAExperience {
         const navMenu = document.getElementById('navMenu');
         const navLinks = document.querySelectorAll('.nav-link');
         const navProgress = document.getElementById('navProgress');
-
-        if (!nav || !toggle || !navMenu) return;
-
-        // Menú toggle
+        
+        if (!toggle || !navMenu) return;
+        
+        // Toggle menú móvil
         toggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            this.isMenuOpen = !this.isMenuOpen;
-            toggle.classList.toggle('active');
-            toggle.setAttribute('aria-expanded', this.isMenuOpen);
-            navMenu.classList.toggle('active');
-            document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
+            this.toggleMenu();
         });
-
+        
         // Cerrar menú al hacer clic en enlace
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                this.isMenuOpen = false;
-                toggle.classList.remove('active');
-                toggle.setAttribute('aria-expanded', 'false');
-                navMenu.classList.remove('active');
-                document.body.style.overflow = '';
+                if (this.isMobile) {
+                    this.closeMenu();
+                }
+                
+                // Smooth scroll
+                const targetId = link.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) {
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        const offset = 80;
+                        const targetPosition = target.offsetTop - offset;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
             });
         });
-
+        
         // Cerrar menú al hacer clic fuera
         document.addEventListener('click', (e) => {
-            if (!nav.contains(e.target) && this.isMenuOpen) {
-                this.isMenuOpen = false;
-                toggle.classList.remove('active');
-                toggle.setAttribute('aria-expanded', 'false');
-                navMenu.classList.remove('active');
-                document.body.style.overflow = '';
+            if (this.isMenuOpen && !nav.contains(e.target)) {
+                this.closeMenu();
             }
         });
-
-        // Smooth scroll optimizado
+        
+        // Progress bar de navegación
+        if (navProgress) {
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                navProgress.style.width = scrolled + "%";
+                
+                // Cambiar estilo de nav
+                if (nav) {
+                    if (window.scrollY > 50) {
+                        nav.style.background = 'rgba(10, 10, 10, 0.98)';
+                        nav.style.backdropFilter = 'blur(20px)';
+                    } else {
+                        nav.style.background = 'rgba(10, 10, 10, 0.95)';
+                        nav.style.backdropFilter = 'blur(20px)';
+                    }
+                }
+            });
+        }
+        
+        // Smooth scroll para todos los enlaces
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', function (e) {
                 const href = this.getAttribute('href');
-                if (href === '#' || href === '#!') return;
+                if (href === '#') return;
                 
                 const target = document.querySelector(href);
                 if (target) {
                     e.preventDefault();
                     
-                    // Cerrar menú en móviles
-                    if (window.innerWidth < 1024) {
-                        toggle.classList.remove('active');
-                        toggle.setAttribute('aria-expanded', 'false');
+                    // Cerrar menú si está abierto
+                    if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
                         navMenu.classList.remove('active');
-                        document.body.style.overflow = '';
-                        this.isMenuOpen = false;
+                        toggle.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                        ODA.isMenuOpen = false;
                     }
                     
-                    // Scroll suave con offset para navegación fija
                     const offset = 80;
                     const targetPosition = target.offsetTop - offset;
                     
@@ -251,141 +302,128 @@ class ODAExperience {
                 }
             });
         });
-
-        // Progress bar en navegación
-        if (navProgress) {
-            const updateProgress = () => {
-                const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const scrolled = (window.scrollY / windowHeight) * 100;
-                navProgress.style.width = `${scrolled}%`;
-            };
-            
-            // Debounce para mejor rendimiento
-            let scrollTimeout;
-            window.addEventListener('scroll', () => {
-                if (scrollTimeout) {
-                    window.cancelAnimationFrame(scrollTimeout);
-                }
-                scrollTimeout = window.requestAnimationFrame(updateProgress);
-            });
-        }
-
-        // Cambiar estilo de navegación al hacer scroll
-        const updateNavStyle = () => {
-            this.scrollPosition = window.scrollY;
-            
-            if (this.scrollPosition > 50) {
-                nav.style.background = 'rgba(10, 10, 10, 0.95)';
-                nav.style.backdropFilter = 'blur(20px)';
-                nav.style.borderBottomColor = 'var(--color-primary)';
-            } else {
-                nav.style.background = 'rgba(10, 10, 10, 0.9)';
-                nav.style.backdropFilter = 'blur(20px)';
-                nav.style.borderBottomColor = 'rgba(255, 255, 255, 0.1)';
-            }
-        };
         
-        // Throttle para mejor rendimiento
-        let navScrollTimeout;
+        // Activar enlace actual
         window.addEventListener('scroll', () => {
-            if (!navScrollTimeout) {
-                navScrollTimeout = setTimeout(() => {
-                    updateNavStyle();
-                    navScrollTimeout = null;
-                }, 100);
-            }
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPos = window.scrollY + 100;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
         });
     }
 
-    setupAnimations() {
-        // Animación de estadísticas
-        this.animateStats();
+    toggleMenu() {
+        const toggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
         
-        // Animación de elementos flotantes (solo desktop)
-        if (!this.isMobile) {
-            this.animateFloatingElements();
+        if (!toggle || !navMenu) return;
+        
+        this.isMenuOpen = !this.isMenuOpen;
+        toggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        
+        if (this.isMenuOpen) {
+            document.body.style.overflow = 'hidden';
+            toggle.setAttribute('aria-expanded', 'true');
+        } else {
+            document.body.style.overflow = 'auto';
+            toggle.setAttribute('aria-expanded', 'false');
         }
-        
-        // Animación de título del hero
-        this.animateHeroTitle();
     }
 
-    animateStats() {
-        const stats = document.querySelectorAll('.stat-value[data-count]');
+    closeMenu() {
+        const toggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (!toggle || !navMenu) return;
+        
+        this.isMenuOpen = false;
+        toggle.classList.remove('active');
+        toggle.setAttribute('aria-expanded', 'false');
+        navMenu.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    setupAnimations() {
+        // Animación de contadores
+        this.animateCounters();
+        
+        // Animación de cards al hacer scroll
+        this.setupScrollAnimations();
+        
+        // Animación de título del hero
+        if (!this.isMobile) {
+            this.animateHeroTitle();
+        }
+    }
+
+    animateCounters() {
+        const counters = document.querySelectorAll('.stat-value[data-count]');
         
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const stat = entry.target;
-                    const target = parseInt(stat.getAttribute('data-count'));
-                    const suffix = stat.querySelector('.percent');
-                    
-                    this.animateCounter(stat, target, suffix, 2000);
-                    observer.unobserve(stat);
+                    const counter = entry.target;
+                    const target = parseInt(counter.getAttribute('data-count'));
+                    this.startCounter(counter, target);
+                    observer.unobserve(counter);
                 }
             });
-        }, { threshold: 0.5, rootMargin: '50px' });
+        }, { threshold: 0.5 });
         
-        stats.forEach(stat => observer.observe(stat));
+        counters.forEach(counter => observer.observe(counter));
     }
 
-    animateCounter(element, target, suffix, duration) {
-        let start = 0;
-        const increment = target / (duration / 16);
-        const startTime = Date.now();
+    startCounter(element, target) {
+        let current = 0;
+        const increment = target / 50;
+        const duration = 1500;
         
-        const updateCounter = () => {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+        const timer = setInterval(() => {
+            current += increment;
             
-            // Easing function para mejor animación
-            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-            const current = Math.floor(target * easeOutQuart);
-            
-            element.textContent = current + (suffix ? suffix.outerHTML : '');
-            
-            if (progress < 1) {
-                requestAnimationFrame(updateCounter);
-            } else {
-                element.textContent = target + (suffix ? suffix.outerHTML : '');
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
             }
-        };
-        
-        requestAnimationFrame(updateCounter);
+            
+            if (element.textContent.includes('%')) {
+                element.textContent = Math.floor(current) + '%';
+            } else {
+                element.textContent = Math.floor(current);
+            }
+        }, duration / 50);
     }
 
-    animateFloatingElements() {
-        const elements = document.querySelectorAll('.floating-shape');
+    setupScrollAnimations() {
+        const animatedElements = document.querySelectorAll('.service-card, .project-card, .info-card, .process-step');
         
-        elements.forEach((el, index) => {
-            const amplitude = 50;
-            const speed = 0.002 + (index * 0.001);
-            const phase = Math.random() * Math.PI * 2;
-            
-            const animate = () => {
-                const time = Date.now();
-                const y = Math.sin(time * speed + phase) * amplitude;
-                const rotation = Math.sin(time * speed * 0.5 + phase) * 20;
-                
-                el.style.transform = `translateY(${y}px) rotate(${rotation}deg)`;
-                requestAnimationFrame(animate);
-            };
-            
-            animate();
-        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        animatedElements.forEach(el => observer.observe(el));
     }
 
     animateHeroTitle() {
         const titleWords = document.querySelectorAll('.title-word');
-        
-        // Solo animar si no es móvil
-        if (this.isMobile) {
-            titleWords.forEach(word => {
-                word.style.opacity = '1';
-                word.style.transform = 'translateY(0)';
-            });
-            return;
-        }
         
         titleWords.forEach((word, index) => {
             word.style.opacity = '0';
@@ -399,59 +437,17 @@ class ODAExperience {
         });
     }
 
-    setupScrollEffects() {
-        // Solo usar GSAP ScrollTrigger en desktop
-        if (this.isMobile) return;
-        
-        if (typeof gsap !== 'undefined' && gsap.utils && gsap.registerPlugin) {
-            gsap.registerPlugin(ScrollTrigger);
-            
-            // Parallax optimizado para performance
-            const bgElements = document.querySelectorAll('.grid-line, .scan-effect');
-            bgElements.forEach(el => {
-                gsap.to(el, {
-                    y: () => window.innerHeight * 0.1,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: "body",
-                        start: "top top",
-                        end: "bottom bottom",
-                        scrub: true,
-                        markers: false // Desactivar markers en producción
-                    }
-                });
-            });
-            
-            // Reveal animations optimizadas
-            const revealSections = document.querySelectorAll('.cyber-services, .cyber-process, .cyber-projects, .cyber-contact');
-            
-            revealSections.forEach(section => {
-                gsap.from(section, {
-                    y: 50,
-                    opacity: 0,
-                    duration: 1,
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top 80%",
-                        toggleActions: "play none none reverse",
-                        once: true // Solo animar una vez
-                    }
-                });
-            });
-        }
-    }
-
     setupParticles() {
         const container = document.getElementById('particles');
-        if (!container || this.isMobile) return; // Menos partículas en móviles
+        if (!container || this.isMobile) return;
 
-        const particleCount = this.isTablet ? 20 : 50; // Reducido para mejor rendimiento
+        const particleCount = this.isTablet ? 20 : 30;
         
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
             particle.className = 'cyber-particle';
             
-            const size = Math.random() * 2 + 1; // Más pequeño
+            const size = Math.random() * 2 + 1;
             const posX = Math.random() * 100;
             const posY = Math.random() * 100;
             const colors = ['#ff3e7a', '#00d9ff', '#9d4edd'];
@@ -472,11 +468,11 @@ class ODAExperience {
             
             container.appendChild(particle);
             
-            // Animación simple para mejor rendimiento
+            // Animación
             const animate = () => {
                 const time = Date.now() * 0.001;
-                const x = Math.sin(time + i) * 50; // Movimiento reducido
-                const y = Math.cos(time * 0.5 + i) * 50;
+                const x = Math.sin(time + i) * 30;
+                const y = Math.cos(time * 0.5 + i) * 30;
                 
                 particle.style.transform = `translate(${x}px, ${y}px)`;
                 requestAnimationFrame(animate);
@@ -487,12 +483,12 @@ class ODAExperience {
     }
 
     setupForms() {
-        const form = document.getElementById('contactForm');
-        if (!form) return;
+        const contactForm = document.getElementById('contactForm');
+        if (!contactForm) return;
 
         // Contador de caracteres
-        const textarea = form.querySelector('textarea');
-        const charCounter = form.querySelector('#charCount');
+        const textarea = contactForm.querySelector('textarea');
+        const charCounter = contactForm.querySelector('#charCount');
         
         if (textarea && charCounter) {
             textarea.addEventListener('input', () => {
@@ -500,7 +496,7 @@ class ODAExperience {
                 const max = 500;
                 charCounter.textContent = count;
                 
-                // Cambiar color según longitud
+                // Cambiar color
                 let color;
                 if (count < 50) {
                     color = '#ff4757';
@@ -515,10 +511,10 @@ class ODAExperience {
         }
 
         // Envío del formulario
-        form.addEventListener('submit', async (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const submitBtn = form.querySelector('.submit-button');
+            const submitBtn = contactForm.querySelector('.submit-button');
             if (submitBtn) {
                 const originalText = submitBtn.querySelector('.button-text').textContent;
                 submitBtn.querySelector('.button-text').textContent = 'ENVIANDO...';
@@ -532,11 +528,11 @@ class ODAExperience {
                 }, 200);
                 
                 try {
-                    // Simular envío (reemplazar con tu endpoint real)
+                    // Simular envío
                     await new Promise(resolve => setTimeout(resolve, 1500));
                     
                     this.showNotification('¡Mensaje enviado con éxito! Te contactaremos pronto.', 'success');
-                    form.reset();
+                    contactForm.reset();
                     
                     if (charCounter) {
                         charCounter.textContent = '0';
@@ -562,19 +558,19 @@ class ODAExperience {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: var(--space-md) var(--space-lg);
-            background: ${type === 'success' ? 'var(--color-secondary)' : '#ff4757'};
-            color: var(--color-dark);
-            border-radius: var(--border-radius-md);
+            padding: 15px 25px;
+            background: ${type === 'success' ? '#2ed573' : '#ff4757'};
+            color: #000;
+            border-radius: 8px;
             z-index: 9999;
             font-weight: 600;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             transform: translateX(100%);
             opacity: 0;
             transition: transform 0.5s ease, opacity 0.5s ease;
-            max-width: 400px;
+            max-width: 300px;
             text-align: center;
         `;
         
@@ -597,337 +593,216 @@ class ODAExperience {
         }, 3000);
     }
 
-    setupVideo() {
-        // Optimizar video para móviles
+    setupScrollEffects() {
+        // Solo usar GSAP en desktop
+        if (this.isMobile || typeof ScrollTrigger === 'undefined') return;
+        
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Animaciones suaves para secciones
+        const sections = document.querySelectorAll('section[id]');
+        
+        sections.forEach(section => {
+            gsap.from(section, {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse',
+                    once: true
+                }
+            });
+        });
+        
+        // Parallax para efectos de fondo
+        const bgElements = document.querySelectorAll('.grid-line, .scan-effect');
+        bgElements.forEach(el => {
+            gsap.to(el, {
+                y: () => window.innerHeight * 0.1,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: true
+                }
+            });
+        });
+    }
+
+    setupResponsive() {
+        // Aplicar clases responsive
         if (this.isMobile) {
-            const videoWrapper = document.querySelector('.video-wrapper');
-            if (videoWrapper) {
-                // Reducir calidad para mejor rendimiento en móviles
-                videoWrapper.style.filter = 'grayscale(100%) contrast(150%) brightness(0.3) blur(1px)';
-                
-                // Pausar efectos pesados en móviles
-                const heavyEffects = document.querySelectorAll('.grid-overlay, .hologram-effect');
-                heavyEffects.forEach(effect => {
-                    effect.style.animationPlayState = 'paused';
-                });
-            }
+            document.body.classList.add('is-mobile');
+            document.body.classList.remove('is-tablet', 'is-desktop');
+        } else if (this.isTablet) {
+            document.body.classList.add('is-tablet');
+            document.body.classList.remove('is-mobile', 'is-desktop');
+        } else {
+            document.body.classList.add('is-desktop');
+            document.body.classList.remove('is-mobile', 'is-tablet');
         }
-    }
-
-    setupIntersectionObservers() {
-        // Animación de tarjetas al hacer scroll
-        const cards = document.querySelectorAll('.service-card, .info-card, .project-card');
-        const cardObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add('animated');
-                    }, index * 100);
-                }
-            });
-        }, { 
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px' // Cargar antes de entrar en viewport
-        });
         
-        cards.forEach(card => {
-            card.classList.remove('animated');
-            cardObserver.observe(card);
-        });
-
-        // Animación de pasos del proceso
-        const steps = document.querySelectorAll('.process-step');
-        const stepObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add('animated');
-                    }, index * 200);
-                }
-            });
-        }, { threshold: 0.2 });
-        
-        steps.forEach(step => {
-            step.classList.remove('animated');
-            stepObserver.observe(step);
-        });
-    }
-
-    setupTouchEvents() {
-        if (!this.isMobile) return;
-        
-        // Mejora la experiencia táctil
-        document.addEventListener('touchstart', () => {}, { passive: true });
-        
-        // Evita el zoom doble tap en botones
-        const buttons = document.querySelectorAll('button, a, input, textarea, select');
-        buttons.forEach(btn => {
-            btn.style.touchAction = 'manipulation';
-        });
-        
-        // Optimiza animaciones para móviles
-        this.optimizeForMobile();
+        // Optimizar para móviles
+        if (this.isMobile) {
+            this.optimizeForMobile();
+        }
     }
 
     optimizeForMobile() {
-        // Reduce efectos visuales en móviles para mejor rendimiento
-        if (this.isMobile) {
-            const heavyEffects = document.querySelectorAll('.grid-overlay, .hologram-effect, .scan-effect');
-            heavyEffects.forEach(effect => {
-                effect.style.animation = 'none';
-                effect.style.opacity = '0.05';
-            });
-            
-            // Desactiva animaciones complejas
-            const complexAnimations = document.querySelectorAll('.floating-shape, .printer-light, .head-glow');
-            complexAnimations.forEach(anim => {
-                anim.style.animation = 'none';
-            });
-        }
-    }
-
-    setupCursorEffects() {
-        // Solo en desktop
-        if (this.isMobile) return;
-
-        const cursor = document.createElement('div');
-        cursor.id = 'cyber-cursor';
-        document.body.appendChild(cursor);
-        
-        cursor.style.cssText = `
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--color-primary);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.1s ease;
-        `;
-
-        let mouseX = 0;
-        let mouseY = 0;
-        let cursorX = 0;
-        let cursorY = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            cursor.style.opacity = '1';
-        });
-
-        // Animación suave del cursor
-        const animateCursor = () => {
-            cursorX += (mouseX - cursorX) * 0.15;
-            cursorY += (mouseY - cursorY) * 0.15;
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-            requestAnimationFrame(animateCursor);
-        };
-        
-        animateCursor();
-
-        // Efecto hover en elementos interactivos
-        const interactiveElements = document.querySelectorAll('a, button, .cta-button, .card-link, .info-link');
-        
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursor.style.borderColor = 'var(--color-secondary)';
-                cursor.style.backgroundColor = 'var(--color-secondary)';
-            });
-            
-            el.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                cursor.style.borderColor = 'var(--color-primary)';
-                cursor.style.backgroundColor = 'transparent';
-            });
-        });
-
-        // Ocultar cursor cuando salga de la ventana
-        document.addEventListener('mouseleave', () => {
-            cursor.style.opacity = '0';
+        // Reducir animaciones en móviles
+        const heavyAnimations = document.querySelectorAll('.grid-overlay, .hologram-effect, .floating-shape');
+        heavyAnimations.forEach(el => {
+            el.style.animation = 'none';
+            el.style.opacity = '0.1';
         });
         
-        document.addEventListener('mouseenter', () => {
-            cursor.style.opacity = '1';
+        // Mejorar rendimiento
+        document.querySelectorAll('.service-card, .project-card').forEach(card => {
+            card.style.willChange = 'transform';
         });
     }
 
     startMainAnimations() {
-        // Mostrar WhatsApp float
-        const whatsappBtn = document.getElementById('whatsappFloat');
-        if (whatsappBtn) {
-            setTimeout(() => {
-                whatsappBtn.style.opacity = '1';
-                whatsappBtn.style.transform = 'translateY(0) scale(1)';
-            }, 500);
-        }
-
-        // Animación inicial del logo
+        // Animación del logo
         const logoCube = document.querySelector('.logo-cube');
         if (logoCube) {
             logoCube.style.animation = 'rotateCube 10s linear infinite';
         }
-
-        // Mostrar elementos con delay (solo en desktop)
-        if (!this.isMobile) {
-            const elementsToShow = [
-                '.hero-badge',
-                '.hero-description',
-                '.hero-stats',
-                '.hero-cta'
-            ];
-            
-            elementsToShow.forEach((selector, index) => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    setTimeout(() => {
-                        element.style.opacity = '1';
-                        element.style.transform = 'translateY(0)';
-                    }, 300 + (index * 200));
-                }
-            });
+        
+        // Mostrar WhatsApp float
+        const whatsappFloat = document.querySelector('.whatsapp-float');
+        if (whatsappFloat) {
+            setTimeout(() => {
+                whatsappFloat.style.opacity = '1';
+                whatsappFloat.style.transform = 'translateY(0) scale(1)';
+            }, 1000);
         }
+        
+        // Iniciar animaciones de entrada
+        setTimeout(() => {
+            const elementsToAnimate = document.querySelectorAll('.hero-badge, .hero-description, .hero-stats, .hero-cta');
+            
+            elementsToAnimate.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 200 + 300);
+            });
+        }, 500);
     }
 
-    onLoad() {
-        console.log('✅ ODA EXPERIENCE completamente cargado');
-        document.body.style.visibility = 'visible';
+    onPageLoad() {
+        console.log('✅ ODA STUDIO - Página completamente cargada');
         
-        // Forzar un pequeño scroll para activar efectos
-        setTimeout(() => {
-            window.scrollTo(0, 0);
-            
-            setTimeout(() => {
-                this.startMainAnimations();
-            }, 300);
-        }, 100);
+        // Asegurar visibilidad
+        document.body.style.visibility = 'visible';
+        document.body.style.opacity = '1';
+        
+        // Iniciar animaciones principales
+        this.startMainAnimations();
     }
 
     onResize() {
-        this.isMobile = window.innerWidth < 768;
-        this.isTablet = window.innerWidth < 1024;
+        // Actualizar flags
+        this.isMobile = window.innerWidth <= 768;
+        this.isTablet = window.innerWidth <= 1024 && window.innerWidth > 768;
         
-        // Cerrar menú en resize si es necesario
-        if (window.innerWidth >= 1024 && this.isMenuOpen) {
-            this.isMenuOpen = false;
-            const toggle = document.getElementById('mobileToggle');
-            const navMenu = document.getElementById('navMenu');
-            
-            if (toggle) {
-                toggle.classList.remove('active');
-                toggle.setAttribute('aria-expanded', 'false');
-            }
-            if (navMenu) navMenu.classList.remove('active');
-            document.body.style.overflow = '';
+        // Cerrar menú si se redimensiona a desktop
+        if (window.innerWidth > 768 && this.isMenuOpen) {
+            this.closeMenu();
         }
         
-        // Actualizar efectos si es necesario
+        // Re-aplicar config responsive
+        this.setupResponsive();
+        
+        // Refrescar ScrollTrigger si existe
         if (typeof ScrollTrigger !== 'undefined') {
             ScrollTrigger.refresh();
         }
-        
-        // Re-optimizar para el nuevo tamaño
-        this.optimizeForMobile();
     }
 }
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    // Ocultar contenido hasta que se cargue
+    // Ocultar contenido temporalmente
     document.body.style.visibility = 'hidden';
+    document.body.style.opacity = '0';
     
-    // Iniciar experiencia
     try {
-        window.odaExp = new ODAExperience();
+        // Iniciar experiencia
+        window.odaExperience = new ODAExperience();
     } catch (error) {
         console.error('Error al inicializar ODAExperience:', error);
+        
+        // Asegurar visibilidad en caso de error
         document.body.style.visibility = 'visible';
+        document.body.style.opacity = '1';
     }
 });
 
-// Agregar estilos adicionales dinámicamente
-const additionalStyles = `
-    .service-card, .info-card, .project-card {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
+// Agregar estilos dinámicos
+const dynamicStyles = `
+    @keyframes rotateCube {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
     }
     
-    .service-card.animated, .info-card.animated, .project-card.animated {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .process-step {
-        opacity: 0;
-        transform: translateX(-20px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
+    .service-card.animated,
+    .project-card.animated,
+    .info-card.animated,
     .process-step.animated {
-        opacity: 1;
-        transform: translateX(0);
+        animation: fadeInUp 0.8s ease forwards;
     }
     
-    .hero-badge,
-    .hero-description,
-    .hero-stats,
-    .hero-cta {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    
-    @media (max-width: 768px) {
-        .service-card, .info-card, .project-card,
-        .process-step,
-        .hero-badge,
-        .hero-description,
-        .hero-stats,
-        .hero-cta {
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
             opacity: 1;
-            transform: none;
-            transition: none;
+            transform: translateY(0);
         }
     }
     
-    /* Mejoras de accesibilidad */
-    @media (prefers-reduced-motion: reduce) {
-        .service-card, .info-card, .project-card,
-        .process-step,
-        .hero-badge,
-        .hero-description,
-        .hero-stats,
-        .hero-cta {
-            opacity: 1;
-            transform: none;
-            transition: none;
-        }
+    /* Estilos para notificaciones */
+    .cyber-notification {
+        font-family: 'Inter', sans-serif;
     }
     
-    /* Mejora de foco para accesibilidad */
+    /* Mejorar focus para accesibilidad */
     *:focus {
-        outline: 2px solid var(--color-primary);
+        outline: 2px solid #ff3e7a;
         outline-offset: 2px;
     }
     
-    /* Mejora de contraste para enlaces */
-    @media (prefers-contrast: high) {
-        .nav-link,
-        .card-link,
-        .info-link {
-            text-decoration: underline;
+    /* Clases responsive */
+    .is-mobile .hero-visual,
+    .is-mobile .scroll-indicator {
+        display: none !important;
+    }
+    
+    @media (max-width: 768px) {
+        .service-card,
+        .project-card,
+        .info-card {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
         }
     }
 `;
 
-const styleSheet = document.createElement('style');
-styleSheet.textContent = additionalStyles;
-document.head.appendChild(styleSheet);
+// Inyectar estilos
+const styleElement = document.createElement('style');
+styleElement.textContent = dynamicStyles;
+document.head.appendChild(styleElement);
 
-console.log('🎮 Usa window.odaExp para controlar las animaciones');
+console.log('🎮 Usa window.odaExperience para controlar las animaciones');
