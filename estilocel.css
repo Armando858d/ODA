@@ -1,0 +1,267 @@
+/* mobile-optimize.css */
+/* Optimizaciones específicas para móviles y tablets */
+
+/* Mejora rendimiento táctil */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+/* Optimiza animaciones para móviles */
+@media (max-width: 768px) {
+    .printer-3d,
+    .floating-shape,
+    .grid-overlay,
+    .hologram-effect {
+        will-change: transform;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+    
+    /* Reduce animaciones pesadas */
+    .print-surface,
+    .printer-head,
+    .filament-spool {
+        animation-duration: 3s !important;
+    }
+    
+    /* Reduce partículas para mejor rendimiento */
+    .particle-field {
+        display: none;
+    }
+    
+    /* Desactiva efectos pesados */
+    .hologram-effect,
+    .grid-overlay {
+        opacity: 0.1;
+    }
+    
+    /* Mejora scroll en iOS */
+    .nav-menu {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+}
+
+/* Tablets medianas (768px - 1023px) optimizadas */
+@media (max-width: 1023px) and (min-width: 768px) {
+    .hero-container {
+        padding: 0 var(--space-lg);
+    }
+    
+    .hero-title {
+        text-align: center;
+    }
+    
+    .hero-description {
+        text-align: center;
+        margin: 0 auto;
+    }
+    
+    .services-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    
+    .contact-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablets pequeñas y móviles grandes (600px - 767px) */
+@media (max-width: 767px) and (min-width: 600px) {
+    .section-container {
+        padding: 0 var(--space-md);
+    }
+    
+    .hero-title .title-word {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+    
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md);
+    }
+}
+
+/* Móviles pequeños (480px y menos) */
+@media (max-width: 480px) {
+    :root {
+        --space-unit: 0.8rem; /* Reduce espaciado en móviles */
+    }
+    
+    body {
+        font-size: 15px; /* Texto ligeramente más pequeño */
+    }
+    
+    .hero-container,
+    .section-container {
+        padding: 0 var(--space-sm);
+    }
+    
+    .cta-button {
+        min-width: auto;
+        width: 100%;
+        justify-content: space-between;
+        padding: var(--space-sm) var(--space-md);
+    }
+    
+    .hero-cta {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
+    }
+    
+    .footer-main {
+        text-align: center;
+        align-items: center;
+    }
+    
+    /* Mejora formularios en móviles */
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px; /* Evita zoom automático en iOS */
+    }
+    
+    .submit-button {
+        padding: var(--space-md);
+    }
+}
+
+/* Dispositivos muy pequeños (360px y menos) */
+@media (max-width: 360px) {
+    :root {
+        --fs-hero: clamp(1.8rem, 7vw, 2.5rem);
+        --fs-xxl: clamp(1.5rem, 6vw, 2rem);
+    }
+    
+    .service-card,
+    .info-card,
+    .project-card {
+        padding: var(--space-md);
+    }
+    
+    .logo-hologram {
+        font-size: clamp(1.2rem, 5vw, 2rem);
+        letter-spacing: 0.1em;
+    }
+    
+    .hero-stats .stat-value {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: var(--fs-xl);
+    }
+}
+
+/* Arregla problemas específicos de iOS */
+@supports (-webkit-touch-callout: none) {
+    .cyber-hero {
+        min-height: -webkit-fill-available;
+    }
+    
+    .nav-menu {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    .whatsapp-float {
+        bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
+    }
+    
+    /* Mejora scroll en iOS */
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Mejora para Android Chrome */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .cyber-background {
+        transform: translateZ(0);
+    }
+    
+    /* Mejora rendimiento de animaciones */
+    .printer-loader,
+    .cyber-nav {
+        will-change: transform;
+    }
+}
+
+/* Deshabilita animaciones si el usuario prefiere reducidas */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .printer-loader,
+    .cyber-hero,
+    .service-card,
+    .process-step {
+        transition: none !important;
+    }
+}
+
+/* Mejora de contraste para accesibilidad */
+@media (prefers-contrast: high) {
+    :root {
+        --color-primary: #ff1a5e;
+        --color-secondary: #00b8e6;
+        --color-accent: #8a2be2;
+    }
+    
+    .nav-link,
+    .card-link,
+    .info-link {
+        text-decoration: underline;
+    }
+}
+
+/* Modo oscuro forzado */
+@media (prefers-color-scheme: dark) {
+    .cyber-background {
+        filter: brightness(0.8);
+    }
+}
+
+/* Optimización de impresión */
+@media print {
+    .printer-loader,
+    .cyber-background,
+    .cyber-nav,
+    .scroll-indicator,
+    .whatsapp-float,
+    .footer-social,
+    .hero-visual {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt !important;
+    }
+    
+    .cyber-hero,
+    .cyber-services,
+    .cyber-process,
+    .cyber-projects,
+    .cyber-contact {
+        padding: 1cm 0 !important;
+        break-inside: avoid;
+    }
+    
+    a {
+        color: black !important;
+        text-decoration: underline !important;
+    }
+}
