@@ -1,953 +1,825 @@
-// ===== VARIABLES GLOBALES =====
-let isMobile = window.innerWidth <= 1024;
-let scrollPosition = 0;
-let menuOpen = false;
-let ticking = false;
+// ===== ODA 3D - EXPERIENCIA OPTIMIZADA =====
 
-// ===== INICIALIZACIÓN COMPLETA =====
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('%c⚡ ODA IMPRESIONES 3D ⚡', 'color: #FFD700; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00FF88;');
-    console.log('%cSistema premium-tecnológico iniciado', 'color: #00FF88; font-size: 14px;');
-    
-    // Inicializar todos los sistemas
-    initLoader();
-    initParticles();
-    initMenu();
-    initParallax();
-    initAnimations();
-    initCounters();
-    initPrintingAnimation();
-    initForms();
-    initScrollEffects();
-    initFloatingElements();
-    initSmoothScroll();
-    initHeaderScroll();
-    initWhatsAppFloat();
-    initVisibilityObserver();
-    
-    // Inyectar estilos adicionales
-    injectAdditionalStyles();
-});
-
-// ===== LOADER DE LUJO =====
-function initLoader() {
-    const loader = document.getElementById('loader');
-    if (loader) {
-        setTimeout(() => {
-            loader.style.opacity = '0';
-            loader.style.visibility = 'hidden';
-        }, 1500);
+class ODAExperience {
+    constructor() {
+        this.isMobile = window.innerWidth < 768;
+        this.isTablet = window.innerWidth < 1024;
+        this.scrollPosition = 0;
+        this.isMenuOpen = false;
+        this.init();
     }
-}
 
-// ===== PARTÍCULAS DE FONDO =====
-function initParticles() {
-    if (typeof particlesJS !== 'undefined') {
-        particlesJS('particles-js', {
-            particles: {
-                number: { 
-                    value: 50, 
-                    density: { 
-                        enable: true, 
-                        value_area: 800 
-                    }
-                },
-                color: { 
-                    value: ["#FFD700", "#00FF88", "#00A8FF"] 
-                },
-                shape: { 
-                    type: "circle" 
-                },
-                opacity: { 
-                    value: 0.5, 
-                    random: true 
-                },
-                size: { 
-                    value: 3, 
-                    random: true 
-                },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: "#FFD700",
-                    opacity: 0.2,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 2,
-                    direction: "none",
-                    random: true,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false
-                }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { 
-                        enable: true, 
-                        mode: "repulse" 
-                    },
-                    onclick: { 
-                        enable: true, 
-                        mode: "push" 
-                    },
-                    resize: true
-                }
-            },
-            retina_detect: true
-        });
+    init() {
+        console.log('🚀 ODA EXPERIENCE - VERSIÓN OPTIMIZADA');
+        console.log(`📱 Dispositivo: ${this.isMobile ? 'Móvil' : this.isTablet ? 'Tablet' : 'Desktop'}`);
+        
+        this.setupLoader();
+        this.setupNavigation();
+        this.setupAnimations();
+        this.setupScrollEffects();
+        this.setupParticles();
+        this.setupForms();
+        this.setupVideo();
+        this.setupIntersectionObservers();
+        
+        // Solo en desktop
+        if (!this.isMobile) {
+            this.setupCursorEffects();
+        }
+        
+        window.addEventListener('load', () => this.onLoad());
+        window.addEventListener('resize', () => this.onResize());
+        
+        window.ODA = this;
     }
-}
 
-// ===== MENÚ COMBINADO =====
-function initMenu() {
-    const menuToggle = document.getElementById('menuToggle');
-    const navMobile = document.getElementById('navMobile');
-    const mobileClose = document.querySelector('.mobile-close');
-    
-    if (menuToggle && navMobile) {
-        // Toggle menú móvil
-        menuToggle.addEventListener('click', () => {
-            menuOpen = !menuOpen;
-            navMobile.classList.toggle('active');
-            menuToggle.classList.toggle('active');
-            document.body.style.overflow = menuOpen ? 'hidden' : '';
+    setupLoader() {
+        const loader = document.getElementById('printerLoader');
+        if (!loader) return;
+
+        const printProgress = document.getElementById('printProgress');
+        const globalProgress = document.getElementById('globalProgress');
+        const loadingStatus = document.getElementById('loadingStatus');
+        const printingFigure = document.getElementById('printingFigure');
+        
+        if (!printProgress || !globalProgress || !loadingStatus || !printingFigure) return;
+
+        // Crear figura ODA 3D
+        this.createODAFigure(printingFigure);
+
+        // Simular progreso de impresión
+        let progress = 0;
+        let global = 0;
+        
+        const progressInterval = setInterval(() => {
+            progress += 1;
+            global += 0.8;
             
-            // Animación de hamburguesa
-            const spans = menuToggle.querySelectorAll('span');
-            if (menuOpen) {
-                spans[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
+            printProgress.style.width = `${progress}%`;
+            globalProgress.style.width = `${global}%`;
+            
+            // Actualizar texto del estado
+            if (progress < 20) {
+                loadingStatus.textContent = 'CALIBRANDO IMPRESORA...';
+            } else if (progress < 40) {
+                loadingStatus.textContent = 'CARGANDO FILAMENTO...';
+            } else if (progress < 60) {
+                loadingStatus.textContent = 'PREPARANDO MODELO ODA...';
+            } else if (progress < 80) {
+                loadingStatus.textContent = 'IMPRIMIENDO CAPAS...';
+            } else if (progress < 95) {
+                loadingStatus.textContent = 'ACABANDO PIEZA...';
             } else {
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
+                loadingStatus.textContent = 'FINALIZANDO...';
             }
-        });
-        
-        // Cerrar con botón X
-        if (mobileClose) {
-            mobileClose.addEventListener('click', closeMenu);
-        }
-        
-        // Cerrar con escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && menuOpen) {
-                closeMenu();
-            }
-        });
-        
-        // Cerrar al hacer clic en enlace
-        const mobileLinks = document.querySelectorAll('.mobile-links a, .nav-link');
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                closeMenu();
+            
+            // Animar figura ODA
+            if (printingFigure) {
+                const height = (progress / 100) * 120;
+                printingFigure.style.height = `${height}px`;
+                printingFigure.style.opacity = 0.3 + (progress / 150);
                 
-                // Actualizar enlace activo
-                const navLinks = document.querySelectorAll('.nav-link');
-                navLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-            });
-        });
-        
-        // Animación del logo 3D
-        const logo3d = document.getElementById('logo3d');
-        if (logo3d) {
-            logo3d.addEventListener('mouseenter', () => {
-                logo3d.style.animation = 'logoFloat 0.5s ease';
+                // Efecto de brillo al final
+                if (progress > 90) {
+                    printingFigure.style.filter = `blur(${2 - ((progress - 90) / 10)}px)`;
+                    printingFigure.style.boxShadow = `0 0 ${20 + (progress - 90) * 2}px rgba(255, 62, 122, 0.5)`;
+                }
+            }
+            
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+                
+                // Esperar un momento para mostrar la figura completa
                 setTimeout(() => {
-                    logo3d.style.animation = '';
-                }, 500);
-            });
-            
-            logo3d.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-        }
+                    loader.classList.add('hidden');
+                    
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        this.startMainAnimations();
+                    }, 500);
+                }, 800);
+            }
+        }, 30);
     }
-}
 
-function closeMenu() {
-    const menuToggle = document.getElementById('menuToggle');
-    const navMobile = document.getElementById('navMobile');
-    const spans = menuToggle?.querySelectorAll('span');
-    
-    menuOpen = false;
-    navMobile?.classList.remove('active');
-    menuToggle?.classList.remove('active');
-    document.body.style.overflow = '';
-    
-    if (spans) {
-        spans[0].style.transform = 'none';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'none';
-    }
-}
-
-// ===== PARALLAX =====
-function initParallax() {
-    const parallaxLayers = document.querySelectorAll('.parallax-layer');
-    
-    if (parallaxLayers.length > 0) {
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
+    createODAFigure(container) {
+        // Limpiar contenedor
+        container.innerHTML = '';
+        
+        // Crear cubo base (O)
+        const cube = document.createElement('div');
+        cube.className = 'oda-cube';
+        cube.style.cssText = `
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff3e7a, #9d4edd);
+            border-radius: 8px;
+            animation: cubePulse 2s ease-in-out infinite;
+        `;
+        container.appendChild(cube);
+        
+        // Crear cilindro (D)
+        const cylinder = document.createElement('div');
+        cylinder.className = 'oda-cylinder';
+        cylinder.style.cssText = `
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 50px;
+            background: linear-gradient(45deg, #00d9ff, #9d4edd);
+            border-radius: 20px 20px 8px 8px;
+            animation: cylinderFloat 3s ease-in-out infinite;
+        `;
+        container.appendChild(cylinder);
+        
+        // Crear pirámide (A)
+        const pyramid = document.createElement('div');
+        pyramid.className = 'oda-pyramid';
+        pyramid.style.cssText = `
+            position: absolute;
+            bottom: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 40px solid #ff3e7a;
+            animation: pyramidRotate 4s linear infinite;
+        `;
+        container.appendChild(pyramid);
+        
+        // Agregar estilos CSS para animaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes cubePulse {
+                0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+                50% { transform: translateX(-50%) scale(1.05); opacity: 1; }
+            }
             
-            parallaxLayers.forEach(layer => {
-                const speed = parseFloat(layer.getAttribute('data-speed')) || 0.1;
-                const yPos = -(scrolled * speed);
-                layer.style.transform = `translateY(${yPos}px)`;
+            @keyframes cylinderFloat {
+                0%, 100% { transform: translateX(-50%) translateY(0); }
+                50% { transform: translateX(-50%) translateY(-10px); }
+            }
+            
+            @keyframes pyramidRotate {
+                from { transform: translateX(-50%) rotate(0deg); }
+                to { transform: translateX(-50%) rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    setupNavigation() {
+        const nav = document.getElementById('cyberNav');
+        const toggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const navProgress = document.getElementById('navProgress');
+
+        if (!nav || !toggle || !navMenu) return;
+
+        // Menú toggle
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.isMenuOpen = !this.isMenuOpen;
+            toggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
+        });
+
+        // Cerrar menú al hacer clic en enlace
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                this.isMenuOpen = false;
+                toggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
             });
         });
-    }
-}
 
-// ===== ANIMACIONES AL SCROLL =====
-function initAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animated');
-                
-                // Retardo personalizado
-                if (entry.target.classList.contains('service-card') || 
-                    entry.target.classList.contains('step') || 
-                    entry.target.classList.contains('gallery-item')) {
-                    const delay = entry.target.dataset.delay || '0';
-                    entry.target.style.animationDelay = `${delay}s`;
-                }
-                
-                // Contadores cuando sean visibles
-                if (entry.target.classList.contains('stat-number')) {
-                    initCounters();
-                }
+        // Cerrar menú al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!nav.contains(e.target) && this.isMenuOpen) {
+                this.isMenuOpen = false;
+                toggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
             }
         });
-    }, observerOptions);
-    
-    // Observar elementos animables
-    const animatedElements = document.querySelectorAll(
-        '.service-card, .step, .gallery-item, .philosophy-item, .info-card'
-    );
-    
-    animatedElements.forEach((el, index) => {
-        el.dataset.delay = (index * 0.2).toFixed(1);
-        observer.observe(el);
-    });
-}
 
-// ===== CONTADORES ANIMADOS =====
-function initCounters() {
-    const counters = document.querySelectorAll('.stat-number');
-    let hasAnimated = false;
-    
-    counters.forEach(counter => {
-        // Verificar si ya fue animado
-        if (counter.classList.contains('counted')) return;
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '#!') return;
+                
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    
+                    // Cerrar menú en móviles
+                    if (window.innerWidth < 1024) {
+                        toggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                        document.body.style.overflow = '';
+                        this.isMenuOpen = false;
+                    }
+                    
+                    // Scroll suave
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Progress bar en navegación
+        if (navProgress) {
+            window.addEventListener('scroll', () => {
+                const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrolled = (window.scrollY / windowHeight) * 100;
+                navProgress.style.width = `${scrolled}%`;
+            });
+        }
+
+        // Cambiar estilo de navegación al hacer scroll
+        window.addEventListener('scroll', () => {
+            this.scrollPosition = window.scrollY;
+            
+            if (this.scrollPosition > 50) {
+                nav.style.background = 'rgba(10, 10, 10, 0.95)';
+                nav.style.backdropFilter = 'blur(20px)';
+                nav.style.borderBottomColor = 'var(--color-primary)';
+            } else {
+                nav.style.background = 'rgba(10, 10, 10, 0.9)';
+                nav.style.backdropFilter = 'blur(20px)';
+                nav.style.borderBottomColor = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+    }
+
+    setupAnimations() {
+        // Animación de estadísticas
+        this.animateStats();
         
-        const originalText = counter.textContent;
-        let target;
-        let suffix = '';
-        let prefix = '';
-        
-        // Detectar tipo de contador
-        if (counter.hasAttribute('data-count')) {
-            target = parseInt(counter.getAttribute('data-count'));
-            suffix = originalText.includes('%') ? '%' : '';
-        } else {
-            const cleanText = originalText.replace(/[^0-9]/g, '');
-            target = parseInt(cleanText) || 100;
-            suffix = originalText.includes('%') ? '%' : '';
-            prefix = originalText.includes('+') ? '+' : '';
+        // Animación de elementos flotantes (solo desktop)
+        if (!this.isMobile) {
+            this.animateFloatingElements();
         }
         
-        let count = 0;
-        const increment = target / 100;
-        const duration = 2000;
-        const stepTime = duration / 100;
+        // Animación de título del hero
+        this.animateHeroTitle();
+    }
+
+    animateStats() {
+        const stats = document.querySelectorAll('.stat-value[data-count]');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const stat = entry.target;
+                    const target = parseInt(stat.getAttribute('data-count'));
+                    const suffix = stat.querySelector('.percent');
+                    
+                    this.animateCounter(stat, target, suffix, 2000);
+                    observer.unobserve(stat);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        stats.forEach(stat => observer.observe(stat));
+    }
+
+    animateCounter(element, target, suffix, duration) {
+        let start = 0;
+        const increment = target / (duration / 16); // 60fps
+        const startTime = Date.now();
         
         const updateCounter = () => {
-            if (count < target) {
-                count += increment;
-                counter.textContent = prefix + Math.floor(count) + suffix;
-                setTimeout(updateCounter, stepTime);
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing function
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const current = Math.floor(target * easeOutQuart);
+            
+            element.textContent = current + (suffix ? suffix.outerHTML : '');
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
             } else {
-                counter.textContent = prefix + target + suffix;
-                counter.classList.add('counted');
+                element.textContent = target + (suffix ? suffix.outerHTML : '');
             }
         };
         
-        // Iniciar contador
-        updateCounter();
-        hasAnimated = true;
-    });
-    
-    return hasAnimated;
-}
-
-// ===== ANIMACIÓN DE IMPRESIÓN 3D =====
-function initPrintingAnimation() {
-    const printingObject = document.getElementById('printingObject');
-    
-    if (printingObject) {
-        // Crear efecto de capas de impresión
-        let layerCount = 0;
-        const maxLayers = 8;
-        
-        const printInterval = setInterval(() => {
-            if (layerCount < maxLayers) {
-                const layer = document.createElement('div');
-                layer.className = 'print-layer';
-                layer.style.cssText = `
-                    position: absolute;
-                    bottom: 0;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: ${80 - (layerCount * 3)}px;
-                    height: 12px;
-                    background: linear-gradient(to right, #00FF88, #FFD700);
-                    opacity: 0.8;
-                    border-radius: 2px;
-                    z-index: ${layerCount};
-                `;
-                printingObject.appendChild(layer);
-                layerCount++;
-                
-                // Animar capas existentes
-                const layers = printingObject.querySelectorAll('.print-layer');
-                layers.forEach((layer, index) => {
-                    const bottom = index * 12;
-                    const opacity = 0.8 - (index * 0.1);
-                    layer.style.bottom = `${bottom}px`;
-                    layer.style.opacity = opacity;
-                    
-                    // Efecto de calor en la capa superior
-                    if (index === layers.length - 1) {
-                        layer.style.boxShadow = '0 0 10px #FFD700';
-                    }
-                });
-                
-                // Limitar número de capas
-                if (layers.length > maxLayers) {
-                    printingObject.removeChild(layers[0]);
-                    layerCount--;
-                }
-            } else {
-                // Resetear animación
-                setTimeout(() => {
-                    printingObject.innerHTML = '';
-                    layerCount = 0;
-                }, 1000);
-            }
-        }, 500);
-        
-        // Limpiar intervalo cuando se desmonta
-        window.addEventListener('beforeunload', () => {
-            clearInterval(printInterval);
-        });
+        requestAnimationFrame(updateCounter);
     }
-}
 
-// ===== FORMULARIOS OPTIMIZADOS =====
-function initForms() {
-    const forms = document.querySelectorAll('form');
-    
-    forms.forEach(form => {
-        // Validación en tiempo real
-        const inputs = form.querySelectorAll('input, textarea, select');
-        inputs.forEach(input => {
-            input.addEventListener('input', () => validateField(input));
-            input.addEventListener('blur', () => validateField(input, true));
+    animateFloatingElements() {
+        const elements = document.querySelectorAll('.floating-shape');
+        
+        elements.forEach((el, index) => {
+            const amplitude = 50;
+            const speed = 0.002 + (index * 0.001);
+            const phase = Math.random() * Math.PI * 2;
             
-            // Contador para textareas
-            if (input.tagName === 'TEXTAREA') {
-                input.addEventListener('input', updateCharCounter);
-            }
+            const animate = () => {
+                const time = Date.now();
+                const y = Math.sin(time * speed + phase) * amplitude;
+                const rotation = Math.sin(time * speed * 0.5 + phase) * 20;
+                
+                el.style.transform = `translateY(${y}px) rotate(${rotation}deg)`;
+                requestAnimationFrame(animate);
+            };
+            
+            animate();
         });
-        
-        // Submit handler
-        form.addEventListener('submit', handleFormSubmit);
-    });
-}
+    }
 
-function validateField(field, showError = false) {
-    const parent = field.parentElement;
-    let errorEl = parent.querySelector('.input-error');
-    
-    if (!errorEl) {
-        errorEl = document.createElement('div');
-        errorEl.className = 'input-error';
-        parent.appendChild(errorEl);
-    }
-    
-    // Limpiar error previo
-    parent.classList.remove('error');
-    errorEl.textContent = '';
-    
-    if (!field.value.trim() && field.required) {
-        if (showError) {
-            parent.classList.add('error');
-            errorEl.textContent = 'Este campo es requerido';
-        }
-        return false;
-    }
-    
-    // Validaciones específicas
-    if (field.type === 'email') {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(field.value)) {
-            if (showError) {
-                parent.classList.add('error');
-                errorEl.textContent = 'Email inválido';
-            }
-            return false;
-        }
-    }
-    
-    if (field.type === 'textarea' && field.hasAttribute('minlength')) {
-        const minLength = parseInt(field.getAttribute('minlength'));
-        if (field.value.length < minLength) {
-            if (showError) {
-                parent.classList.add('error');
-                errorEl.textContent = `Mínimo ${minLength} caracteres`;
-            }
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-function updateCharCounter(e) {
-    const textarea = e.target;
-    let counter = textarea.parentElement.querySelector('.char-counter');
-    
-    if (!counter) {
-        counter = document.createElement('div');
-        counter.className = 'char-counter';
-        textarea.parentElement.appendChild(counter);
-    }
-    
-    const count = textarea.value.length;
-    const max = 500;
-    counter.textContent = `${count}/${max}`;
-    
-    // Cambiar color según longitud
-    if (count < 50) {
-        counter.style.color = '#FF4757';
-    } else if (count < 100) {
-        counter.style.color = '#FFD700';
-    } else {
-        counter.style.color = '#00FF88';
-    }
-    
-    // Limitar caracteres
-    if (count > max) {
-        textarea.value = textarea.value.substring(0, max);
-    }
-}
-
-async function handleFormSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    
-    // Validar todos los campos
-    const inputs = form.querySelectorAll('[required]');
-    let isValid = true;
-    
-    inputs.forEach(input => {
-        if (!validateField(input, true)) {
-            isValid = false;
-        }
-    });
-    
-    if (!isValid) {
-        shakeForm(form);
-        return;
-    }
-    
-    // Deshabilitar botón y mostrar loader
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ENVIANDO...';
-    submitBtn.disabled = true;
-    
-    try {
-        // Crear loader
-        const formLoader = document.createElement('div');
-        formLoader.className = 'form-loader';
-        formLoader.innerHTML = '<div class="spinner"></div>';
-        form.appendChild(formLoader);
+    animateHeroTitle() {
+        const titleWords = document.querySelectorAll('.title-word');
         
-        // Enviar formulario a Formspree
-        const formData = new FormData(form);
-        const response = await fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-        
-        // Remover loader
-        formLoader.remove();
-        
-        if (response.ok) {
-            showSuccessMessage(form, submitBtn, originalText);
-        } else {
-            throw new Error('Error en el envío');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showNotification('Error al enviar. Intenta nuevamente.', 'error');
-        
-        // Restaurar botón
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-    }
-}
-
-function showSuccessMessage(form, submitBtn, originalText) {
-    // Mostrar éxito
-    submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡ENVIADO!';
-    submitBtn.style.background = 'linear-gradient(135deg, #00FF88, #00A8FF)';
-    submitBtn.style.color = '#000';
-    
-    // Mostrar mensaje de éxito
-    const successMsg = document.createElement('div');
-    successMsg.className = 'success-message';
-    successMsg.innerHTML = `
-        <i class="fas fa-check-circle"></i>
-        <h3>¡Solicitud enviada con éxito!</h3>
-        <p>Te contactaremos en menos de 2 horas hábiles.</p>
-        <small>Revisa tu bandeja de spam si no ves nuestro email</small>
-    `;
-    form.parentElement.appendChild(successMsg);
-    
-    // Log de datos (simulado)
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
-    console.log('📨 Formulario enviado:', data);
-    
-    // Resetear después de 5 segundos
-    setTimeout(() => {
-        form.reset();
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-        submitBtn.style.background = '';
-        submitBtn.style.color = '';
-        successMsg.remove();
-        
-        // Resetear contadores
-        const charCounters = form.querySelectorAll('.char-counter');
-        charCounters.forEach(counter => {
-            counter.textContent = '0/500';
-            counter.style.color = '';
-        });
-        
-        // Resetear errores
-        const errors = form.querySelectorAll('.input-error');
-        errors.forEach(error => error.textContent = '');
-        
-        const errorGroups = form.querySelectorAll('.form-group.error');
-        errorGroups.forEach(group => group.classList.remove('error'));
-    }, 5000);
-}
-
-function shakeForm(form) {
-    form.style.animation = 'shake 0.5s';
-    setTimeout(() => {
-        form.style.animation = '';
-    }, 500);
-}
-
-// ===== EFECTOS DE SCROLL OPTIMIZADOS =====
-function initScrollEffects() {
-    // Throttle para scroll
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                handleScroll();
-                ticking = false;
+        // Solo animar si no es móvil
+        if (this.isMobile) {
+            titleWords.forEach(word => {
+                word.style.opacity = '1';
+                word.style.transform = 'translateY(0)';
             });
-            ticking = true;
-        }
-    });
-}
-
-function handleScroll() {
-    const scrollPos = window.pageYOffset;
-    const header = document.querySelector('.main-nav-combined');
-    
-    // Header effect
-    if (scrollPos > 100) {
-        header.classList.add('scrolled');
-    } else {
-        header.classList.remove('scrolled');
-    }
-    
-    // Update active nav link
-    updateActiveNavLink(scrollPos);
-    
-    // Show/hide WhatsApp button
-    const whatsappBtn = document.querySelector('.whatsapp-float');
-    if (whatsappBtn) {
-        whatsappBtn.classList.toggle('visible', scrollPos > 500);
-    }
-}
-
-function updateActiveNavLink(scrollPos) {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const headerHeight = document.querySelector('.main-nav-combined').offsetHeight;
-    const scrollPosition = scrollPos + headerHeight + 100;
-    
-    let currentSection = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        const sectionId = section.getAttribute('id');
-        
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-            currentSection = sectionId;
-        }
-    });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        const href = link.getAttribute('href').replace('#', '');
-        if (href === currentSection) {
-            link.classList.add('active');
-        }
-    });
-}
-
-// ===== ELEMENTOS FLOTANTES =====
-function initFloatingElements() {
-    const floatingElements = document.querySelectorAll('.floating-cube, .floating-spray, .floating-diamond');
-    
-    floatingElements.forEach(el => {
-        // Movimiento aleatorio suave
-        let x = 0;
-        let y = 0;
-        let targetX = 0;
-        let targetY = 0;
-        
-        function moveElement() {
-            // Movimiento suave hacia el objetivo
-            x += (targetX - x) * 0.05;
-            y += (targetY - y) * 0.05;
-            
-            el.style.transform = `translate(${x}px, ${y}px) rotate(${x * 0.5}deg)`;
-            
-            // Cambiar objetivo aleatoriamente
-            if (Math.abs(targetX - x) < 1 && Math.abs(targetY - y) < 1) {
-                targetX = (Math.random() * 40 - 20);
-                targetY = (Math.random() * 40 - 20);
-            }
-            
-            requestAnimationFrame(moveElement);
-        }
-        
-        // Iniciar animación
-        moveElement();
-        
-        // Interacción con mouse
-        el.addEventListener('mouseenter', () => {
-            el.style.color = '#FFD700';
-            el.style.fontSize = '4rem';
-            el.style.transition = 'all 0.3s ease';
-        });
-        
-        el.addEventListener('mouseleave', () => {
-            el.style.color = '';
-            el.style.fontSize = '3rem';
-        });
-    });
-}
-
-// ===== SCROLL SUAVE =====
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-            
-            if (href === '#' || href === '#!') return;
-            
-            e.preventDefault();
-            const target = document.querySelector(href);
-            
-            if (target) {
-                const headerHeight = document.querySelector('.main-nav-combined').offsetHeight;
-                const targetPosition = target.offsetTop - headerHeight;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-}
-
-// ===== HEADER SCROLL =====
-function initHeaderScroll() {
-    const header = document.querySelector('.main-nav-combined');
-    let lastScroll = 0;
-    
-    if (!header) return;
-    
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-        
-        if (currentScroll <= 0) {
-            header.classList.remove('scroll-up');
             return;
         }
         
-        if (currentScroll > lastScroll && !header.classList.contains('scroll-down')) {
-            // Scrolling down
-            header.classList.remove('scroll-up');
-            header.classList.add('scroll-down');
-        } else if (currentScroll < lastScroll && header.classList.contains('scroll-down')) {
-            // Scrolling up
-            header.classList.remove('scroll-down');
-            header.classList.add('scroll-up');
+        titleWords.forEach((word, index) => {
+            word.style.opacity = '0';
+            word.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                word.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                word.style.opacity = '1';
+                word.style.transform = 'translateY(0)';
+            }, index * 200);
+        });
+    }
+
+    setupScrollEffects() {
+        // Solo usar GSAP ScrollTrigger en desktop
+        if (this.isMobile) return;
+        
+        if (typeof gsap !== 'undefined' && gsap.utils && gsap.registerPlugin) {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Parallax en elementos de fondo
+            const bgElements = document.querySelectorAll('.grid-line, .scan-effect');
+            bgElements.forEach(el => {
+                gsap.to(el, {
+                    y: () => window.innerHeight * 0.1,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: "body",
+                        start: "top top",
+                        end: "bottom bottom",
+                        scrub: true
+                    }
+                });
+            });
+            
+            // Reveal animations
+            const revealSections = document.querySelectorAll('.cyber-services, .cyber-process, .cyber-projects, .cyber-contact');
+            
+            revealSections.forEach(section => {
+                gsap.from(section, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
         }
-        
-        lastScroll = currentScroll;
-    });
-}
+    }
 
-// ===== WHATSAPP FLOTANTE =====
-function initWhatsAppFloat() {
-    const floatBtn = document.querySelector('.whatsapp-float');
-    
-    if (!floatBtn) return;
-    
-    // Efecto de pulso periódico
-    setInterval(() => {
-        floatBtn.classList.add('pulse');
-        setTimeout(() => {
-            floatBtn.classList.remove('pulse');
-        }, 1000);
-    }, 8000);
-    
-    // Click analytics
-    floatBtn.addEventListener('click', (e) => {
-        console.log('📱 WhatsApp clickeado');
-        
-        // Añadir efecto de click
-        floatBtn.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-            floatBtn.style.transform = '';
-        }, 200);
-    });
-}
+    setupParticles() {
+        const container = document.getElementById('particles');
+        if (!container || this.isMobile) return; // Menos partículas en móviles
 
-// ===== OBSERVADOR DE VISIBILIDAD =====
-function initVisibilityObserver() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Elemento visible - puedes agregar animaciones específicas
-                entry.target.classList.add('visible');
+        const particleCount = this.isTablet ? 30 : 80;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'cyber-particle';
+            
+            const size = Math.random() * 3 + 1;
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            const duration = Math.random() * 10 + 10;
+            const delay = Math.random() * 5;
+            const colors = ['#ff3e7a', '#00d9ff', '#9d4edd'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            particle.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                background: ${color};
+                border-radius: 50%;
+                left: ${posX}%;
+                top: ${posY}%;
+                opacity: ${Math.random() * 0.3 + 0.1};
+                pointer-events: none;
+                filter: blur(${size / 2}px);
+            `;
+            
+            container.appendChild(particle);
+            
+            // Animación simple para mejor rendimiento
+            const animate = () => {
+                const time = Date.now() * 0.001;
+                const x = Math.sin(time + i) * 100;
+                const y = Math.cos(time * 0.7 + i) * 100;
                 
-                // Contadores
-                if (entry.target.classList.contains('stat-number')) {
-                    initCounters();
+                particle.style.transform = `translate(${x}px, ${y}px)`;
+                requestAnimationFrame(animate);
+            };
+            
+            animate();
+        }
+    }
+
+    setupForms() {
+        const form = document.getElementById('contactForm');
+        if (!form) return;
+
+        // Contador de caracteres
+        const textarea = form.querySelector('textarea');
+        const charCounter = form.querySelector('#charCount');
+        
+        if (textarea && charCounter) {
+            textarea.addEventListener('input', () => {
+                const count = textarea.value.length;
+                const max = 500;
+                charCounter.textContent = count;
+                
+                // Cambiar color según longitud
+                let color;
+                if (count < 50) {
+                    color = '#ff4757';
+                } else if (count < max * 0.9) {
+                    color = '#ff3e7a';
+                } else {
+                    color = '#00ff9d';
+                }
+                
+                charCounter.style.color = color;
+            });
+        }
+
+        // Envío del formulario
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('.submit-button');
+            if (submitBtn) {
+                const originalText = submitBtn.querySelector('.button-text').textContent;
+                submitBtn.querySelector('.button-text').textContent = 'ENVIANDO...';
+                submitBtn.disabled = true;
+                
+                // Animación de envío
+                submitBtn.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    submitBtn.style.transform = 'scale(1)';
+                }, 200);
+                
+                try {
+                    // Simular envío (reemplazar con tu endpoint real)
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    this.showNotification('¡Mensaje enviado con éxito! Te contactaremos pronto.', 'success');
+                    form.reset();
+                    
+                    if (charCounter) {
+                        charCounter.textContent = '0';
+                        charCounter.style.color = '#888';
+                    }
+                    
+                } catch (error) {
+                    this.showNotification('Error al enviar el mensaje. Intenta de nuevo.', 'error');
+                } finally {
+                    submitBtn.querySelector('.button-text').textContent = originalText;
+                    submitBtn.disabled = false;
                 }
             }
         });
-    }, { threshold: 0.3 });
-    
-    // Observar elementos importantes
-    const importantElements = document.querySelectorAll(
-        '.service-card, .philosophy-item, .info-card, .step, .gallery-item'
-    );
-    
-    importantElements.forEach(el => observer.observe(el));
-}
+    }
 
-// ===== NOTIFICACIONES =====
-function showNotification(message, type = 'success') {
-    // Crear notificación
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Mostrar
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-    
-    // Ocultar después de 3 segundos
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, 3000);
-}
-
-// ===== INYECTAR ESTILOS ADICIONALES =====
-function injectAdditionalStyles() {
-    // Verificar si ya existen
-    if (document.querySelector('#additional-styles')) return;
-    
-    const additionalStyles = `
-        .success-message {
-            background: rgba(0, 255, 136, 0.1);
-            border: 2px solid #00FF88;
-            border-radius: 10px;
-            padding: 2rem;
+    showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = 'cyber-notification';
+        notification.textContent = message;
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: var(--space-md) var(--space-lg);
+            background: ${type === 'success' ? 'var(--color-secondary)' : '#ff4757'};
+            color: var(--color-dark);
+            border-radius: var(--border-radius-md);
+            z-index: 9999;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(100%);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            max-width: 400px;
             text-align: center;
-            margin-top: 2rem;
-            animation: fadeInUp 0.5s ease;
-        }
+        `;
         
-        .success-message i {
-            font-size: 3rem;
-            color: #00FF88;
-            margin-bottom: 1rem;
-        }
+        document.body.appendChild(notification);
         
-        .success-message h3 {
-            color: #00FF88;
-            margin-bottom: 0.5rem;
-            font-size: 1.5rem;
-        }
+        // Mostrar
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+            notification.style.opacity = '1';
+        }, 10);
         
-        .success-message p {
-            color: #ccc;
-            margin-bottom: 0.5rem;
-        }
-        
-        .success-message small {
-            color: #888;
-            font-size: 0.8rem;
-        }
-        
-        /* Efectos hover mejorados */
-        .service-card.luxury:hover .service-icon {
-            transform: scale(1.1) rotate(5deg);
-            transition: transform 0.3s ease;
-        }
-        
-        .info-card:hover .info-icon {
-            transform: rotateY(180deg);
-            transition: transform 0.6s ease;
-        }
-        
-        .service-link:hover {
-            transform: translateX(5px);
-        }
-        
-        /* Animaciones de entrada */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideInUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.8s ease;
-        }
-        
-        .slide-in-up {
-            animation: slideInUp 0.8s ease;
-        }
-    `;
-    
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'additional-styles';
-    styleSheet.textContent = additionalStyles;
-    document.head.appendChild(styleSheet);
-}
-
-// ===== RESIZE HANDLER =====
-window.addEventListener('resize', () => {
-    isMobile = window.innerWidth <= 1024;
-    
-    // Cerrar menú móvil si se cambia a desktop
-    if (!isMobile && menuOpen) {
-        closeMenu();
+        // Ocultar después de 3 segundos
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            notification.style.opacity = '0';
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }, 3000);
     }
-    
-    // Recalcular elementos si es necesario
-    console.log('📐 Ventana redimensionada:', window.innerWidth);
-});
 
-// ===== DEBUG HELPERS =====
-window.ODA = {
-    version: '2.0.0',
-    debug: true,
-    refreshAnimations: () => {
-        console.log('🔄 Refrescando animaciones...');
-        initAnimations();
-        initCounters();
-    },
-    showMenu: () => {
-        const menuToggle = document.getElementById('menuToggle');
-        if (menuToggle) menuToggle.click();
-    },
-    scrollToSection: (sectionId) => {
-        const section = document.getElementById(sectionId);
-        if (section) {
-            window.scrollTo({
-                top: section.offsetTop - 100,
-                behavior: 'smooth'
+    setupVideo() {
+        // Optimizar video para móviles
+        if (this.isMobile) {
+            const iframe = document.querySelector('.video-wrapper iframe');
+            if (iframe) {
+                // Reducir calidad para mejor rendimiento en móviles
+                iframe.src = iframe.src.replace('autoplay=1', 'autoplay=0');
+                
+                // Opcional: Pausar video en móviles
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) {
+                            // Aquí podrías pausar el video si fuera necesario
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                observer.observe(iframe);
+            }
+        }
+    }
+
+    setupIntersectionObservers() {
+        // Animación de tarjetas al hacer scroll
+        const cards = document.querySelectorAll('.service-card, .info-card, .project-card');
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animated');
+                    }, index * 100);
+                }
             });
-        }
-    },
-    testForm: () => {
-        const form = document.getElementById('premiumForm');
-        if (form) {
-            form.querySelector('button[type="submit"]').click();
-        }
+        }, { threshold: 0.1 });
+        
+        cards.forEach(card => {
+            card.classList.remove('animated');
+            cardObserver.observe(card);
+        });
+
+        // Animación de pasos del proceso
+        const steps = document.querySelectorAll('.process-step');
+        const stepObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animated');
+                    }, index * 200);
+                }
+            });
+        }, { threshold: 0.2 });
+        
+        steps.forEach(step => {
+            step.classList.remove('animated');
+            stepObserver.observe(step);
+        });
     }
-};
 
-// Log de inicialización completa
-console.log('✅ Sistema ODA completamente inicializado');
-console.log('📱 Mobile:', isMobile);
-console.log('🎨 Estilos inyectados');
-console.log('⚡ Listo para imprimir experiencias premium');
+    setupCursorEffects() {
+        // Solo en desktop
+        if (this.isMobile) return;
 
-// ===== INITIAL SCROLL PARA POSICIONAR ELEMENTOS =====
-window.addEventListener('load', () => {
-    // Forzar un pequeño scroll para activar efectos
-    setTimeout(() => {
-        window.scrollTo(0, 1);
+        const cursor = document.createElement('div');
+        cursor.id = 'cyber-cursor';
+        document.body.appendChild(cursor);
+        
+        cursor.style.cssText = `
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.1s ease;
+        `;
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.opacity = '1';
+        });
+
+        // Animación suave del cursor
+        const animateCursor = () => {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        };
+        
+        animateCursor();
+
+        // Efecto hover en elementos interactivos
+        const interactiveElements = document.querySelectorAll('a, button, .cta-button, .card-link, .info-link');
+        
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursor.style.borderColor = 'var(--color-secondary)';
+                cursor.style.backgroundColor = 'var(--color-secondary)';
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursor.style.borderColor = 'var(--color-primary)';
+                cursor.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // Ocultar cursor cuando salga de la ventana
+        document.addEventListener('mouseleave', () => {
+            cursor.style.opacity = '0';
+        });
+    }
+
+    startMainAnimations() {
+        // Mostrar WhatsApp float
+        const whatsappBtn = document.getElementById('whatsappFloat');
+        if (whatsappBtn) {
+            setTimeout(() => {
+                whatsappBtn.style.opacity = '1';
+                whatsappBtn.style.transform = 'translateY(0) scale(1)';
+            }, 500);
+        }
+
+        // Animación inicial del logo
+        const logoCube = document.querySelector('.logo-cube');
+        if (logoCube) {
+            logoCube.style.animation = 'rotateCube 10s linear infinite';
+        }
+
+        // Mostrar elementos con delay
+        const elementsToShow = [
+            '.hero-badge',
+            '.hero-description',
+            '.hero-stats',
+            '.hero-cta'
+        ];
+        
+        elementsToShow.forEach((selector, index) => {
+            const element = document.querySelector(selector);
+            if (element) {
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, 300 + (index * 200));
+            }
+        });
+    }
+
+    onLoad() {
+        console.log('✅ ODA EXPERIENCE completamente cargado');
+        document.body.style.visibility = 'visible';
+        
+        // Forzar un pequeño scroll para activar efectos
         setTimeout(() => {
             window.scrollTo(0, 0);
-        }, 10);
-    }, 100);
+            
+            setTimeout(() => {
+                this.startMainAnimations();
+            }, 300);
+        }, 100);
+    }
+
+    onResize() {
+        this.isMobile = window.innerWidth < 768;
+        this.isTablet = window.innerWidth < 1024;
+        
+        // Cerrar menú en resize si es necesario
+        if (window.innerWidth >= 1024 && this.isMenuOpen) {
+            this.isMenuOpen = false;
+            const toggle = document.getElementById('mobileToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (toggle) toggle.classList.remove('active');
+            if (navMenu) navMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Actualizar efectos si es necesario
+        if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.refresh();
+        }
+    }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    // Ocultar contenido hasta que se cargue
+    document.body.style.visibility = 'hidden';
+    
+    // Iniciar experiencia
+    window.odaExp = new ODAExperience();
 });
+
+// Agregar estilos adicionales
+const additionalStyles = `
+    .service-card, .info-card, .project-card {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .service-card.animated, .info-card.animated, .project-card.animated {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .process-step {
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .process-step.animated {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .hero-badge,
+    .hero-description,
+    .hero-stats,
+    .hero-cta {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    
+    @media (max-width: 768px) {
+        .service-card, .info-card, .project-card,
+        .process-step,
+        .hero-badge,
+        .hero-description,
+        .hero-stats,
+        .hero-cta {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
+`;
+
+const styleSheet = document.createElement('style');
+styleSheet.textContent = additionalStyles;
+document.head.appendChild(styleSheet);
+
+console.log('🎮 Usa window.odaExp para controlar las animaciones');
