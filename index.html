@@ -32,7 +32,7 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="index_estilo.css" />
+  <link rel="stylesheet" href="style.css" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
@@ -45,6 +45,7 @@
   <!-- =========================
         LOADER (NO SE TOCA)
   ========================== -->
+
   <div class="printer-loader" id="printerLoader" aria-label="Cargando experiencia">
     <div class="loader-container">
       <div class="printer-3d" role="img" aria-label="Animación de impresora 3D">
@@ -63,8 +64,9 @@
           </div>
 
           <div class="printer-controls">
+
             <div class="temp-display" aria-label="Temperatura de impresión">
-              <span class="temp-value">215°C</span>
+              <span class="temp-value">215°</span>
               <div class="temp-bar" aria-hidden="true">
                 <div class="temp-fill"></div>
               </div>
@@ -97,9 +99,10 @@
         <div class="tagline">STUDIO 3D</div>
 
         <!-- aria-live SOLO aquí -->
+<center>
         <div class="loading-status" id="loadingStatus" aria-live="polite">
           INICIALIZANDO IMPRESORA...
-        </div>
+        </div></center>
 
         <div class="loading-details" aria-label="Detalles de carga">
           <span class="detail">PRECISIÓN: 0.1mm</span>
@@ -107,6 +110,7 @@
         </div>
 
         <div class="global-progress" aria-label="Progreso de carga">
+<center>
           <div class="global-bar" aria-hidden="true">
             <div class="global-fill" id="globalProgress"></div>
           </div>
@@ -805,6 +809,6 @@
   </a>
 
   <!-- Scripts -->
-  <script defer src="index_script.js"></script>
+  <script defer src="script.js"></script>
 </body>
 </html>
