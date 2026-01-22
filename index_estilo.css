@@ -170,6 +170,7 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 .scan-effect{
+
   position:absolute;
   inset:0;
   pointer-events:none;
@@ -179,7 +180,7 @@ input, select, textarea { font: inherit; color: inherit; }
     rgba(255,62,122,0.05) 60%,
     transparent 100%);
   opacity: .6;
-  animation: scanMove 5.5s linear infinite;
+  animation: scanMove 8.5s linear infinite;
   mix-blend-mode: screen;
 }
 
@@ -189,6 +190,7 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 
 .hologram-effect{
+
   position:absolute;
   inset:-10%;
   pointer-events:none;
@@ -1749,6 +1751,10 @@ section{
 /* ============================================================
    LOADER (Impresora + Progreso + Gato Reveal)
 ============================================================ */
+/* ============================================================
+   LOADER (PRO) - Figura al centro + controles abajo (como tu foto)
+============================================================ */
+
 .printer-loader{
   position: fixed;
   inset: 0;
@@ -1756,9 +1762,10 @@ section{
   display:flex;
   align-items:center;
   justify-content:center;
-  background: radial-gradient(900px 520px at 20% 20%, rgba(255,62,122,0.20), transparent 60%),
-              radial-gradient(860px 520px at 80% 50%, rgba(0,217,255,0.12), transparent 55%),
-              linear-gradient(180deg, rgba(0,0,0,0.96), rgba(0,0,0,0.92));
+  background:
+    radial-gradient(900px 520px at 20% 20%, rgba(255,62,122,0.20), transparent 60%),
+    radial-gradient(860px 520px at 80% 50%, rgba(0,217,255,0.12), transparent 55%),
+    linear-gradient(180deg, rgba(0,0,0,0.96), rgba(0,0,0,0.92));
   backdrop-filter: blur(16px);
   transition: opacity .45s ease, transform .45s ease;
 }
@@ -1770,12 +1777,11 @@ section{
 }
 
 .loader-container{
-  width: min(980px, calc(100% - 34px));
-  display:grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 18px;
-  align-items:center;
-  padding: 18px;
+  width: min(560px, calc(100% - 34px));
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  padding: 30px;
   border-radius: 28px;
   border: 1px solid rgba(255,255,255,0.10);
   background: rgba(255,255,255,0.05);
@@ -1783,46 +1789,116 @@ section{
   backdrop-filter: blur(18px);
 }
 
+/* Caja principal (como tarjeta grande) */
 .printer-3d{
   position: relative;
-  min-height: 320px;
   border-radius: 28px;
-  background: rgba(0,0,0,0.25);
-  border: 1px solid rgba(255,255,255,0.08);
-  overflow:hidden;
+  background: rgba(0,0,0,0.30);
+  border: 1px solid rgba(255,255,255,0.10);
+  overflow: hidden;
   box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+  padding: 16px;
 }
 
+/* Marco interno */
 .printer-frame{
-  position:absolute;
-  inset: 18px 18px 18px 18px;
+  position: relative;
   border-radius: 24px;
   border: 1px solid rgba(255,255,255,0.08);
   background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.18));
+  padding: 16px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 14px;
 }
 
-.print-surface{
+/* ---------- CONTROLES ARRIBA (TEMP + DOT) ---------- */
+.printer-controls{
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+/* TEMP ARRIBA */
+.temp-display{
+  position: relative;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.20);
+  padding: 14px 14px;
+  overflow: hidden;
+}
+
+/* Este circulito verde (como la foto) */
+.temp-display::after{
+  content:"";
   position:absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 18px;
-  height: 150px;
-  border-radius: 22px;
-  background: rgba(255,255,255,0.03);
+  right: 14px;
+  top: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(0,255,157,0.95);
+  box-shadow: 0 0 18px rgba(0,255,157,0.55);
+  opacity: 0.9;
+}
+
+.temp-value{
+  font-family: var(--fontTitle);
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  font-size: 14px;
+  color: rgba(255,255,255,0.92);
+}
+
+.temp-bar{
+  margin-top: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.06);
   overflow:hidden;
 }
 
-.printing-figure{
-  position:absolute;
-  inset: 12px;
-  border-radius: 18px;
-  display:grid;
-  place-items:center;
-  opacity: 1;
+.temp-fill{
+  height:100%;
+  width: 80%;
+  background: linear-gradient(90deg, rgba(255,62,122,0.85), rgba(0,217,255,0.65));
+  opacity: 0.85;
+  animation: tempMove 1.8s ease-in-out infinite;
 }
 
-/* Elementos para JS2 (gato reveal con SVG + layers) */
+@keyframes tempMove{
+  0%,100%{ transform: translateX(-8px); opacity: 0.55; }
+  50%{ transform: translateX(8px); opacity: 0.95; }
+}
+
+/* ---------- FIGURA CENTRAL GRANDE ---------- */
+.print-surface{
+  position: relative;
+  height: 210px;              /* 🔥 más grande */
+  border-radius: 22px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow:hidden;
+  display: grid;
+  place-items: center;
+}
+
+.printing-figure{
+  transform: translateY(-25px);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display:grid;
+  place-items:center;
+  border-radius: 18px;
+}
+
+/* Para tu figura del JS2 (cat reveal) */
 .print-figure-inner{
   width: 100%;
   height: 100%;
@@ -1835,7 +1911,7 @@ section{
 }
 
 .cat-svg{
-  width: min(240px, 90%);
+  width: min(260px, 92%);   /* 🔥 MÁS GRANDE */
   height: auto;
   opacity: 0.95;
   filter: drop-shadow(0 14px 22px rgba(255,62,122,0.18));
@@ -1886,116 +1962,19 @@ section{
   filter: blur(0.3px);
   transition: opacity .18s ease;
 }
-.print-figure-layers .layer.on{
-  opacity: 0.9;
-}
+.print-figure-layers .layer.on{ opacity: 0.9; }
 
-/* Printer head */
-.printer-head{
-  position:absolute;
-  left: 22px;
-  right: 22px;
-  top: 42px;
-  height: 56px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-}
-
-.extruder{
-  width: 120px;
-  height: 46px;
-  border-radius: 18px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.nozzle{
-  width: 60px;
-  height: 28px;
-  border-radius: 14px;
-  background: rgba(0,0,0,0.25);
-  border: 1px solid rgba(255,255,255,0.10);
-  display:grid;
-  place-items:center;
-  position: relative;
-}
-
-.filament-flow{
-  width: 22px;
-  height: 10px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--pink), var(--cyan));
-  box-shadow: 0 0 18px rgba(255,62,122,0.35);
-  opacity: 0.85;
-  animation: filamentPulse 0.75s ease-in-out infinite;
-}
-@keyframes filamentPulse{
-  0%,100%{ transform: scaleX(0.9); opacity: 0.55; }
-  50%{ transform: scaleX(1.05); opacity: 0.95; }
-}
-
-.head-glow{
-  position:absolute;
-  inset:-22px;
-  background: radial-gradient(circle at 50% 50%, rgba(0,217,255,0.18), transparent 60%);
-  filter: blur(18px);
-  opacity: 0.55;
-}
-
-.printer-controls{
-  position:absolute;
-  left: 18px;
-  right: 18px;
-  top: 120px;
-  display:flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px;
-}
-
-.temp-display,
+/* ---------- IMPRIMIENDO ABAJO ---------- */
 .progress-display{
-  flex:1;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(0,0,0,0.18);
-  padding: 12px 12px;
-}
 
-.temp-value{
-  font-family: var(--fontTitle);
-  font-weight: 900;
-  letter-spacing: 0.10em;
-}
-
-.temp-bar,
-.progress-bar{
-  margin-top: 10px;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.06);
-  overflow:hidden;
-}
-
-.temp-fill{
-  height:100%;
-  width: 80%;
-  background: linear-gradient(90deg, rgba(255,62,122,0.85), rgba(0,217,255,0.65));
-  opacity: 0.75;
-  animation: tempMove 1.8s ease-in-out infinite;
-}
-@keyframes tempMove{
-  0%,100%{ transform: translateX(-8px); opacity: 0.55; }
-  50%{ transform: translateX(8px); opacity: 0.9; }
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.20);
+  padding: 8px 10px;
 }
 
 .progress-text{
+
   font-family: var(--fontTitle);
   font-weight: 900;
   letter-spacing: 0.16em;
@@ -2003,12 +1982,126 @@ section{
   color: rgba(255,255,255,0.78);
 }
 
+.progress-bar{
+  margin-top: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow:hidden;
+}
+
 .progress-fill{
   height:100%;
   width: 0%;
   background: linear-gradient(90deg, var(--pink), var(--cyan), var(--purple));
+  opacity: 0.95;
+  transition: width .12s linear;
+}
+
+/* Cositas extra del loader que no estorben */
+.printer-head,
+.filament-spool,
+.printer-light{
+  display: none; /* ✅ ya no los ocupas, porque tu diseño es más fino */
+}
+
+/* TEXTO A LA DERECHA (ODA + detalles) */
+.loader-text{
+  padding: 6px 6px 8px;
+  text-align: center;
+}
+
+.logo-hologram{
+  display:flex;
+  justify-content:center;
+  gap: 10px;
+  font-family: var(--fontTitle);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  font-size: 38px;
+}
+
+.logo-char{
+  color: transparent;
+  background: linear-gradient(90deg, var(--pink), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 14px 30px rgba(255,62,122,0.18));
+}
+
+.tagline{
+  margin-top: 6px;
+  font-family: var(--fontTitle);
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  color: rgba(255,255,255,0.62);
+  font-size: 12px;
+}
+
+.loading-status{
+  margin-top: 14px;
+  font-family: var(--fontTitle);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.86);
+  font-size: 12px;
+}
+
+.loading-details{
+  margin-top: 12px;
+  display:flex;
+  justify-content: center; /* ✅ CENTRADO */
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.loading-details .detail{
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.70);
+  font-size: 11px;
+  letter-spacing: 0.10em;
+}
+
+.global-progress{
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.global-bar{
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow:hidden;
+}
+
+.global-fill{
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--pink), var(--cyan), var(--purple));
   opacity: 0.9;
   transition: width .12s linear;
+}
+
+.global-text{
+  margin-top: 10px;
+  font-family: var(--fontTitle);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: rgba(255,255,255,0.62);
+  font-size: 11px;
+}
+
+/* Responsive */
+@media (max-width: 520px){
+  .loader-container{ width: min(520px, calc(100% - 24px)); }
+  .print-surface{ height: 170px; }
+  .cat-svg{ width: min(240px, 92%); }
 }
 
 /* spool */
@@ -2068,6 +2161,7 @@ section{
 }
 
 .logo-hologram{
+justify-content: center;
   display:flex;
   gap: 10px;
   font-family: var(--fontTitle);
@@ -2085,6 +2179,8 @@ section{
 }
 
 .tagline{
+text-align: center;
+  width: 100%;
   margin-top: 6px;
   font-family: var(--fontTitle);
   font-weight: 800;
@@ -2107,9 +2203,11 @@ section{
   display:flex;
   gap: 10px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .loading-details .detail{
+text-align: center;
   padding: 7px 10px;
   border-radius: 999px;
   border: 1px solid rgba(255,255,255,0.10);
@@ -2257,6 +2355,14 @@ body.nav-open{
     bottom: 16px;
     justify-content: space-between;
   }
+.printer-controls{
+    flex-direction: column;
+  }
+
+  .print-surface{
+    min-height: 190px;
+  }
+}
 
   .loader-container{
     grid-template-columns: 1fr;
