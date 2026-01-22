@@ -201,7 +201,8 @@
         requestAnimationFrame(tick);
       } else {
         inner.style.transform = "";
-        statusEl.textContent = "LISTO ✅";
+        statusEl.textContent = "LISTO";
+        document.body.classList.remove("loading");
       }
     };
 
@@ -220,6 +221,7 @@
       done = true;
       loader.style.display = "none";
       loader.removeEventListener("transitionend", finish);
+      document.body.classList.remove("loading");
     };
 
     loader.addEventListener("transitionend", finish);
@@ -228,6 +230,8 @@
 
   function runLoader() {
     if (!loader) return;
+
+    document.body.classList.add("loading");
 
     loader.classList.remove("hidden");
     loader.style.display = "";
@@ -452,7 +456,6 @@
       }, 120 * i + 220);
     });
 
-    // Animar palabras del title (si existen)
     const words = $$(".title-word");
     words.forEach((w, i) => {
       w.style.opacity = "0";
@@ -561,7 +564,6 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
-    // Fade sections suave
     const sections = $$("section[id]");
     sections.forEach((sec) => {
       gsap.from(sec, {
@@ -580,7 +582,6 @@
 
   // ---------- Init ----------
   function init() {
-    // Asegurar body visible
     document.body.style.visibility = "visible";
     document.body.style.opacity = "1";
 
