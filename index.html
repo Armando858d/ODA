@@ -39,6 +39,16 @@
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+  <!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DX5Y6HV4KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DX5Y6HV4KC');
+</script>
+
 </head>
 
 <body>
@@ -824,5 +834,35 @@
 
   <!-- Scripts -->
   <script defer src="index_script.js"></script>
+  <script>
+  // Track WhatsApp clicks (GA4)
+  window.addEventListener("DOMContentLoaded", () => {
+    const track = (label) => {
+      if (typeof gtag === "function") {
+        gtag("event", "click_whatsapp", {
+          event_category: "contact",
+          event_label: label
+        });
+      }
+    };
+
+    // Botón flotante (tu id ya existe ✅)
+    const floatBtn = document.getElementById("whatsappFloat");
+    if (floatBtn) {
+      floatBtn.addEventListener("click", () => track("Whats Float"));
+    }
+
+    // Links de Whats en contacto y footer (por href)
+    const waLinks = document.querySelectorAll('a[href^="https://wa.me/"]');
+    waLinks.forEach((a) => {
+      // Evita duplicar si ya es el float
+      if (a.id === "whatsappFloat") return;
+      a.addEventListener("click", () => {
+        track("Whats Link");
+      });
+    });
+  });
+</script>
+
 </body>
 </html>
