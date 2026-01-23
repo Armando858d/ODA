@@ -1,160 +1,669 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>calculadora impresion 3d pro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Costos 3D | ODA Studio</title>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f0f0f;
-      color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    :root{
+      --bg: #05060a;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,.70);
+      --line: rgba(255,255,255,.14);
+      --accent: #00d9ff;
+      --accent2: #ff3e7a;
+      --ok: #45ff8f;
+      --warn: #ffd166;
+      --shadow: 0 16px 50px rgba(0,0,0,.55);
+      --radius: 18px;
+    }
+
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 450px at 10% 10%, rgba(0,217,255,.18), transparent 55%),
+        radial-gradient(800px 450px at 90% 10%, rgba(255,62,122,.12), transparent 55%),
+        radial-gradient(1000px 600px at 50% 110%, rgba(157,78,221,.12), transparent 60%),
+        var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      margin: 0;
+      padding: 22px 14px;
     }
 
-    .card {
-      background: #1a1a1a;
-      padding: 24px;
-      border-radius: 18px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
-    h1 {
-      font-size: 22px;
-      margin-bottom: 6px;
-      text-align: center;
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 16px;
+      margin-bottom: 16px;
     }
 
-    .sub {
-      text-align: center;
-      font-size: 13px;
-      opacity: 0.6;
-      margin-bottom: 18px;
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
     }
 
-    label {
-      display: block;
+    h1{
+      margin:0;
+      font-size: clamp(1.25rem, 3vw, 1.85rem);
+      letter-spacing: .3px;
+      line-height: 1.2;
+    }
+
+    .subtitle{
+      color: var(--muted);
+      font-size: .95rem;
+      max-width: 56ch;
+    }
+
+    .badge{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      font-size: .9rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 900px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.03));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .cardHead{
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+
+    .cardHead h2{
+      margin:0;
+      font-size: 1rem;
+      letter-spacing:.2px;
+    }
+
+    .hint{
+      color: var(--muted);
+      font-size:.85rem;
+    }
+
+    .cardBody{
+      padding: 14px;
+    }
+
+    .section{
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .section:last-child{ margin-bottom:0; }
+
+    .sectionTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .sectionTitle strong{
+      font-size: .95rem;
+    }
+
+    .mini{
+      font-size:.82rem;
+      color: var(--muted);
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 520px){
+      .row{ grid-template-columns: 1fr; }
+      header{flex-direction:column;}
+      .badge{ width: fit-content; }
+    }
+
+    label{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      font-size:.86rem;
+      color: var(--muted);
+    }
+
+    input, select{
+      width:100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      outline:none;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.35);
+      color: var(--text);
+      font-size: 1rem;
+      transition: .2s ease;
+    }
+
+    input:focus, select:focus{
+      border-color: rgba(0,217,255,.55);
+      box-shadow: 0 0 0 4px rgba(0,217,255,.12);
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
       margin-top: 12px;
-      font-size: 14px;
-      opacity: 0.85;
     }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 16px;
+    button{
+      border: 0;
+      cursor:pointer;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+      letter-spacing:.2px;
+      transition: transform .08s ease, opacity .2s ease;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    button:active{ transform: scale(.98); }
+
+    .btnPrimary{
+      background: linear-gradient(90deg, rgba(0,217,255,.92), rgba(255,62,122,.92));
+      color: #07080c;
     }
 
-    button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 12px;
-      background: #00ff88;
-      color: #000;
-      font-size: 16px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: bold;
+    .btnGhost{
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.14);
+      color: var(--text);
     }
 
-    button:hover {
-      background: #00e078;
-    }
-
-    .box {
-      margin-top: 14px;
-      padding: 12px;
-      background: #111;
-      border-radius: 12px;
-      font-size: 14px;
-    }
-
-    .total {
-      margin-top: 18px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-      color: #00ff88;
-    }
-
-    .nota {
+    .note{
       margin-top: 10px;
-      font-size: 12px;
-      opacity: 0.55;
-      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
+      line-height: 1.45;
+    }
+
+    .results{
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    .totalBox{
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+    }
+
+    .totalTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .big{
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing:.3px;
+    }
+
+    .pill{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.25);
+      color: var(--muted);
+      font-size: .82rem;
+      white-space: nowrap;
+    }
+
+    .breakdown{
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 10px;
+      display:grid;
+      gap: 8px;
+    }
+
+    .line{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .line b{
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .good{
+      color: var(--ok);
+      font-weight: 800;
+    }
+
+    .warn{
+      color: var(--warn);
+      font-weight: 800;
+    }
+
+    .smallHelp{
+      font-size: .82rem;
+      color: var(--muted);
+      margin-top: 10px;
+      line-height: 1.45;
+    }
+
+    .tiny{
+      opacity:.8;
+      font-size:.82rem;
+    }
+
+    .err{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,62,122,.35);
+      background: rgba(255,62,122,.12);
+      color: #ffd9e6;
+      display:none;
     }
   </style>
 </head>
+
 <body>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <h1>Calculadora de Costos de Impresión 3D</h1>
+        <div class="subtitle">
+          Material (regla de 3) + Luz + Desgaste + Tu tiempo + (Dificultad/Riesgo 20%).
+        </div>
+      </div>
+      <div class="badge">ODA STUDIO • Premium Tool</div>
+    </header>
 
-  <div class="card">
-    <h1>calculadora impresion 3d</h1>
-    <div class="sub">ganancia fija del 100%</div>
+    <div class="grid">
+      <!-- INPUTS -->
+      <section class="card">
+        <div class="cardHead">
+          <h2>Datos de la impresión</h2>
+          <div class="hint">Llena y presiona “Calcular”</div>
+        </div>
 
-    <label>precio del kilo de filamento (mxn)</label>
-    <input type="number" id="precioKilo" placeholder="ej. 500">
+        <div class="cardBody">
+          <div class="section">
+            <div class="sectionTitle">
+              <strong>1) Material (Filamento)</strong>
+              <span class="mini">Regla de 3</span>
+            </div>
 
-    <label>peso de la pieza (gramos)</label>
-    <input type="number" id="pesoPieza" placeholder="ej. 120">
+            <div class="row">
+              <label>
+                Precio del filamento (por kilo)
+                <input id="filamentPriceKg" type="number" min="0" step="0.01" placeholder="Ej. 450" />
+              </label>
+              <label>
+                Peso de la pieza (gramos)
+                <input id="pieceWeightG" type="number" min="0" step="0.1" placeholder="Ej. 120" />
+              </label>
+            </div>
 
-    <label>horas de impresion</label>
-    <input type="number" id="horas" placeholder="ej. 5">
+            <div class="row" style="margin-top:10px;">
+              <label>
+                Peso del kilo en gramos (normalmente 1000)
+                <input id="kgWeightG" type="number" min="1" step="1" value="1000" />
+              </label>
 
-    <label>costo por hora de maquina (mxn)</label>
-    <input type="number" id="costoHora" placeholder="ej. 10">
+              <label>
+                Modo de material para el TOTAL
+                <select id="materialMode">
+                  <option value="base">Material normal</option>
+                  <option value="x2">Material x2</option>
+                </select>
+              </label>
+            </div>
+          </div>
 
-    <label>costo de electricidad (3 pesos por hora)</label>
-    <input type="number" id="luz" disabled>
+          <div class="section">
+            <div class="sectionTitle">
+              <strong>2) Luz</strong>
+              <span class="mini">$4 por hora</span>
+            </div>
 
-    <button onclick="calcular()">calcular precio final</button>
+            <div class="row">
+              <label>
+                Horas de impresión (luz)
+                <input id="lightHours" type="number" min="0" step="1" placeholder="Ej. 6" />
+              </label>
+              <label>
+                Minutos (luz)
+                <input id="lightMinutes" type="number" min="0" step="1" placeholder="Ej. 30" />
+              </label>
+            </div>
+          </div>
 
-    <div class="box" id="detalle"></div>
+          <div class="section">
+            <div class="sectionTitle">
+              <strong>3) Tu tiempo</strong>
+              <span class="mini">$50 1ra hora + $20 horas extra</span>
+            </div>
 
-    <div class="total" id="total">$0.00</div>
+            <div class="row">
+              <label>
+                Horas trabajadas (tu tiempo)
+                <input id="laborHours" type="number" min="0" step="1" placeholder="Ej. 2" />
+              </label>
+              <label>
+                Minutos (tu tiempo)
+                <input id="laborMinutes" type="number" min="0" step="1" placeholder="Ej. 15" />
+              </label>
+            </div>
 
-    <div class="nota">
-      ganancia aplicada: 100% (doble del costo real)
+            <div class="smallHelp">
+              Nota: la primera hora se cobra en $50 completa.  
+              Si te pasas, lo extra se cobra proporcional a $20/hora.
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btnPrimary" id="btnCalc">⚡ Calcular</button>
+            <button class="btnGhost" id="btnReset">🧼 Reiniciar</button>
+          </div>
+
+          <div class="note">
+            ✅ Fórmulas:
+            <div class="tiny">
+              Material = (peso pieza × precio kilo) ÷ 1000g<br>
+              Luz = 4 × (horas + minutos/60)<br>
+              Desgaste = (Material (sin x2) + Luz) × 0.15<br>
+              Tiempo = 50 + (horasExtra × 20)<br>
+              Riesgo = (Material + Luz + Desgaste + Tiempo) × 0.20<br>
+              Total = Subtotal + Riesgo
+            </div>
+          </div>
+
+          <div class="err" id="errorBox"></div>
+        </div>
+      </section>
+
+      <!-- RESULTS -->
+      <aside class="card">
+        <div class="cardHead">
+          <h2>Resultado</h2>
+          <div class="hint">Desglose completo</div>
+        </div>
+
+        <div class="cardBody results">
+          <div class="totalBox">
+            <div class="totalTop">
+              <div>
+                <div class="pill" id="modeLabel">Modo: Material normal</div>
+                <div style="margin-top:6px;" class="big" id="finalTotal">$0.00</div>
+              </div>
+              <div class="pill">MXN</div>
+            </div>
+
+            <div class="breakdown">
+              <div class="line">
+                <span>Material (normal)</span>
+                <b id="materialBase">$0.00</b>
+              </div>
+
+              <div class="line">
+                <span>Material x2</span>
+                <b id="materialX2">$0.00</b>
+              </div>
+
+              <div class="line">
+                <span>Luz</span>
+                <b id="lightCost">$0.00</b>
+              </div>
+
+              <div class="line">
+                <span>Desgaste (15%)</span>
+                <b id="wearCost">$0.00</b>
+              </div>
+
+              <div class="line">
+                <span>Tu tiempo</span>
+                <b id="laborCost">$0.00</b>
+              </div>
+
+              <div class="line" style="border-top:1px solid rgba(255,255,255,.12); padding-top:10px;">
+                <span>Subtotal (sin riesgo)</span>
+                <b class="good" id="subtotal">$0.00</b>
+              </div>
+
+              <div class="line">
+                <span>Dificultad/Riesgo (20%)</span>
+                <b class="warn" id="riskCost">$0.00</b>
+              </div>
+
+              <div class="line" style="border-top:1px solid rgba(255,255,255,.12); padding-top:10px;">
+                <span><b style="color:#fff;">TOTAL FINAL</b></span>
+                <b style="font-size:1.05rem;" id="finalTotal2">$0.00</b>
+              </div>
+            </div>
+          </div>
+
+          <div class="smallHelp">
+            💡 Tip: cambia el “Modo de material para el TOTAL” para ver cuánto queda en normal o x2.
+          </div>
+        </div>
+      </aside>
     </div>
   </div>
 
   <script>
-    function calcular() {
-      document.getElementById('luz').value = ( (parseFloat(document.getElementById('horas').value) || 0) * 3 ).toFixed(2);
-      const precioKilo = parseFloat(document.getElementById('precioKilo').value) || 0;
-      const pesoPieza = parseFloat(document.getElementById('pesoPieza').value) || 0;
-      const horas = parseFloat(document.getElementById('horas').value) || 0;
-      const costoHora = parseFloat(document.getElementById('costoHora').value) || 0;
-      const costoLuz = horas * 3;
+    // ===== Helpers =====
+    const $ = (id) => document.getElementById(id);
 
-      const costoFilamento = (pesoPieza * precioKilo) / 1000;
-      const costoMaquina = horas * costoHora;
-      const costoReal = costoFilamento + costoMaquina + costoLuz;
+    const money = (n) => {
+      if (!isFinite(n)) return "$0.00";
+      return n.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
+    };
 
-      const precioFinal = costoReal * 2; // 100% ganancia
+    const num = (value) => {
+      const n = parseFloat(value);
+      return isNaN(n) ? 0 : n;
+    };
 
-      document.getElementById('detalle').innerHTML = `
-        filamento: $${costoFilamento.toFixed(2)}<br>
-        maquina: $${costoMaquina.toFixed(2)}<br>
-        electricidad: $${costoLuz.toFixed(2)}<br>
-        
-        <strong>costo real: $${costoReal.toFixed(2)}</strong>
-      `;
+    const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
-      document.getElementById('total').innerText = '$' + precioFinal.toFixed(2);
+    // ===== Elements =====
+    const filamentPriceKg = $("filamentPriceKg");
+    const pieceWeightG    = $("pieceWeightG");
+    const kgWeightG       = $("kgWeightG");
+    const materialMode    = $("materialMode");
+
+    const lightHours      = $("lightHours");
+    const lightMinutes    = $("lightMinutes");
+
+    const laborHours      = $("laborHours");
+    const laborMinutes    = $("laborMinutes");
+
+    const btnCalc         = $("btnCalc");
+    const btnReset        = $("btnReset");
+    const errorBox        = $("errorBox");
+
+    // Outputs
+    const outModeLabel    = $("modeLabel");
+    const outFinalTotal   = $("finalTotal");
+    const outFinalTotal2  = $("finalTotal2");
+    const outMaterialBase = $("materialBase");
+    const outMaterialX2   = $("materialX2");
+    const outLightCost    = $("lightCost");
+    const outWearCost     = $("wearCost");
+    const outLaborCost    = $("laborCost");
+    const outSubtotal     = $("subtotal");
+    const outRiskCost     = $("riskCost");
+
+    // ===== Core Calculations =====
+    function calc() {
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+
+      // Inputs
+      const priceKg = num(filamentPriceKg.value);
+      const pieceG  = num(pieceWeightG.value);
+      const kiloG   = Math.max(1, num(kgWeightG.value));
+
+      const hLight  = clamp(num(lightHours.value), 0, 9999);
+      const mLight  = clamp(num(lightMinutes.value), 0, 9999);
+
+      const hLabor  = clamp(num(laborHours.value), 0, 9999);
+      const mLabor  = clamp(num(laborMinutes.value), 0, 9999);
+
+      // Validación básica (por si ponen negativos)
+      if (priceKg < 0 || pieceG < 0) {
+        errorBox.textContent = "⚠️ No uses valores negativos en material.";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      // 1) Material (regla de 3)
+      // Material base = (peso pieza * precio kilo) / 1000
+      const materialBase = (pieceG * priceKg) / kiloG;
+      const materialX2 = materialBase * 2;
+
+      // 2) Luz: $4 por hora
+      const lightTotalHours = hLight + (mLight / 60);
+      const lightCost = 4 * lightTotalHours;
+
+      // 3) Desgaste: (material base + luz) * 0.15
+      // OJO: desgaste SIEMPRE usa material SIN x2, como dijiste
+      const wearCost = (materialBase + lightCost) * 0.15;
+
+      // 4) Tu tiempo:
+      // 1ra hora = 50 (completa)
+      // horas extra = 20/h proporcional
+      const laborTotalHours = hLabor + (mLabor / 60);
+      let laborCost = 0;
+
+      if (laborTotalHours <= 0) {
+        laborCost = 0;
+      } else if (laborTotalHours <= 1) {
+        laborCost = 50; // primera hora completa
+      } else {
+        laborCost = 50 + ((laborTotalHours - 1) * 20);
+      }
+
+      // Elegir material para total
+      const mode = materialMode.value; // base o x2
+      const materialForTotal = (mode === "x2") ? materialX2 : materialBase;
+
+      // Subtotal sin riesgo
+      const subtotal = materialForTotal + lightCost + wearCost + laborCost;
+
+      // 5) Riesgo = 20% del subtotal
+      const riskCost = subtotal * 0.20;
+
+      // Total final
+      const totalFinal = subtotal + riskCost;
+
+      // UI updates
+      outModeLabel.textContent = "Modo: " + (mode === "x2" ? "Material x2" : "Material normal");
+
+      outMaterialBase.textContent = money(materialBase);
+      outMaterialX2.textContent   = money(materialX2);
+      outLightCost.textContent    = money(lightCost);
+      outWearCost.textContent     = money(wearCost);
+      outLaborCost.textContent    = money(laborCost);
+      outSubtotal.textContent     = money(subtotal);
+      outRiskCost.textContent     = money(riskCost);
+
+      outFinalTotal.textContent   = money(totalFinal);
+      outFinalTotal2.textContent  = money(totalFinal);
     }
-  </script>
 
+    function resetAll() {
+      filamentPriceKg.value = "";
+      pieceWeightG.value = "";
+      kgWeightG.value = "1000";
+      materialMode.value = "base";
+
+      lightHours.value = "";
+      lightMinutes.value = "";
+
+      laborHours.value = "";
+      laborMinutes.value = "";
+
+      // Reset outputs
+      outModeLabel.textContent = "Modo: Material normal";
+      outFinalTotal.textContent = "$0.00";
+      outFinalTotal2.textContent = "$0.00";
+      outMaterialBase.textContent = "$0.00";
+      outMaterialX2.textContent = "$0.00";
+      outLightCost.textContent = "$0.00";
+      outWearCost.textContent = "$0.00";
+      outLaborCost.textContent = "$0.00";
+      outSubtotal.textContent = "$0.00";
+      outRiskCost.textContent = "$0.00";
+
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+    }
+
+    // Eventos
+    btnCalc.addEventListener("click", calc);
+    btnReset.addEventListener("click", resetAll);
+
+    // Para que se vaya calculando en vivo (opcional)
+    [
+      filamentPriceKg, pieceWeightG, kgWeightG,
+      lightHours, lightMinutes,
+      laborHours, laborMinutes,
+      materialMode
+    ].forEach(el => el.addEventListener("input", calc));
+
+    // Primera carga
+    calc();
+  </script>
 </body>
 </html>
-
