@@ -736,7 +736,7 @@
     bindSmoothScroll();
     bindCharCounter();
 
-    bindCharCounter();
+
 
     // animateStats(); // ❌ Se llama en hideLoader() para esperar al usuario
     if (!document.getElementById("printerLoader")) animateStats(); // Fallback si no hay loader
