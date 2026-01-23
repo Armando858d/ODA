@@ -58,7 +58,7 @@
   const TEXTAREA_LIMIT = 500;
 
   // 👉 Tu imagen (silueta gato sentado)
-  const CAT_IMAGE_SRC = "cat-sit.png";
+  const CAT_IMAGE_SRC = "images/cat-sit.png";
 
   // offset dinámico (nav real + aire)
   const getNavOffset = () => {
