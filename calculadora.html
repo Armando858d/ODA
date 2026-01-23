@@ -9,7 +9,6 @@
     :root{
       --bg: #05060a;
       --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.08);
       --text: #ffffff;
       --muted: rgba(255,255,255,.70);
       --line: rgba(255,255,255,.14);
@@ -64,7 +63,8 @@
     .subtitle{
       color: var(--muted);
       font-size: .95rem;
-      max-width: 56ch;
+      max-width: 62ch;
+      line-height: 1.35;
     }
 
     .badge{
@@ -128,7 +128,6 @@
       padding: 12px;
       margin-bottom: 12px;
     }
-
     .section:last-child{ margin-bottom:0; }
 
     .sectionTitle{
@@ -139,10 +138,7 @@
       margin-bottom: 10px;
     }
 
-    .sectionTitle strong{
-      font-size: .95rem;
-    }
-
+    .sectionTitle strong{ font-size: .95rem; }
     .mini{
       font-size:.82rem;
       color: var(--muted);
@@ -168,7 +164,7 @@
       color: var(--muted);
     }
 
-    input, select{
+    input{
       width:100%;
       padding: 11px 12px;
       border-radius: 12px;
@@ -180,7 +176,7 @@
       transition: .2s ease;
     }
 
-    input:focus, select:focus{
+    input:focus{
       border-color: rgba(0,217,255,.55);
       box-shadow: 0 0 0 4px rgba(0,217,255,.12);
     }
@@ -282,15 +278,8 @@
       font-weight: 800;
     }
 
-    .good{
-      color: var(--ok);
-      font-weight: 800;
-    }
-
-    .warn{
-      color: var(--warn);
-      font-weight: 800;
-    }
+    .good{ color: var(--ok); font-weight: 900; }
+    .warn{ color: var(--warn); font-weight: 900; }
 
     .smallHelp{
       font-size: .82rem;
@@ -300,8 +289,9 @@
     }
 
     .tiny{
-      opacity:.8;
+      opacity:.85;
       font-size:.82rem;
+      line-height: 1.45;
     }
 
     .err{
@@ -322,10 +312,11 @@
       <div class="title">
         <h1>Calculadora de Costos de Impresión 3D</h1>
         <div class="subtitle">
-          Material (regla de 3) + Luz + Desgaste + Tu tiempo + (Dificultad/Riesgo 20%).
+          Material (regla de 3) + Luz + Desgaste + Tu tiempo + (Dificultad/Riesgo 20%).<br>
+          <span class="tiny">Incluye <b>Precio al cliente</b> + <b>Costo real</b> + <b>Ganancia</b>.</span>
         </div>
       </div>
-      <div class="badge">ODA STUDIO • Premium Tool</div>
+      <div class="badge">ODA STUDIO • Tool</div>
     </header>
 
     <div class="grid">
@@ -333,14 +324,14 @@
       <section class="card">
         <div class="cardHead">
           <h2>Datos de la impresión</h2>
-          <div class="hint">Llena y presiona “Calcular”</div>
+          <div class="hint">Llena y se calcula solo</div>
         </div>
 
         <div class="cardBody">
           <div class="section">
             <div class="sectionTitle">
               <strong>1) Material (Filamento)</strong>
-              <span class="mini">Regla de 3</span>
+              <span class="mini">Regla de 3 + x2</span>
             </div>
 
             <div class="row">
@@ -356,16 +347,12 @@
 
             <div class="row" style="margin-top:10px;">
               <label>
-                Peso del kilo en gramos (normalmente 1000)
+                Peso del filamento (normalmente 1000g)
                 <input id="kgWeightG" type="number" min="1" step="1" value="1000" />
               </label>
-
               <label>
-                Modo de material para el TOTAL
-                <select id="materialMode">
-                  <option value="base">Material normal</option>
-                  <option value="x2">Material x2</option>
-                </select>
+                Nota
+                <input type="text" value="Precio cliente = material x2 ✅" disabled />
               </label>
             </div>
           </div>
@@ -378,11 +365,11 @@
 
             <div class="row">
               <label>
-                Horas de impresión (luz)
+                Horas de impresión
                 <input id="lightHours" type="number" min="0" step="1" placeholder="Ej. 6" />
               </label>
               <label>
-                Minutos (luz)
+                Minutos
                 <input id="lightMinutes" type="number" min="0" step="1" placeholder="Ej. 30" />
               </label>
             </div>
@@ -391,23 +378,23 @@
           <div class="section">
             <div class="sectionTitle">
               <strong>3) Tu tiempo</strong>
-              <span class="mini">$50 1ra hora + $20 horas extra</span>
+              <span class="mini">$50 1ra hora + $10 extra</span>
             </div>
 
             <div class="row">
               <label>
-                Horas trabajadas (tu tiempo)
+                Horas trabajadas
                 <input id="laborHours" type="number" min="0" step="1" placeholder="Ej. 2" />
               </label>
               <label>
-                Minutos (tu tiempo)
+                Minutos trabajados
                 <input id="laborMinutes" type="number" min="0" step="1" placeholder="Ej. 15" />
               </label>
             </div>
 
             <div class="smallHelp">
-              Nota: la primera hora se cobra en $50 completa.  
-              Si te pasas, lo extra se cobra proporcional a $20/hora.
+              Primera hora se cobra completa en <b>$50</b>.  
+              Si pasas de 1h, lo extra se cobra proporcional a <b>$10/h</b>.
             </div>
           </div>
 
@@ -419,12 +406,13 @@
           <div class="note">
             ✅ Fórmulas:
             <div class="tiny">
-              Material = (peso pieza × precio kilo) ÷ 1000g<br>
+              Material costo real = (peso × precioKilo) ÷ 1000<br>
+              Material cliente = material × 2<br>
               Luz = 4 × (horas + minutos/60)<br>
-              Desgaste = (Material (sin x2) + Luz) × 0.15<br>
-              Tiempo = 50 + (horasExtra × 20)<br>
-              Riesgo = (Material + Luz + Desgaste + Tiempo) × 0.20<br>
-              Total = Subtotal + Riesgo
+              Desgaste = (Material costo real + Luz) × 0.15<br>
+              Tu tiempo = 50 + (horasExtra × 10)<br>
+              Riesgo = (Material cliente + Luz + Desgaste + Tiempo) × 0.20<br>
+              Total cliente = Subtotal + Riesgo
             </div>
           </div>
 
@@ -435,15 +423,15 @@
       <!-- RESULTS -->
       <aside class="card">
         <div class="cardHead">
-          <h2>Resultado</h2>
-          <div class="hint">Desglose completo</div>
+          <h2>Resultados</h2>
+          <div class="hint">Desglose + ganancia</div>
         </div>
 
         <div class="cardBody results">
           <div class="totalBox">
             <div class="totalTop">
               <div>
-                <div class="pill" id="modeLabel">Modo: Material normal</div>
+                <div class="pill">Precio al cliente (Total)</div>
                 <div style="margin-top:6px;" class="big" id="finalTotal">$0.00</div>
               </div>
               <div class="pill">MXN</div>
@@ -451,12 +439,12 @@
 
             <div class="breakdown">
               <div class="line">
-                <span>Material (normal)</span>
+                <span>Material (costo real)</span>
                 <b id="materialBase">$0.00</b>
               </div>
 
               <div class="line">
-                <span>Material x2</span>
+                <span>Material (precio cliente x2)</span>
                 <b id="materialX2">$0.00</b>
               </div>
 
@@ -486,14 +474,26 @@
               </div>
 
               <div class="line" style="border-top:1px solid rgba(255,255,255,.12); padding-top:10px;">
-                <span><b style="color:#fff;">TOTAL FINAL</b></span>
+                <span><b style="color:#fff;">TOTAL FINAL CLIENTE</b></span>
                 <b style="font-size:1.05rem;" id="finalTotal2">$0.00</b>
               </div>
-            </div>
-          </div>
 
-          <div class="smallHelp">
-            💡 Tip: cambia el “Modo de material para el TOTAL” para ver cuánto queda en normal o x2.
+              <!-- NUEVO -->
+              <div class="line" style="border-top:1px solid rgba(255,255,255,.12); padding-top:10px;">
+                <span><b style="color:#fff;">COSTO REAL (tu costo)</b></span>
+                <b id="realCost">$0.00</b>
+              </div>
+
+              <div class="line">
+                <span><b style="color:#fff;">GANANCIA (para ti)</b></span>
+                <b class="good" id="profit">$0.00</b>
+              </div>
+            </div>
+
+            <div class="smallHelp">
+              💡 <b>Costo real</b> = Material costo real + Luz<br>
+              💰 <b>Ganancia</b> = Total cliente - Costo real
+            </div>
           </div>
         </div>
       </aside>
@@ -520,7 +520,6 @@
     const filamentPriceKg = $("filamentPriceKg");
     const pieceWeightG    = $("pieceWeightG");
     const kgWeightG       = $("kgWeightG");
-    const materialMode    = $("materialMode");
 
     const lightHours      = $("lightHours");
     const lightMinutes    = $("lightMinutes");
@@ -533,7 +532,6 @@
     const errorBox        = $("errorBox");
 
     // Outputs
-    const outModeLabel    = $("modeLabel");
     const outFinalTotal   = $("finalTotal");
     const outFinalTotal2  = $("finalTotal2");
     const outMaterialBase = $("materialBase");
@@ -544,15 +542,18 @@
     const outSubtotal     = $("subtotal");
     const outRiskCost     = $("riskCost");
 
-    // ===== Core Calculations =====
+    // NEW
+    const outRealCost     = $("realCost");
+    const outProfit       = $("profit");
+
     function calc() {
       errorBox.style.display = "none";
       errorBox.textContent = "";
 
-      // Inputs
+      // ===== INPUTS =====
       const priceKg = num(filamentPriceKg.value);
       const pieceG  = num(pieceWeightG.value);
-      const kiloG   = Math.max(1, num(kgWeightG.value));
+      const kiloG   = Math.max(1, num(kgWeightG.value)); // 1000
 
       const hLight  = clamp(num(lightHours.value), 0, 9999);
       const mLight  = clamp(num(lightMinutes.value), 0, 9999);
@@ -560,56 +561,60 @@
       const hLabor  = clamp(num(laborHours.value), 0, 9999);
       const mLabor  = clamp(num(laborMinutes.value), 0, 9999);
 
-      // Validación básica (por si ponen negativos)
       if (priceKg < 0 || pieceG < 0) {
-        errorBox.textContent = "⚠️ No uses valores negativos en material.";
+        errorBox.textContent = "⚠️ No uses valores negativos.";
         errorBox.style.display = "block";
         return;
       }
 
-      // 1) Material (regla de 3)
-      // Material base = (peso pieza * precio kilo) / 1000
+      // ===== 1) MATERIAL =====
+      // costo real (sin ganancia)
       const materialBase = (pieceG * priceKg) / kiloG;
+
+      // precio al cliente = x2
       const materialX2 = materialBase * 2;
 
-      // 2) Luz: $4 por hora
+      // ===== 2) LUZ =====
+      // $4 por hora
       const lightTotalHours = hLight + (mLight / 60);
       const lightCost = 4 * lightTotalHours;
 
-      // 3) Desgaste: (material base + luz) * 0.15
-      // OJO: desgaste SIEMPRE usa material SIN x2, como dijiste
+      // ===== 3) DESGASTE =====
+      // (materialBase + luz) * 0.15
       const wearCost = (materialBase + lightCost) * 0.15;
 
-      // 4) Tu tiempo:
-      // 1ra hora = 50 (completa)
-      // horas extra = 20/h proporcional
+      // ===== 4) TU TIEMPO =====
+      // 1ra hora: $50
+      // extra: $10/h proporcional
       const laborTotalHours = hLabor + (mLabor / 60);
       let laborCost = 0;
 
       if (laborTotalHours <= 0) {
         laborCost = 0;
       } else if (laborTotalHours <= 1) {
-        laborCost = 50; // primera hora completa
+        laborCost = 50;
       } else {
-        laborCost = 50 + ((laborTotalHours - 1) * 20);
+        laborCost = 50 + ((laborTotalHours - 1) * 10);
       }
 
-      // Elegir material para total
-      const mode = materialMode.value; // base o x2
-      const materialForTotal = (mode === "x2") ? materialX2 : materialBase;
+      // ===== SUBTOTAL (sin riesgo) =====
+      // OJO: AQUÍ ENTRA materialX2 (precio cliente)
+      const subtotal = materialX2 + lightCost + wearCost + laborCost;
 
-      // Subtotal sin riesgo
-      const subtotal = materialForTotal + lightCost + wearCost + laborCost;
-
-      // 5) Riesgo = 20% del subtotal
+      // ===== RIESGO 20% =====
       const riskCost = subtotal * 0.20;
 
-      // Total final
+      // ===== TOTAL CLIENTE =====
       const totalFinal = subtotal + riskCost;
 
-      // UI updates
-      outModeLabel.textContent = "Modo: " + (mode === "x2" ? "Material x2" : "Material normal");
+      // ===== COSTO REAL + GANANCIA =====
+      // costo real verdadero = materialBase + luz
+      const realCost = materialBase + lightCost;
 
+      // ganancia total = total cliente - costo real
+      const profit = totalFinal - realCost;
+
+      // ===== UI UPDATES =====
       outMaterialBase.textContent = money(materialBase);
       outMaterialX2.textContent   = money(materialX2);
       outLightCost.textContent    = money(lightCost);
@@ -620,13 +625,15 @@
 
       outFinalTotal.textContent   = money(totalFinal);
       outFinalTotal2.textContent  = money(totalFinal);
+
+      outRealCost.textContent     = money(realCost);
+      outProfit.textContent       = money(profit);
     }
 
     function resetAll() {
       filamentPriceKg.value = "";
       pieceWeightG.value = "";
       kgWeightG.value = "1000";
-      materialMode.value = "base";
 
       lightHours.value = "";
       lightMinutes.value = "";
@@ -634,8 +641,6 @@
       laborHours.value = "";
       laborMinutes.value = "";
 
-      // Reset outputs
-      outModeLabel.textContent = "Modo: Material normal";
       outFinalTotal.textContent = "$0.00";
       outFinalTotal2.textContent = "$0.00";
       outMaterialBase.textContent = "$0.00";
@@ -646,23 +651,24 @@
       outSubtotal.textContent = "$0.00";
       outRiskCost.textContent = "$0.00";
 
+      outRealCost.textContent = "$0.00";
+      outProfit.textContent = "$0.00";
+
       errorBox.style.display = "none";
       errorBox.textContent = "";
     }
 
-    // Eventos
+    // EVENTS
     btnCalc.addEventListener("click", calc);
     btnReset.addEventListener("click", resetAll);
 
-    // Para que se vaya calculando en vivo (opcional)
     [
       filamentPriceKg, pieceWeightG, kgWeightG,
       lightHours, lightMinutes,
-      laborHours, laborMinutes,
-      materialMode
+      laborHours, laborMinutes
     ].forEach(el => el.addEventListener("input", calc));
 
-    // Primera carga
+    // Start
     calc();
   </script>
 </body>
