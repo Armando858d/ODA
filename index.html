@@ -1,12 +1,14 @@
 <!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5.0" />
   <meta name="color-scheme" content="dark" />
 
   <title>ODA STUDIO | Impresión 3D Premium</title>
-  <meta name="description" content="Impresión 3D premium con alta precisión, materiales de calidad y acabados profesionales. Diseño 3D, impresión y acabado pro en Aguascalientes." />
+  <meta name="description"
+    content="Impresión 3D premium con alta precisión, materiales de calidad y acabados profesionales. Diseño 3D, impresión y acabado pro en Aguascalientes." />
   <meta name="theme-color" content="#0a0a0a" />
 
   <!-- PWA / iOS -->
@@ -16,7 +18,8 @@
 
   <!-- Open Graph -->
   <meta property="og:title" content="ODA STUDIO | Impresión 3D Premium" />
-  <meta property="og:description" content="Transformamos ideas en piezas reales: impresión 3D premium, diseño 3D y acabado pro." />
+  <meta property="og:description"
+    content="Transformamos ideas en piezas reales: impresión 3D premium, diseño 3D y acabado pro." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://armando858d.github.io/ODA/" />
   <!-- OPCIONAL: sube una imagen preview.jpg a tu repo -->
@@ -25,7 +28,8 @@
   <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" />
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -38,16 +42,17 @@
   <link rel="stylesheet" href="index_estilo.css" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
   <!-- Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DX5Y6HV4KC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DX5Y6HV4KC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-  gtag('config', 'G-DX5Y6HV4KC');
-</script>
+    gtag('config', 'G-DX5Y6HV4KC');
+  </script>
 
 </head>
 
@@ -171,49 +176,50 @@
       <div class="nav-logo">
         <a href="#hero" class="logo-link" aria-label="Ir al inicio">
           <div class="logo-3d" aria-hidden="true">
-            <span class="logo-cube">◼</span>
+            <img src="oda.png" alt="ODA" class="logo-img" />
             <span class="logo-text">ODA</span>
             <div class="logo-glow"></div>
           </div>
-          <div class="logo-subtitle">3D PRINT STUDIO</div>
         </a>
       </div>
 
       <div class="nav-menu" id="navMenu">
+        <!-- Close button for mobile -->
+        <button class="close-menu-btn" type="button" aria-label="Cerrar menú">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <div class="nav-marker"></div> <!-- Barra deslizante -->
         <div class="menu-container">
           <a href="#hero" class="nav-link active">
-            <span class="link-indicator"></span>
-            <span class="link-number">01</span>
+            <span class="link-icon"><i class="fas fa-home"></i></span>
             <span class="link-text">INICIO</span>
           </a>
 
           <a href="#servicios" class="nav-link">
-            <span class="link-indicator"></span>
-            <span class="link-number">02</span>
+            <span class="link-icon"><i class="fas fa-cube"></i></span>
             <span class="link-text">SERVICIOS</span>
           </a>
 
           <a href="#proceso" class="nav-link">
-            <span class="link-indicator"></span>
-            <span class="link-number">03</span>
+            <span class="link-icon"><i class="fas fa-cogs"></i></span>
             <span class="link-text">PROCESO</span>
           </a>
 
           <a href="#proyectos" class="nav-link">
-            <span class="link-indicator"></span>
-            <span class="link-number">04</span>
+            <span class="link-icon"><i class="fas fa-layer-group"></i></span>
             <span class="link-text">PROYECTOS</span>
           </a>
 
           <a href="#contacto" class="nav-link cta-button">
-            <span class="link-indicator"></span>
-            <span class="link-number">05</span>
+            <span class="link-icon"><i class="fas fa-paper-plane"></i></span>
             <span class="link-text">CONTACTO</span>
           </a>
         </div>
       </div>
 
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu" type="button">
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú" aria-expanded="false"
+        aria-controls="navMenu" type="button">
         <span class="toggle-bar"></span>
         <span class="toggle-bar"></span>
         <span class="toggle-bar"></span>
@@ -235,10 +241,6 @@
     <section id="hero" class="cyber-hero" aria-label="Inicio">
       <div class="hero-container">
         <div class="hero-content">
-          <div class="hero-badge">
-            <span class="badge-text">TECNOLOGÍA DE VANGUARDIA</span>
-            <div class="badge-line"></div>
-          </div>
 
           <h1 class="hero-title">
             <div class="title-line line-1">
@@ -249,6 +251,13 @@
               <span class="title-word word-3">PREMIUM</span>
             </div>
           </h1>
+
+          <!-- Moved Badge Here -->
+          <div class="hero-badge">
+            <div class="badge-line"></div>
+            <span class="badge-text">TECNOLOGÍA DE VANGUARDIA</span>
+            <div class="badge-line"></div>
+          </div>
 
           <div class="hero-description">
             <p class="description-text">
@@ -262,23 +271,29 @@
             <div class="stat-card">
               <div class="stat-value" data-count="250">0</div>
               <div class="stat-label">PROYECTOS</div>
-              <div class="stat-progress"><div class="progress-track"></div></div>
+              <div class="stat-progress">
+                <div class="progress-track"></div>
+              </div>
             </div>
 
             <div class="stat-card">
               <!-- ✅ FIX: número separado del % para animación limpia -->
               <div class="stat-value">
-                <span class="stat-number" data-count="99">0</span><span class="percent">%</span>
+                <span class="stat-number" data-count="95" data-fill="95">0</span><span class="percent">%</span>
               </div>
               <div class="stat-label">SATISFACCIÓN</div>
-              <div class="stat-progress"><div class="progress-track"></div></div>
+              <div class="stat-progress">
+                <div class="progress-track"></div>
+              </div>
             </div>
 
             <div class="stat-card">
-              <div class="stat-value" data-count="48">0</div>
+              <div class="stat-value" data-count="48" data-fill="50">0</div>
               <div class="stat-label">HORAS</div>
               <div class="stat-label-sub">Tiempo promedio</div>
-              <div class="stat-progress"><div class="progress-track"></div></div>
+              <div class="stat-progress">
+                <div class="progress-track"></div>
+              </div>
             </div>
           </div>
 
@@ -297,14 +312,59 @@
         </div>
 
         <div class="hero-visual" aria-hidden="true">
-          <div class="floating-shape shape-1"></div>
-          <div class="floating-shape shape-2"></div>
-          <div class="floating-shape shape-3"></div>
+          <div class="hero-printer-wrapper">
+            <div class="printer-3d" role="img" aria-label="Impresión destacada">
+              <div class="printer-frame">
+                <div class="print-surface">
+                  <div class="printing-figure" id="heroPrintingFigure"></div>
+                  <!-- Scanner laser added -->
+                  <div class="hero-scanner"></div>
+                </div>
+
+                <div class="printer-head" style="display:flex">
+                  <div class="extruder">
+                    <div class="nozzle">
+                      <div class="filament-flow"></div>
+                    </div>
+                  </div>
+                  <div class="head-glow"></div>
+                </div>
+
+                <div class="printer-controls">
+                  <div class="controls-row">
+                    <div class="temp-display">
+                      <span class="temp-value">210°</span>
+                      <div class="temp-bar">
+                        <div class="temp-fill"></div>
+                      </div>
+                    </div>
+                    <div class="progress-display">
+                      <div class="progress-text">IMPRIMIENDO</div>
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%; animation: none;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Spools/Lights decorative -->
+              <div class="filament-spool">
+                <div class="spool-core"></div>
+                <div class="spool-filament"></div>
+              </div>
+              <div class="printer-light"></div>
+            </div>
+
+            <div class="weekly-label">IMPRESIÓN DE LA SEMANA</div>
+          </div>
         </div>
       </div>
 
       <div class="scroll-indicator" aria-hidden="true">
-        <div class="mouse-icon"><div class="mouse-wheel"></div></div>
+        <div class="mouse-icon">
+          <div class="mouse-wheel"></div>
+        </div>
         <div class="scroll-text">DESPLAZAR</div>
       </div>
     </section>
@@ -426,6 +486,10 @@
             </div>
 
             <div class="card-footer">
+              <div class="featured-badge">
+                <i class="fas fa-star"></i>
+                <span>MÁS SOLICITADO</span>
+              </div>
               <a href="#proyectos" class="card-link">
                 <span>Ver portfolio</span>
                 <i class="fas fa-arrow-right"></i>
@@ -433,10 +497,6 @@
             </div>
 
             <div class="card-glow" aria-hidden="true"></div>
-            <div class="featured-badge">
-              <i class="fas fa-star"></i>
-              <span>MÁS SOLICITADO</span>
-            </div>
           </article>
 
           <!-- Acabado Pro -->
@@ -713,7 +773,8 @@
                 </div>
 
                 <div class="form-group">
-                  <textarea name="message" placeholder="Describe tu proyecto..." rows="4" maxlength="500" required></textarea>
+                  <textarea name="message" placeholder="Describe tu proyecto..." rows="4" maxlength="500"
+                    required></textarea>
                   <div class="input-underline"></div>
                   <div class="char-counter" aria-label="Contador de caracteres">
                     <span id="charCount">0</span>/500
@@ -795,7 +856,8 @@
           <a href="#" class="social-link" aria-label="TikTok">
             <i class="fab fa-tiktok"></i>
           </a>
-          <a href="https://wa.me/524492795557" target="_blank" rel="noopener" class="social-link whatsapp" aria-label="WhatsApp">
+          <a href="https://wa.me/524492795557" target="_blank" rel="noopener" class="social-link whatsapp"
+            aria-label="WhatsApp">
             <i class="fab fa-whatsapp"></i>
           </a>
         </div>
@@ -811,8 +873,9 @@
         </div>
 
         <div class="footer-copyright">
-          <p>© 2024 ODA STUDIO. Todos los derechos reservados.</p>
+          
           <p class="copyright-note">Impresión 3D Premium en Aguascalientes</p>
+            <p>© 2024 ODA. Todos los derechos reservados.</p>
         </div>
       </div>
     </div>
@@ -821,7 +884,8 @@
   <!-- =========================
         WHATSAPP FLOAT
   ========================== -->
-  <a href="https://wa.me/524492795557" target="_blank" rel="noopener" class="whatsapp-float" id="whatsappFloat" aria-label="Cotización express por WhatsApp">
+  <a href="https://wa.me/524492795557" target="_blank" rel="noopener" class="whatsapp-float" id="whatsappFloat"
+    aria-label="Cotización express por WhatsApp">
     <div class="float-icon" aria-hidden="true">
       <i class="fab fa-whatsapp"></i>
       <div class="float-pulse"></div>
@@ -835,34 +899,35 @@
   <!-- Scripts -->
   <script defer src="index_script.js"></script>
   <script>
-  // Track WhatsApp clicks (GA4)
-  window.addEventListener("DOMContentLoaded", () => {
-    const track = (label) => {
-      if (typeof gtag === "function") {
-        gtag("event", "click_whatsapp", {
-          event_category: "contact",
-          event_label: label
-        });
+    // Track WhatsApp clicks (GA4)
+    window.addEventListener("DOMContentLoaded", () => {
+      const track = (label) => {
+        if (typeof gtag === "function") {
+          gtag("event", "click_whatsapp", {
+            event_category: "contact",
+            event_label: label
+          });
+        }
+      };
+
+      // Botón flotante (tu id ya existe ✅)
+      const floatBtn = document.getElementById("whatsappFloat");
+      if (floatBtn) {
+        floatBtn.addEventListener("click", () => track("Whats Float"));
       }
-    };
 
-    // Botón flotante (tu id ya existe ✅)
-    const floatBtn = document.getElementById("whatsappFloat");
-    if (floatBtn) {
-      floatBtn.addEventListener("click", () => track("Whats Float"));
-    }
-
-    // Links de Whats en contacto y footer (por href)
-    const waLinks = document.querySelectorAll('a[href^="https://wa.me/"]');
-    waLinks.forEach((a) => {
-      // Evita duplicar si ya es el float
-      if (a.id === "whatsappFloat") return;
-      a.addEventListener("click", () => {
-        track("Whats Link");
+      // Links de Whats en contacto y footer (por href)
+      const waLinks = document.querySelectorAll('a[href^="https://wa.me/"]');
+      waLinks.forEach((a) => {
+        // Evita duplicar si ya es el float
+        if (a.id === "whatsappFloat") return;
+        a.addEventListener("click", () => {
+          track("Whats Link");
+        });
       });
     });
-  });
-</script>
+  </script>
 
 </body>
+
 </html>
