@@ -14,7 +14,7 @@
       <div>
         <h1 class="oda-title">Calculadora de Cotización 3D</h1>
         <p class="oda-subtitle">
-          Precio cliente + Costo real + Ganancia ✅ (lista para vender)
+          Cotiza rápido para vender: <b>precio cliente</b> + <b>costo real</b> + <b>ganancia</b> ✅
         </p>
       </div>
       <div class="oda-badge">ODA STUDIO</div>
@@ -26,7 +26,7 @@
       <section class="oda-card">
         <div class="oda-cardHead">
           <h2>Datos</h2>
-          <span class="oda-hint">Se calcula solo</span>
+          <span class="oda-hint">Auto-cálculo</span>
         </div>
 
         <div class="oda-cardBody">
@@ -52,7 +52,7 @@
 
             <div class="oda-row oda-mt">
               <label class="oda-label">
-                1000g = 1kg
+                Peso del kilo (g)
                 <input id="kgWeightG" class="oda-input" type="number" min="1" step="1" value="1000">
               </label>
 
@@ -67,7 +67,7 @@
             </div>
 
             <p class="oda-help">
-              Material costo real = regla de 3 • Material cliente = costo real × multiplicador
+              Material costo real = (peso pieza × precio kg) ÷ 1000 • Material cliente = costo real × multiplicador
             </p>
           </div>
 
@@ -92,7 +92,7 @@
 
             <div class="oda-row oda-mt">
               <label class="oda-label">
-                Luz por hora
+                Luz por hora (MXN)
                 <input id="lightRate" class="oda-input" type="number" min="0" step="0.5" value="4">
               </label>
 
@@ -154,7 +154,7 @@
           <div class="oda-section">
             <div class="oda-sectionTitle">
               <strong>4) Riesgo + Extras</strong>
-              <span class="oda-mini">Normal</span>
+              <span class="oda-mini">Para no perder</span>
             </div>
 
             <div class="oda-row">
@@ -175,13 +175,13 @@
 
             <div class="oda-row oda-mt">
               <label class="oda-label">
-                Extras
+                Extras (pintura/post)
                 <input id="extras" class="oda-input" type="number" min="0" step="10" value="0">
               </label>
 
               <label class="oda-label">
-                Nota
-                <input id="note" class="oda-input" type="text" placeholder="Ej. pintura, entrega express">
+                Nota (opcional)
+                <input id="note" class="oda-input" type="text" placeholder="Ej. pintura metálica, express...">
               </label>
             </div>
           </div>
@@ -189,10 +189,15 @@
           <div class="oda-actions">
             <button class="oda-btn oda-btnPrimary" id="btnCalc">⚡ Calcular</button>
             <button class="oda-btn oda-btnGhost" id="btnReset">🧼 Reiniciar</button>
-            <button class="oda-btn oda-btnWhats" id="btnWhats">📲 WhatsApp</button>
+            <button class="oda-btn oda-btnGhost" id="btnPDFPreview">👁️ Vista PDF</button>
+            <button class="oda-btn oda-btnWhats" id="btnPDFShare">📲 Enviar PDF</button>
           </div>
 
           <div class="oda-error" id="errorBox"></div>
+
+          <p class="oda-help oda-mt2">
+            📌 Tip: En Android/Chrome, “Enviar PDF” abre el menú compartir para mandarlo a WhatsApp.
+          </p>
 
         </div>
       </section>
@@ -201,7 +206,7 @@
       <aside class="oda-card">
         <div class="oda-cardHead">
           <h2>Resultado</h2>
-          <span class="oda-hint">Precio y ganancia</span>
+          <span class="oda-hint">Cliente / Ganancia</span>
         </div>
 
         <div class="oda-cardBody">
@@ -226,10 +231,6 @@
               <div class="oda-line"><span>Ganancia %</span><b id="profitPct">0%</b></div>
               <div class="oda-line"><span>Mínimo aplicado</span><b id="minApplied">No</b></div>
             </div>
-
-            <div class="oda-actions oda-mt2">
-              <button class="oda-btn oda-btnGhost" id="btnCopy">📋 Copiar</button>
-            </div>
           </div>
         </div>
       </aside>
@@ -237,6 +238,10 @@
     </section>
   </main>
 
+  <!-- ✅ LIBRERÍA PDF -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <!-- ✅ TU JS -->
   <script src="calculadora.js" defer></script>
 </body>
 </html>
