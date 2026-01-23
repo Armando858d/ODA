@@ -9,7 +9,6 @@
     :root{
       --bg: #05060a;
       --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.08);
       --text: #ffffff;
       --muted: rgba(255,255,255,.70);
       --line: rgba(255,255,255,.14);
@@ -36,10 +35,7 @@
       padding: 22px 14px;
     }
 
-    .wrap{
-      max-width: 1150px;
-      margin: 0 auto;
-    }
+    .wrap{ max-width: 1150px; margin: 0 auto; }
 
     header{
       display:flex;
@@ -49,11 +45,7 @@
       margin-bottom: 16px;
     }
 
-    .title{
-      display:flex;
-      flex-direction:column;
-      gap: 8px;
-    }
+    .title{ display:flex; flex-direction:column; gap: 8px; }
 
     h1{
       margin:0;
@@ -97,7 +89,6 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
-      position: relative;
     }
 
     .cardHead{
@@ -131,11 +122,7 @@
       white-space: nowrap;
     }
 
-    .hint{
-      color: var(--muted);
-      font-size:.85rem;
-    }
-
+    .hint{ color: var(--muted); font-size:.85rem; }
     .cardBody{ padding: 14px; }
 
     .section{
@@ -221,7 +208,7 @@
       cursor:pointer;
       padding: 12px 14px;
       border-radius: 14px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing:.2px;
       transition: transform .08s ease, opacity .2s ease;
       display:flex;
@@ -242,6 +229,12 @@
       color: var(--text);
     }
 
+    .btnWhats{
+      background: rgba(69,255,143,.16);
+      border: 1px solid rgba(69,255,143,.35);
+      color: #d8ffe9;
+    }
+
     .err{
       margin-top: 10px;
       padding: 10px 12px;
@@ -254,12 +247,8 @@
       font-size: .9rem;
     }
 
-    /* Results panel */
-    .results{
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
+    /* Results */
+    .results{ display:flex; flex-direction:column; gap: 12px; }
 
     .totalBox{
       padding: 14px;
@@ -317,6 +306,19 @@
       white-space: nowrap;
     }
 
+    .tag{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.2);
+      color: var(--muted);
+      font-size: .8rem;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .breakdown{
       border-top: 1px solid rgba(255,255,255,.12);
       padding-top: 10px;
@@ -337,12 +339,11 @@
 
     .line b{
       color: var(--text);
-      font-weight: 900;
+      font-weight: 1000;
     }
 
     .good{ color: var(--ok) !important; font-weight: 1000; }
     .warn{ color: var(--warn) !important; font-weight: 1000; }
-    .bad{ color: var(--bad) !important; font-weight: 1000; }
 
     .sepTop{
       border-top:1px solid rgba(255,255,255,.12);
@@ -351,7 +352,7 @@
     }
 
     .cta{
-      margin-top: 10px;
+      margin-top: 12px;
       display:flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -360,6 +361,8 @@
       color: var(--muted);
       font-size: .82rem;
       line-height: 1.45;
+      position: relative;
+      z-index: 1;
     }
 
     .copy{
@@ -368,18 +371,10 @@
       color: var(--text);
       padding: 10px 12px;
       border-radius: 14px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    .tag{
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.2);
-      color: var(--muted);
-      font-size: .8rem;
-      white-space: nowrap;
-    }
+    .copy:active{ transform: scale(.98); }
   </style>
 </head>
 
@@ -389,8 +384,8 @@
       <div class="title">
         <h1>Calculadora de Cotización 3D (Venta)</h1>
         <div class="subtitle">
-          Pensada para <b>cobrar normal</b> (ni barato ni caro) en Aguascalientes.<br>
-          Te muestra <b>Precio al cliente</b>, <b>Costo real</b> y <b>Ganancia</b> para tomar decisiones rápido.
+          Diseñada para cobrar <b>normal</b> (ni barato ni caro) en Aguascalientes.
+          Te muestra <b>Precio cliente</b>, <b>Costo real</b> y <b>Ganancia</b>.
         </div>
       </div>
       <div class="badge">ODA STUDIO • Pricing Tool</div>
@@ -401,11 +396,8 @@
       <!-- Inputs -->
       <section class="card">
         <div class="cardHead">
-          <h2>
-            Datos de la impresión
-            <span class="chip">⚡ Auto cálculo</span>
-          </h2>
-          <div class="hint">Llena y listo</div>
+          <h2>Datos de la impresión <span class="chip">⚡ Auto</span></h2>
+          <div class="hint">Se calcula solo</div>
         </div>
 
         <div class="cardBody">
@@ -414,7 +406,7 @@
           <div class="section">
             <div class="sectionTitle">
               <strong>1) Material (Filamento)</strong>
-              <span class="mini">Regla de 3 + x2</span>
+              <span class="mini">Regla de 3 + venta</span>
             </div>
 
             <div class="row">
@@ -434,7 +426,7 @@
                 <input id="kgWeightG" type="number" min="1" step="1" value="1000" />
               </label>
               <label>
-                Multiplicador material (venta)
+                Multiplicador material (precio cliente)
                 <select id="materialMultiplier">
                   <option value="2" selected>x2 (recomendado)</option>
                   <option value="1.8">x1.8 (competitivo)</option>
@@ -444,16 +436,16 @@
             </div>
 
             <div class="help">
-              ✅ <b>Material costo real</b> = regla de 3<br>
-              ✅ <b>Material cliente</b> = costo real × multiplicador
+              Material costo real = regla de 3. <br>
+              Material cliente = costo real × multiplicador.
             </div>
           </div>
 
-          <!-- Luz -->
+          <!-- Luz + desgaste -->
           <div class="section">
             <div class="sectionTitle">
-              <strong>2) Luz</strong>
-              <span class="mini">$4 por hora</span>
+              <strong>2) Luz + Desgaste</strong>
+              <span class="mini">Protección negocio</span>
             </div>
 
             <div class="row">
@@ -469,7 +461,7 @@
 
             <div class="row" style="margin-top:10px;">
               <label>
-                Costo luz por hora
+                Costo luz por hora (MXN)
                 <input id="lightRate" type="number" min="0" step="0.5" value="4" />
               </label>
               <label>
@@ -479,20 +471,20 @@
             </div>
 
             <div class="help">
-              Desgaste = (<b>Material costo real</b> + Luz) × (Desgaste%)
+              Desgaste = (<b>material costo real</b> + luz) × desgaste%
             </div>
           </div>
 
-          <!-- Trabajo / Mano de obra -->
+          <!-- Mano de obra -->
           <div class="section">
             <div class="sectionTitle">
               <strong>3) Tu tiempo / Mano de obra</strong>
-              <span class="mini">Se ajusta por tipo</span>
+              <span class="mini">Imprimir o diseñar</span>
             </div>
 
             <div class="row">
               <label>
-                Tipo de trabajo (para cobrar normal)
+                Tipo de trabajo
                 <select id="jobType">
                   <option value="printOnly" selected>Solo impresión (archivo listo)</option>
                   <option value="prep">Preparación + soportes + limpieza</option>
@@ -513,7 +505,7 @@
 
             <div class="row" style="margin-top:10px;">
               <label>
-                Horas que trabajaste
+                Horas trabajadas
                 <input id="laborHours" type="number" min="0" step="1" placeholder="Ej. 1" />
               </label>
               <label>
@@ -523,16 +515,15 @@
             </div>
 
             <div class="help">
-              Primera hora se cobra según el tipo de trabajo:
-              <b id="jobHint">$50</b> + horas extra (tarifa seleccionada).
+              Primera hora base: <b id="jobHint">$50</b>
             </div>
           </div>
 
-          <!-- Riesgo + Extras + Mínimo -->
+          <!-- Riesgo + extras -->
           <div class="section">
             <div class="sectionTitle">
               <strong>4) Riesgo + Extras</strong>
-              <span class="mini">para no perder</span>
+              <span class="mini">Para no perder</span>
             </div>
 
             <div class="row">
@@ -544,6 +535,7 @@
                   <option value="30">Alto (30%)</option>
                 </select>
               </label>
+
               <label>
                 Mínimo de cobro
                 <input id="minPrice" type="number" min="0" step="10" value="120" />
@@ -552,38 +544,35 @@
 
             <div class="row" style="margin-top:10px;">
               <label>
-                Extras (post-proceso / pintura / empaque)
+                Extras (pintura / empaque / post-proceso)
                 <input id="extras" type="number" min="0" step="10" value="0" />
               </label>
               <label>
-                Nota (opcional)
-                <input id="note" type="text" placeholder="Ej. Pintura metálica, entrega express..." />
+                Nota opcional
+                <input id="note" type="text" placeholder="Ej. pintura metálica, entrega express..." />
               </label>
             </div>
 
             <div class="help">
-              Extras es para cobrar bonito cuando sí te pidan “terminado pro”.
+              Extras te ayuda a cobrar pro cuando el cliente lo pide terminado bonito.
             </div>
           </div>
 
           <div class="actions">
             <button class="btnPrimary" id="btnCalc">⚡ Calcular</button>
             <button class="btnGhost" id="btnReset">🧼 Reiniciar</button>
+            <button class="btnWhats" id="btnWhats">📲 Enviar a WhatsApp</button>
           </div>
 
           <div class="err" id="errorBox"></div>
-
         </div>
       </section>
 
       <!-- Results -->
       <aside class="card">
         <div class="cardHead">
-          <h2>
-            Resultado
-            <span class="chip">💰 Cliente / Ganancia</span>
-          </h2>
-          <div class="hint">Desglose completo</div>
+          <h2>Resultado <span class="chip">💰 Cliente / Ganancia</span></h2>
+          <div class="hint">Desglose</div>
         </div>
 
         <div class="cardBody results">
@@ -656,65 +645,65 @@
   </div>
 
   <script>
-    const $ = (id) => document.getElementById(id);
+    document.addEventListener("DOMContentLoaded", () => {
 
-    const money = (n) => {
-      if (!isFinite(n)) return "$0.00";
-      return n.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
-    };
+      const $ = (id) => document.getElementById(id);
 
-    const num = (value) => {
-      const n = parseFloat(value);
-      return isNaN(n) ? 0 : n;
-    };
+      const money = (n) => {
+        if (!isFinite(n)) return "$0.00";
+        return n.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
+      };
 
-    const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+      const num = (value) => {
+        const n = parseFloat(value);
+        return isNaN(n) ? 0 : n;
+      };
 
-    // Inputs
-    const filamentPriceKg = $("filamentPriceKg");
-    const pieceWeightG = $("pieceWeightG");
-    const kgWeightG = $("kgWeightG");
-    const materialMultiplier = $("materialMultiplier");
+      const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
-    const lightHours = $("lightHours");
-    const lightMinutes = $("lightMinutes");
-    const lightRate = $("lightRate");
-    const wearPercent = $("wearPercent");
+      // Inputs
+      const filamentPriceKg = $("filamentPriceKg");
+      const pieceWeightG = $("pieceWeightG");
+      const kgWeightG = $("kgWeightG");
+      const materialMultiplier = $("materialMultiplier");
 
-    const jobType = $("jobType");
-    const extraRateMode = $("extraRateMode");
-    const laborHours = $("laborHours");
-    const laborMinutes = $("laborMinutes");
+      const lightHours = $("lightHours");
+      const lightMinutes = $("lightMinutes");
+      const lightRate = $("lightRate");
+      const wearPercent = $("wearPercent");
 
-    const riskPercent = $("riskPercent");
-    const minPrice = $("minPrice");
-    const extras = $("extras");
-    const note = $("note");
+      const jobType = $("jobType");
+      const extraRateMode = $("extraRateMode");
+      const laborHours = $("laborHours");
+      const laborMinutes = $("laborMinutes");
 
-    const btnCalc = $("btnCalc");
-    const btnReset = $("btnReset");
-    const btnCopy = $("btnCopy");
+      const riskPercent = $("riskPercent");
+      const minPrice = $("minPrice");
+      const extras = $("extras");
+      const note = $("note");
 
-    const errorBox = $("errorBox");
+      const btnCalc = $("btnCalc");
+      const btnReset = $("btnReset");
+      const btnCopy = $("btnCopy");
+      const btnWhats = $("btnWhats");
 
-    // Outputs
-    const outFinalTotal = $("finalTotal");
-    const outFinalTotal2 = $("finalTotal2");
+      const errorBox = $("errorBox");
 
-    const outMaterialBase = $("materialBase");
-    const outMaterialClient = $("materialClient");
-    const outLightCost = $("lightCost");
-    const outWearCost = $("wearCost");
-    const outLaborCost = $("laborCost");
-    const outExtrasCost = $("extrasCost");
+      // Outputs
+      const outFinalTotal = $("finalTotal");
+      const outFinalTotal2 = $("finalTotal2");
 
-    const outSubtotal = $("subtotal");
-    const outRiskCost = $("riskCost");
+      const outMaterialBase = $("materialBase");
+      const outMaterialClient = $("materialClient");
+      const outLightCost = $("lightCost");
+      const outWearCost = $("wearCost");
+      const outLaborCost = $("laborCost");
+      const outExtrasCost = $("extrasCost");
 
-    const outRealCost = $("realCost");
-    const outProfit = $("profit");
-    const outProfitPct = $("profitPct");
-    const outMinApplied = $("minApplied");
-    const outSummaryLine = $("summaryLine");
-    const pricingTag = $("pricingTag");
-    const jobHint = $
+      const outSubtotal = $("subtotal");
+      const outRiskCost = $("riskCost");
+
+      const outRealCost = $("realCost");
+      const outProfit = $("profit");
+      const outProfitPct = $("profitPct");
+      con
