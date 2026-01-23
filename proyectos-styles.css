@@ -1,0 +1,98 @@
+/* ============================================================
+   PROJECTS PAGE SPECIFIC STYLES
+============================================================ */
+.projects-page {
+    padding-top: 80px;
+}
+
+.projects-hero {
+    padding: 80px 0 60px;
+    min-height: auto;
+}
+
+.projects-hero .section-header {
+    margin-bottom: 50px;
+}
+
+.projects-hero .projects-grid {
+    margin-bottom: 60px;
+}
+
+.projects-cta-section {
+    margin-top: 60px;
+    padding: 60px 30px;
+    border-radius: var(--radius2);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+}
+
+.cta-content h2 {
+    font-family: var(--fontTitle);
+    font-weight: 900;
+    font-size: 32px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--pink), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.cta-content p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-content .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 62, 122, 0.28);
+    background: linear-gradient(90deg, rgba(255, 62, 122, 0.12), rgba(0, 217, 255, 0.06));
+    transition: transform .2s ease, border-color .2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-content .cta-button:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 62, 122, 0.4);
+}
+
+.cta-content .button-text {
+    font-family: var(--fontTitle);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.22em;
+    color: #fff;
+}
+
+.cta-content .button-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(0, 0, 0, 0.18);
+}
+
+@media (max-width: 768px) {
+    .projects-hero {
+        padding: 60px 0 40px;
+    }
+
+    .cta-content h2 {
+        font-size: 24px;
+    }
+
+    .cta-content p {
+        font-size: 14px;
+    }
+}
