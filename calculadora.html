@@ -5,429 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calculadora 3D | ODA Studio</title>
 
-  <style>
-    :root{
-      --bg: #05060a;
-      --card: rgba(255,255,255,.06);
-      --text: #ffffff;
-      --muted: rgba(255,255,255,.70);
-      --line: rgba(255,255,255,.14);
-      --accent: #00d9ff;
-      --accent2: #ff3e7a;
-      --ok: #45ff8f;
-      --warn: #ffd166;
-      --bad: #ff5c7a;
-      --shadow: 0 18px 60px rgba(0,0,0,.55);
-      --radius: 18px;
-    }
-
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(900px 450px at 10% 10%, rgba(0,217,255,.18), transparent 55%),
-        radial-gradient(800px 450px at 90% 10%, rgba(255,62,122,.12), transparent 55%),
-        radial-gradient(1000px 600px at 50% 110%, rgba(157,78,221,.12), transparent 60%),
-        var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 22px 14px;
-    }
-
-    .wrap{ max-width: 1150px; margin: 0 auto; }
-
-    header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .title{ display:flex; flex-direction:column; gap: 8px; }
-
-    h1{
-      margin:0;
-      font-size: clamp(1.25rem, 3vw, 2rem);
-      letter-spacing: .3px;
-      line-height: 1.1;
-    }
-
-    .subtitle{
-      color: var(--muted);
-      font-size: .95rem;
-      max-width: 72ch;
-      line-height: 1.35;
-    }
-
-    .badge{
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.06);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      font-size: .9rem;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap: 14px;
-    }
-
-    @media (max-width: 950px){
-      .grid{ grid-template-columns: 1fr; }
-    }
-
-    .card{
-      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.03));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-
-    .cardHead{
-      padding: 14px 14px 10px;
-      border-bottom: 1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-    }
-
-    .cardHead h2{
-      margin:0;
-      font-size: 1rem;
-      letter-spacing:.2px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.25);
-      color: var(--muted);
-      font-size: .82rem;
-      white-space: nowrap;
-    }
-
-    .hint{ color: var(--muted); font-size:.85rem; }
-    .cardBody{ padding: 14px; }
-
-    .section{
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 12px;
-    }
-    .section:last-child{ margin-bottom:0; }
-
-    .sectionTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .sectionTitle strong{
-      font-size: .95rem;
-      letter-spacing:.2px;
-    }
-
-    .mini{
-      font-size:.82rem;
-      color: var(--muted);
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    @media (max-width: 560px){
-      header{ flex-direction:column; }
-      .badge{ width: fit-content; }
-      .row{ grid-template-columns: 1fr; }
-    }
-
-    label{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-      font-size:.86rem;
-      color: var(--muted);
-    }
-
-    input, select{
-      width:100%;
-      padding: 11px 12px;
-      border-radius: 12px;
-      outline:none;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.35);
-      color: var(--text);
-      font-size: 1rem;
-      transition: .2s ease;
-    }
-
-    input:focus, select:focus{
-      border-color: rgba(0,217,255,.55);
-      box-shadow: 0 0 0 4px rgba(0,217,255,.12);
-    }
-
-    .help{
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: .82rem;
-      line-height: 1.45;
-    }
-
-    .actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    button{
-      border: 0;
-      cursor:pointer;
-      padding: 12px 14px;
-      border-radius: 14px;
-      font-weight: 900;
-      letter-spacing:.2px;
-      transition: transform .08s ease, opacity .2s ease;
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      user-select:none;
-    }
-    button:active{ transform: scale(.98); }
-
-    .btnPrimary{
-      background: linear-gradient(90deg, rgba(0,217,255,.92), rgba(255,62,122,.92));
-      color: #07080c;
-    }
-
-    .btnGhost{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      color: var(--text);
-    }
-
-    .btnWhats{
-      background: rgba(69,255,143,.16);
-      border: 1px solid rgba(69,255,143,.35);
-      color: #d8ffe9;
-    }
-
-    .err{
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,92,122,.35);
-      background: rgba(255,92,122,.12);
-      color: #ffd9e6;
-      display:none;
-      line-height: 1.35;
-      font-size: .9rem;
-    }
-
-    /* Results */
-    .results{ display:flex; flex-direction:column; gap: 12px; }
-
-    .totalBox{
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      position: relative;
-      overflow:hidden;
-    }
-
-    .glow{
-      position:absolute;
-      inset:-80px -80px auto auto;
-      width: 240px;
-      height: 240px;
-      background: radial-gradient(circle, rgba(0,217,255,.22), transparent 60%);
-      pointer-events:none;
-      filter: blur(6px);
-    }
-
-    .glow2{
-      position:absolute;
-      inset:auto auto -120px -120px;
-      width: 320px;
-      height: 320px;
-      background: radial-gradient(circle, rgba(255,62,122,.18), transparent 60%);
-      pointer-events:none;
-      filter: blur(8px);
-    }
-
-    .totalTop{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap: 10px;
-      margin-bottom: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .big{
-      font-size: 1.95rem;
-      font-weight: 1000;
-      letter-spacing:.3px;
-      line-height: 1.1;
-    }
-
-    .pill{
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.25);
-      color: var(--muted);
-      font-size: .82rem;
-      white-space: nowrap;
-    }
-
-    .tag{
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.2);
-      color: var(--muted);
-      font-size: .8rem;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .breakdown{
-      border-top: 1px solid rgba(255,255,255,.12);
-      padding-top: 10px;
-      display:grid;
-      gap: 8px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .line{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap: 10px;
-      color: var(--muted);
-      font-size: .95rem;
-    }
-
-    .line b{
-      color: var(--text);
-      font-weight: 1000;
-    }
-
-    .good{ color: var(--ok) !important; font-weight: 1000; }
-    .warn{ color: var(--warn) !important; font-weight: 1000; }
-
-    .sepTop{
-      border-top:1px solid rgba(255,255,255,.12);
-      padding-top:10px;
-      margin-top: 4px;
-    }
-
-    .cta{
-      margin-top: 12px;
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items:center;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: .82rem;
-      line-height: 1.45;
-      position: relative;
-      z-index: 1;
-    }
-
-    .copy{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-weight: 900;
-    }
-
-    .copy:active{ transform: scale(.98); }
-  </style>
+  <link rel="stylesheet" href="calculadora.css" />
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div class="title">
-        <h1>Calculadora de Cotización 3D (Venta)</h1>
-        <div class="subtitle">
-          Diseñada para cobrar <b>normal</b> (ni barato ni caro) en Aguascalientes.
-          Te muestra <b>Precio cliente</b>, <b>Costo real</b> y <b>Ganancia</b>.
-        </div>
+  <main class="oda-wrap">
+    <header class="oda-header">
+      <div>
+        <h1 class="oda-title">Calculadora de Cotización 3D</h1>
+        <p class="oda-subtitle">
+          Precio cliente + Costo real + Ganancia ✅ (lista para vender)
+        </p>
       </div>
-      <div class="badge">ODA STUDIO • Pricing Tool</div>
+      <div class="oda-badge">ODA STUDIO</div>
     </header>
 
-    <div class="grid">
+    <section class="oda-grid">
 
-      <!-- Inputs -->
-      <section class="card">
-        <div class="cardHead">
-          <h2>Datos de la impresión <span class="chip">⚡ Auto</span></h2>
-          <div class="hint">Se calcula solo</div>
+      <!-- INPUTS -->
+      <section class="oda-card">
+        <div class="oda-cardHead">
+          <h2>Datos</h2>
+          <span class="oda-hint">Se calcula solo</span>
         </div>
 
-        <div class="cardBody">
+        <div class="oda-cardBody">
 
           <!-- Material -->
-          <div class="section">
-            <div class="sectionTitle">
-              <strong>1) Material (Filamento)</strong>
-              <span class="mini">Regla de 3 + venta</span>
+          <div class="oda-section">
+            <div class="oda-sectionTitle">
+              <strong>1) Material</strong>
+              <span class="oda-mini">Regla de 3</span>
             </div>
 
-            <div class="row">
-              <label>
-                Precio del filamento (por kilo)
-                <input id="filamentPriceKg" type="number" min="0" step="0.01" placeholder="Ej. 450" />
+            <div class="oda-row">
+              <label class="oda-label">
+                Precio filamento / kg
+                <input id="filamentPriceKg" class="oda-input" type="number" min="0" step="0.01" placeholder="Ej. 450">
               </label>
-              <label>
-                Peso de la pieza (gramos)
-                <input id="pieceWeightG" type="number" min="0" step="0.1" placeholder="Ej. 120" />
+
+              <label class="oda-label">
+                Peso pieza (g)
+                <input id="pieceWeightG" class="oda-input" type="number" min="0" step="0.1" placeholder="Ej. 120">
               </label>
             </div>
 
-            <div class="row" style="margin-top:10px;">
-              <label>
-                Peso del kilo (g)
-                <input id="kgWeightG" type="number" min="1" step="1" value="1000" />
+            <div class="oda-row oda-mt">
+              <label class="oda-label">
+                1000g = 1kg
+                <input id="kgWeightG" class="oda-input" type="number" min="1" step="1" value="1000">
               </label>
-              <label>
-                Multiplicador material (precio cliente)
-                <select id="materialMultiplier">
+
+              <label class="oda-label">
+                Multiplicador (venta)
+                <select id="materialMultiplier" class="oda-input">
                   <option value="2" selected>x2 (recomendado)</option>
                   <option value="1.8">x1.8 (competitivo)</option>
                   <option value="2.2">x2.2 (premium)</option>
@@ -435,275 +66,177 @@
               </label>
             </div>
 
-            <div class="help">
-              Material costo real = regla de 3. <br>
-              Material cliente = costo real × multiplicador.
-            </div>
+            <p class="oda-help">
+              Material costo real = regla de 3 • Material cliente = costo real × multiplicador
+            </p>
           </div>
 
-          <!-- Luz + desgaste -->
-          <div class="section">
-            <div class="sectionTitle">
+          <!-- Luz -->
+          <div class="oda-section">
+            <div class="oda-sectionTitle">
               <strong>2) Luz + Desgaste</strong>
-              <span class="mini">Protección negocio</span>
+              <span class="oda-mini">$4/h + 15%</span>
             </div>
 
-            <div class="row">
-              <label>
-                Horas de impresión
-                <input id="lightHours" type="number" min="0" step="1" placeholder="Ej. 6" />
+            <div class="oda-row">
+              <label class="oda-label">
+                Horas impresión
+                <input id="lightHours" class="oda-input" type="number" min="0" step="1" placeholder="Ej. 6">
               </label>
-              <label>
+
+              <label class="oda-label">
                 Minutos
-                <input id="lightMinutes" type="number" min="0" step="1" placeholder="Ej. 30" />
+                <input id="lightMinutes" class="oda-input" type="number" min="0" step="1" placeholder="Ej. 30">
               </label>
             </div>
 
-            <div class="row" style="margin-top:10px;">
-              <label>
-                Costo luz por hora (MXN)
-                <input id="lightRate" type="number" min="0" step="0.5" value="4" />
+            <div class="oda-row oda-mt">
+              <label class="oda-label">
+                Luz por hora
+                <input id="lightRate" class="oda-input" type="number" min="0" step="0.5" value="4">
               </label>
-              <label>
+
+              <label class="oda-label">
                 Desgaste (%)
-                <input id="wearPercent" type="number" min="0" step="1" value="15" />
+                <input id="wearPercent" class="oda-input" type="number" min="0" step="1" value="15">
               </label>
             </div>
 
-            <div class="help">
-              Desgaste = (<b>material costo real</b> + luz) × desgaste%
-            </div>
+            <p class="oda-help">
+              Desgaste = (material costo real + luz) × desgaste%
+            </p>
           </div>
 
           <!-- Mano de obra -->
-          <div class="section">
-            <div class="sectionTitle">
+          <div class="oda-section">
+            <div class="oda-sectionTitle">
               <strong>3) Tu tiempo / Mano de obra</strong>
-              <span class="mini">Imprimir o diseñar</span>
+              <span class="oda-mini">Imprimir o diseñar</span>
             </div>
 
-            <div class="row">
-              <label>
+            <div class="oda-row">
+              <label class="oda-label">
                 Tipo de trabajo
-                <select id="jobType">
-                  <option value="printOnly" selected>Solo impresión (archivo listo)</option>
-                  <option value="prep">Preparación + soportes + limpieza</option>
-                  <option value="designAssist">Ajustes de archivo / arreglo leve</option>
-                  <option value="fullDesign">Diseño completo / pieza personalizada</option>
+                <select id="jobType" class="oda-input">
+                  <option value="printOnly" selected>Solo impresión</option>
+                  <option value="prep">Preparación + limpieza</option>
+                  <option value="designAssist">Ajustes de archivo</option>
+                  <option value="fullDesign">Diseño completo</option>
                 </select>
               </label>
 
-              <label>
-                Tarifa por hora extra
-                <select id="extraRateMode">
-                  <option value="10">$10/h (muy barato)</option>
-                  <option value="15" selected>$15/h (normal)</option>
-                  <option value="20">$20/h (pro)</option>
+              <label class="oda-label">
+                Hora extra
+                <select id="extraRateMode" class="oda-input">
+                  <option value="10">$10/h</option>
+                  <option value="15" selected>$15/h</option>
+                  <option value="20">$20/h</option>
                 </select>
               </label>
             </div>
 
-            <div class="row" style="margin-top:10px;">
-              <label>
+            <div class="oda-row oda-mt">
+              <label class="oda-label">
                 Horas trabajadas
-                <input id="laborHours" type="number" min="0" step="1" placeholder="Ej. 1" />
+                <input id="laborHours" class="oda-input" type="number" min="0" step="1" placeholder="Ej. 1">
               </label>
-              <label>
+
+              <label class="oda-label">
                 Minutos trabajados
-                <input id="laborMinutes" type="number" min="0" step="1" placeholder="Ej. 30" />
+                <input id="laborMinutes" class="oda-input" type="number" min="0" step="1" placeholder="Ej. 30">
               </label>
             </div>
 
-            <div class="help">
-              Primera hora base: <b id="jobHint">$50</b>
-            </div>
+            <p class="oda-help">Primera hora base: <b id="jobHint">$50</b></p>
           </div>
 
-          <!-- Riesgo + extras -->
-          <div class="section">
-            <div class="sectionTitle">
+          <!-- Riesgo -->
+          <div class="oda-section">
+            <div class="oda-sectionTitle">
               <strong>4) Riesgo + Extras</strong>
-              <span class="mini">Para no perder</span>
+              <span class="oda-mini">Normal</span>
             </div>
 
-            <div class="row">
-              <label>
-                Dificultad / Riesgo
-                <select id="riskPercent">
+            <div class="oda-row">
+              <label class="oda-label">
+                Riesgo
+                <select id="riskPercent" class="oda-input">
                   <option value="10">Bajo (10%)</option>
                   <option value="20" selected>Normal (20%)</option>
                   <option value="30">Alto (30%)</option>
                 </select>
               </label>
 
-              <label>
+              <label class="oda-label">
                 Mínimo de cobro
-                <input id="minPrice" type="number" min="0" step="10" value="120" />
+                <input id="minPrice" class="oda-input" type="number" min="0" step="10" value="120">
               </label>
             </div>
 
-            <div class="row" style="margin-top:10px;">
-              <label>
-                Extras (pintura / empaque / post-proceso)
-                <input id="extras" type="number" min="0" step="10" value="0" />
+            <div class="oda-row oda-mt">
+              <label class="oda-label">
+                Extras
+                <input id="extras" class="oda-input" type="number" min="0" step="10" value="0">
               </label>
-              <label>
-                Nota opcional
-                <input id="note" type="text" placeholder="Ej. pintura metálica, entrega express..." />
-              </label>
-            </div>
 
-            <div class="help">
-              Extras te ayuda a cobrar pro cuando el cliente lo pide terminado bonito.
+              <label class="oda-label">
+                Nota
+                <input id="note" class="oda-input" type="text" placeholder="Ej. pintura, entrega express">
+              </label>
             </div>
           </div>
 
-          <div class="actions">
-            <button class="btnPrimary" id="btnCalc">⚡ Calcular</button>
-            <button class="btnGhost" id="btnReset">🧼 Reiniciar</button>
-            <button class="btnWhats" id="btnWhats">📲 Enviar a WhatsApp</button>
+          <div class="oda-actions">
+            <button class="oda-btn oda-btnPrimary" id="btnCalc">⚡ Calcular</button>
+            <button class="oda-btn oda-btnGhost" id="btnReset">🧼 Reiniciar</button>
+            <button class="oda-btn oda-btnWhats" id="btnWhats">📲 WhatsApp</button>
           </div>
 
-          <div class="err" id="errorBox"></div>
+          <div class="oda-error" id="errorBox"></div>
+
         </div>
       </section>
 
-      <!-- Results -->
-      <aside class="card">
-        <div class="cardHead">
-          <h2>Resultado <span class="chip">💰 Cliente / Ganancia</span></h2>
-          <div class="hint">Desglose</div>
+      <!-- RESULTS -->
+      <aside class="oda-card">
+        <div class="oda-cardHead">
+          <h2>Resultado</h2>
+          <span class="oda-hint">Precio y ganancia</span>
         </div>
 
-        <div class="cardBody results">
-          <div class="totalBox">
-            <div class="glow"></div>
-            <div class="glow2"></div>
+        <div class="oda-cardBody">
+          <div class="oda-totalBox">
+            <div class="oda-pill">TOTAL CLIENTE</div>
+            <div class="oda-big" id="finalTotal">$0.00</div>
 
-            <div class="totalTop">
-              <div>
-                <div class="pill">Precio al cliente (TOTAL)</div>
-                <div style="margin-top:6px;" class="big" id="finalTotal">$0.00</div>
-                <div style="margin-top:6px;" class="tag" id="pricingTag">Normal</div>
-              </div>
-              <div class="pill">MXN</div>
+            <div class="oda-breakdown">
+              <div class="oda-line"><span>Material (costo real)</span><b id="materialBase">$0.00</b></div>
+              <div class="oda-line"><span>Material (cliente)</span><b id="materialClient">$0.00</b></div>
+              <div class="oda-line"><span>Luz</span><b id="lightCost">$0.00</b></div>
+              <div class="oda-line"><span>Desgaste</span><b id="wearCost">$0.00</b></div>
+              <div class="oda-line"><span>Tu tiempo</span><b id="laborCost">$0.00</b></div>
+              <div class="oda-line"><span>Extras</span><b id="extrasCost">$0.00</b></div>
+
+              <div class="oda-line oda-sepTop"><span>Subtotal</span><b class="oda-good" id="subtotal">$0.00</b></div>
+              <div class="oda-line"><span>Riesgo</span><b class="oda-warn" id="riskCost">$0.00</b></div>
+
+              <div class="oda-line oda-sepTop"><span><b>Precio final</b></span><b id="finalTotal2">$0.00</b></div>
+              <div class="oda-line"><span>Costo real</span><b id="realCost">$0.00</b></div>
+              <div class="oda-line"><span><b>Ganancia</b></span><b class="oda-good" id="profit">$0.00</b></div>
+              <div class="oda-line"><span>Ganancia %</span><b id="profitPct">0%</b></div>
+              <div class="oda-line"><span>Mínimo aplicado</span><b id="minApplied">No</b></div>
             </div>
 
-            <div class="breakdown">
-              <div class="line"><span>Material (costo real)</span><b id="materialBase">$0.00</b></div>
-              <div class="line"><span>Material (precio cliente)</span><b id="materialClient">$0.00</b></div>
-              <div class="line"><span>Luz</span><b id="lightCost">$0.00</b></div>
-              <div class="line"><span>Desgaste</span><b id="wearCost">$0.00</b></div>
-              <div class="line"><span>Tu tiempo</span><b id="laborCost">$0.00</b></div>
-              <div class="line"><span>Extras</span><b id="extrasCost">$0.00</b></div>
-
-              <div class="line sepTop">
-                <span>Subtotal (sin riesgo)</span>
-                <b class="good" id="subtotal">$0.00</b>
-              </div>
-
-              <div class="line">
-                <span>Riesgo</span>
-                <b class="warn" id="riskCost">$0.00</b>
-              </div>
-
-              <div class="line sepTop">
-                <span><b style="color:#fff;">TOTAL CLIENTE</b></span>
-                <b style="font-size:1.05rem;" id="finalTotal2">$0.00</b>
-              </div>
-
-              <div class="line sepTop">
-                <span><b style="color:#fff;">COSTO REAL (tú pagas)</b></span>
-                <b id="realCost">$0.00</b>
-              </div>
-
-              <div class="line">
-                <span><b style="color:#fff;">GANANCIA (para ti)</b></span>
-                <b class="good" id="profit">$0.00</b>
-              </div>
-
-              <div class="line">
-                <span class="mini">Ganancia % (aprox)</span>
-                <b id="profitPct">0%</b>
-              </div>
-
-              <div class="line">
-                <span class="mini">Mínimo aplicado</span>
-                <b id="minApplied">No</b>
-              </div>
-            </div>
-
-            <div class="cta">
-              <span id="summaryLine">📌 Cotización lista</span>
-              <button class="copy" id="btnCopy">📋 Copiar cotización</button>
+            <div class="oda-actions oda-mt2">
+              <button class="oda-btn oda-btnGhost" id="btnCopy">📋 Copiar</button>
             </div>
           </div>
         </div>
       </aside>
 
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-
-      const $ = (id) => document.getElementById(id);
-
-      const money = (n) => {
-        if (!isFinite(n)) return "$0.00";
-        return n.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
-      };
-
-      const num = (value) => {
-        const n = parseFloat(value);
-        return isNaN(n) ? 0 : n;
-      };
-
-      const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
-
-      // Inputs
-      const filamentPriceKg = $("filamentPriceKg");
-      const pieceWeightG = $("pieceWeightG");
-      const kgWeightG = $("kgWeightG");
-      const materialMultiplier = $("materialMultiplier");
-
-      const lightHours = $("lightHours");
-      const lightMinutes = $("lightMinutes");
-      const lightRate = $("lightRate");
-      const wearPercent = $("wearPercent");
-
-      const jobType = $("jobType");
-      const extraRateMode = $("extraRateMode");
-      const laborHours = $("laborHours");
-      const laborMinutes = $("laborMinutes");
-
-      const riskPercent = $("riskPercent");
-      const minPrice = $("minPrice");
-      const extras = $("extras");
-      const note = $("note");
-
-      const btnCalc = $("btnCalc");
-      const btnReset = $("btnReset");
-      const btnCopy = $("btnCopy");
-      const btnWhats = $("btnWhats");
-
-      const errorBox = $("errorBox");
-
-      // Outputs
-      const outFinalTotal = $("finalTotal");
-      const outFinalTotal2 = $("finalTotal2");
-
-      const outMaterialBase = $("materialBase");
-      const outMaterialClient = $("materialClient");
-      const outLightCost = $("lightCost");
-      const outWearCost = $("wearCost");
-      const outLaborCost = $("laborCost");
-      const outExtrasCost = $("extrasCost");
-
-      const outSubtotal = $("subtotal");
-      const outRiskCost = $("riskCost");
-
-      const outRealCost = $("realCost");
-      const outProfit = $("profit");
-      const outProfitPct = $("profitPct");
-      con
+  <script src="calculadora.js"></script>
+</body>
+</html>
