@@ -1,0 +1,116 @@
+/* Header Slide Specific Styles */
+.header-content {
+    max-width: 800px !important;
+    text-align: center;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+.header-content .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: slideUp 0.8s ease forwards 0.2s;
+}
+
+.header-content .label-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.header-content .label-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.header-content .section-title {
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: slideUp 0.8s ease forwards 0.4s;
+}
+
+.header-content .title-main,
+.header-content .title-accent {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 900;
+    font-size: 80px;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.header-content .title-main {
+    color: #fff;
+}
+
+.header-content .title-accent {
+    background: linear-gradient(135deg, #ff3e7a, #00d9ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header-content .section-subtitle {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: slideUp 0.8s ease forwards 0.6s;
+}
+
+@media (max-width: 980px) {
+
+    .header-content .title-main,
+    .header-content .title-accent {
+        font-size: 64px;
+    }
+
+    .header-content .section-subtitle {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .header-content .title-main,
+    .header-content .title-accent {
+        font-size: 48px;
+    }
+
+    .header-content .section-subtitle {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 520px) {
+    .header-content {
+        bottom: 120px !important;
+        top: auto !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .header-content .title-main,
+    .header-content .title-accent {
+        font-size: 36px;
+    }
+
+    .header-content .section-subtitle {
+        font-size: 14px;
+    }
+
+    .header-content .section-label {
+        margin-bottom: 20px;
+    }
+}

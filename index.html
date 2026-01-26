@@ -25,21 +25,32 @@
   <!-- OPCIONAL: sube una imagen preview.jpg a tu repo -->
   <meta property="og:image" content="https://armando858d.github.io/ODA/preview.jpg" />
 
-  <!-- Fuentes -->
+  <!-- Fuentes (Optimized) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+  <!-- Preload Critical CSS -->
+  <link rel="preload" href="css/index_estilo.css" as="style" />
+
+  <!-- Fonts (display=swap for FOUT instead of FOIT) -->
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" />
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" />
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Font Awesome (defer non-critical) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print"
+    onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </noscript>
 
-  <!-- GSAP -->
+  <!-- GSAP (defer) -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="index_estilo.css" />
+  <link rel="stylesheet" href="css/index_estilo.css" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml"
@@ -146,8 +157,8 @@
     <div class="video-background">
       <div class="video-wrapper">
         <video autoplay muted loop playsinline preload="metadata" id="bgVideo">
-          <source src="BIG.mp4" type="video/mp4" media="(min-width: 900px)" />
-          <source src="3D.mp4" type="video/mp4" />
+          <source src="assets/videos/BIG.mp4" type="video/mp4" media="(min-width: 900px)" />
+          <source src="assets/videos/3D.mp4" type="video/mp4" />
         </video>
         <div class="video-overlay"></div>
         <div class="video-filter"></div>
@@ -176,7 +187,7 @@
       <div class="nav-logo">
         <a href="#hero" class="logo-link" aria-label="Ir al inicio">
           <div class="logo-3d" aria-hidden="true">
-            <img src="oda.png" alt="ODA" class="logo-img" />
+            <img src="assets/images/oda.png" alt="ODA" class="logo-img" height="55" width="55" />
             <span class="logo-text">ODA</span>
             <div class="logo-glow"></div>
           </div>
@@ -216,7 +227,7 @@
             <span class="link-text">CONTACTO</span>
           </a>
 
-          <a href="iniciooda.html" class="nav-link cta-button">
+          <a href="#contacto" class="nav-link cta-button">
             <span class="link-icon"><i class="fas fa-briefcase"></i></span>
             <span class="link-text">SERVICIOS ODA</span>
           </a>
@@ -318,6 +329,9 @@
 
         <div class="hero-visual" aria-hidden="true">
           <div class="hero-printer-wrapper">
+            <!-- Label movido arriba -->
+            <div class="weekly-label">IMPRESIÓN DE LA SEMANA</div>
+
             <div class="printer-3d" role="img" aria-label="Impresión destacada">
               <div class="printer-frame">
                 <div class="print-surface">
@@ -361,7 +375,11 @@
               <div class="printer-light"></div>
             </div>
 
-            <div class="weekly-label">IMPRESIÓN DE LA SEMANA</div>
+            <!-- Botón nuevo abajo -->
+            <a href="proyectos.html" class="weekly-btn">
+              VER MÁS PROYECTOS
+              <i class="fas fa-arrow-right"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -423,8 +441,8 @@
               </div>
 
               <p class="card-description">
-                Impresión de alta calidad con precisión de 0.1mm.
-                Piezas funcionales, decorativas y prototipos listos para uso real.
+                Impresión 3D con excelente detalle y gran acabado.
+                Piezas funcionales, decorativas y prototipos listas para uso real.
               </p>
 
               <div class="card-specs">
@@ -434,7 +452,7 @@
                 </div>
                 <div class="spec">
                   <div class="spec-value">±0.05mm</div>
-                  <div class="spec-label">Precisión</div>
+                  <div class="spec-label">Tolerancia</div>
                 </div>
               </div>
             </div>
@@ -470,24 +488,11 @@
               </div>
 
               <p class="card-description">
-                Modelado profesional desde cero, reparación de STL,
-                optimización para impresión y prototipos industriales.
+                Diseño 3D a medida: desde cero o listo para imprimir.
+                Modelado, reparación de STL y optimización para piezas funcionales o prototipos.
               </p>
 
-              <div class="design-process">
-                <div class="process-step">
-                  <span>Concepto</span>
-                  <div class="process-bar">
-                    <div class="process-fill" style="--width: 90%"></div>
-                  </div>
-                </div>
-                <div class="process-step">
-                  <span>Modelado</span>
-                  <div class="process-bar">
-                    <div class="process-fill" style="--width: 85%"></div>
-                  </div>
-                </div>
-              </div>
+
             </div>
 
             <div class="card-footer">
@@ -526,8 +531,8 @@
               </div>
 
               <p class="card-description">
-                Convertimos tus impresiones en piezas de exhibición:
-                lijado, primer, pintura profesional, detalles finos y acabado final.
+                Transformamos tus impresiones en piezas listas para exhibición.
+                Lijado, preparación, pintura y detalles finos con un acabado final premium.
               </p>
 
               <div class="quality-indicator">
@@ -586,7 +591,7 @@
             <div class="step-content">
               <h3 class="step-title">CONSULTA</h3>
               <p class="step-description">
-                Revisamos tu idea, uso final, tamaño y material. Te damos una propuesta clara.
+                Nos cuentas tu idea y para qué la necesitas. Te damos una propuesta con precio y tiempo.
               </p>
             </div>
           </div>
@@ -599,7 +604,7 @@
             <div class="step-content">
               <h3 class="step-title">DISEÑO</h3>
               <p class="step-description">
-                Modelado 3D profesional o mejora de archivos STL para impresión perfecta.
+                Creamos el modelo 3D o arreglamos tu archivo para que se imprima bien.
               </p>
             </div>
           </div>
@@ -612,7 +617,7 @@
             <div class="step-content">
               <h3 class="step-title">IMPRESIÓN</h3>
               <p class="step-description">
-                Impresión de alta precisión con monitoreo. Capas limpias, tolerancias reales.
+                Imprimimos tu pieza con buen detalle y revisamos que salga correcta.
               </p>
             </div>
           </div>
@@ -625,7 +630,7 @@
             <div class="step-content">
               <h3 class="step-title">ENTREGA</h3>
               <p class="step-description">
-                Acabado pro, empaque seguro y entrega lista para lucirse o usarse.
+                Te entregamos la pieza terminada, bien protegida y lista para usar o lucir.
               </p>
             </div>
           </div>
@@ -663,16 +668,16 @@
           <article class="project-card">
             <div class="project-image project-1">
               <div class="image-overlay">
-                <h3>ESCULTURA PERSONALIZADA</h3>
-                <p>ARTE EN 3D • 15 CM</p>
+                <h3>REGALO PERSONALIZADO</h3>
+                <p>Hecho a tu gusto • Único</p>
               </div>
             </div>
             <div class="project-info">
               <div class="project-number">01</div>
               <div class="project-tags">
-                <span>EDICION PERSONALIZADA</span>
-                <span>PINTURA A MANO</span>
-                <span>LISTO PARA REGALO</span>
+                <span>REGALO</span>
+                <span>NOMBRE</span>
+                <span>ESPECIAL</span>
               </div>
             </div>
           </article>
@@ -680,8 +685,8 @@
           <article class="project-card">
             <div class="project-image project-2">
               <div class="image-overlay">
-                <h3>IMPRESION</h3>
-                <p>IMPRESION 3D • 15 CM</p>
+                <h3>FIGURA VENOM</h3>
+                <p>Impresión premium • Detalle HD</p>
               </div>
             </div>
             <div class="project-info">
@@ -697,16 +702,16 @@
           <article class="project-card">
             <div class="project-image project-3">
               <div class="image-overlay">
-                <h3>JOYERÍA 3D</h3>
-                <p>Diseño • Lujo y detalle</p>
+                <h3>RECUERDO INOLVIDABLE</h3>
+                <p>Tu bebé en 3D • Calidad premium</p>
               </div>
             </div>
             <div class="project-info">
               <div class="project-number">03</div>
               <div class="project-tags">
-                <span>RESINA</span>
-                <span>DETALLE</span>
-                <span>EXCLUSIVO</span>
+                <span>RECUERDO</span>
+                <span>ÚNICO</span>
+                <span>PREMIUM</span>
               </div>
             </div>
           </article>
@@ -758,17 +763,19 @@
 
               <form id="contactForm" class="cyber-form" autocomplete="on">
                 <div class="form-group">
-                  <input type="text" name="name" placeholder="Tu nombre" autocomplete="name" required />
+                  <input type="text" name="name" placeholder="Tu nombre" autocomplete="name" required
+                    aria-label="Nombre completo" />
                   <div class="input-underline"></div>
                 </div>
 
                 <div class="form-group">
-                  <input type="email" name="email" placeholder="Correo electrónico" autocomplete="email" required />
+                  <input type="email" name="email" placeholder="Correo electrónico" autocomplete="email" required
+                    aria-label="Correo electrónico" />
                   <div class="input-underline"></div>
                 </div>
 
                 <div class="form-group">
-                  <select name="service" required>
+                  <select name="service" required aria-label="Selecciona un servicio">
                     <option value="">Selecciona un servicio</option>
                     <option value="impresion">Impresión 3D</option>
                     <option value="diseno">Diseño 3D</option>
@@ -778,8 +785,8 @@
                 </div>
 
                 <div class="form-group">
-                  <textarea name="message" placeholder="Describe tu proyecto..." rows="4" maxlength="500"
-                    required></textarea>
+                  <textarea name="message" placeholder="Describe tu proyecto..." rows="4" maxlength="500" required
+                    aria-label="Mensaje del proyecto"></textarea>
                   <div class="input-underline"></div>
                   <div class="char-counter" aria-label="Contador de caracteres">
                     <span id="charCount">0</span>/500
@@ -806,7 +813,8 @@
               </div>
               <h4 class="info-title">WHATSAPP</h4>
               <p class="info-text">Respuesta en menos de 30 minutos</p>
-              <a href="https://wa.me/524492795557" target="_blank" rel="noopener" class="info-link">
+              <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20vi%20su%20p%C3%A1gina%20web%20y%20me%20interesa%20cotizar%20un%20proyecto%20de%20impresi%C3%B3n%203D%20premium.%20%F0%9F%9A%80"
+                target="_blank" rel="noopener" class="info-link">
                 <span>Enviar mensaje</span>
                 <i class="fas fa-external-link-alt"></i>
               </a>
@@ -818,7 +826,8 @@
               </div>
               <h4 class="info-title">EMAIL</h4>
               <p class="info-text">daordaz18@gmail.com</p>
-              <a href="mailto:daordaz18@gmail.com" class="info-link">
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=daordaz18@gmail.com" target="_blank" rel="noopener"
+                class="info-link">
                 <span>Enviar correo</span>
                 <i class="fas fa-external-link-alt"></i>
               </a>
@@ -852,17 +861,19 @@
         </div>
 
         <div class="footer-social" aria-label="Redes sociales">
-          <a href="#" class="social-link" aria-label="Instagram">
+          <a href="https://www.instagram.com/oda858dj?igsh=MXF3OTl0dzBpODR0eA==" class="social-link"
+            aria-label="Instagram">
             <i class="fab fa-instagram"></i>
           </a>
-          <a href="#" class="social-link" aria-label="Facebook">
+          <a href="https://www.facebook.com/ServiceODA" target="_blank" rel="noopener" class="social-link"
+            aria-label="Facebook">
             <i class="fab fa-facebook-f"></i>
           </a>
-          <a href="#" class="social-link" aria-label="TikTok">
+          <a href="https://www.tiktok.com/@oda858d?_r=1&_t=ZS-93NfFNAv3mZ" class="social-link" aria-label="TikTok">
             <i class="fab fa-tiktok"></i>
           </a>
-          <a href="https://wa.me/524492795557" target="_blank" rel="noopener" class="social-link whatsapp"
-            aria-label="WhatsApp">
+          <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20sus%20servicios%20de%20impresi%C3%B3n%203D."
+            target="_blank" rel="noopener" class="social-link whatsapp" aria-label="WhatsApp">
             <i class="fab fa-whatsapp"></i>
           </a>
         </div>
@@ -875,7 +886,8 @@
           <a href="#proceso">Proceso</a>
           <a href="#proyectos">Proyectos</a>
           <a href="#contacto">Contacto</a>
-          <a href="iniciooda.html">Servicios ODA</a>
+          <a href="#contacto">Contacto</a>
+          <!-- <a href="#">Servicios ODA</a> -->
         </div>
 
         <div class="footer-copyright">
@@ -890,7 +902,8 @@
   <!-- =========================
         WHATSAPP FLOAT
   ========================== -->
-  <a href="https://wa.me/524492795557" target="_blank" rel="noopener" class="whatsapp-float" id="whatsappFloat"
+  <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20necesito%20una%20cotizaci%C3%B3n%20express%20para%20una%20impresi%C3%B3n%203D."
+    target="_blank" rel="noopener" class="whatsapp-float" id="whatsappFloat"
     aria-label="Cotización express por WhatsApp">
     <div class="float-icon" aria-hidden="true">
       <i class="fab fa-whatsapp"></i>
@@ -903,7 +916,7 @@
   </a>
 
   <!-- Scripts -->
-  <script defer src="index_script.js"></script>
+  <script defer src="js/index_script.js?v=5"></script>
   <script>
     // Track WhatsApp clicks (GA4)
     window.addEventListener("DOMContentLoaded", () => {

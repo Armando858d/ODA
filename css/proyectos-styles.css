@@ -96,3 +96,71 @@
         font-size: 14px;
     }
 }
+
+/* ============================================================
+   PROJECT BACKGROUNDS (CAROUSEL)
+============================================================ */
+.project-1 {
+    background-image: url('../assets/images/angel1.png');
+}
+
+.project-2 {
+    background-image: url('../assets/images/ven1.png');
+}
+
+.project-3 {
+    background-image: url('../assets/images/bebe1.png');
+}
+
+.project-4 {
+    background-image: url('../assets/images/corazon1.png');
+}
+
+.project-5 {
+    background-image: url('../assets/images/elefante1.png');
+}
+
+.project-6 {
+    background-image: url('../assets/images/elena1.png');
+}
+
+.project-7 {
+    background-image: url('../assets/images/jan1.png');
+}
+
+.project-8 {
+    background-image: url('../assets/images/jan2.png');
+}
+
+.project-9 {
+    background-image: url('../assets/images/mujer1.png');
+}
+
+.project-10 {
+    background-image: url('../assets/images/sen1.png');
+}
+
+.project-11 {
+    background-image: url('../assets/images/snoppy.png');
+}
+
+.project-12 {
+    background-image: url('../assets/images/hello1.png');
+}
+
+.project-13 {
+    background-image: url('../assets/images/conejo1.png');
+}
+
+.project-14 {
+    background-image: url('../assets/images/sofiplano1.png');
+}
+
+.project-15 {
+    background-image: url('../assets/images/camaraplano1.png');
+}
+
+.slide-background {
+    background-size: cover;
+    background-position: center;
+}

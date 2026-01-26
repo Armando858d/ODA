@@ -1,0 +1,582 @@
+:root {
+  /* Variables Premium (Sync with index_estilo.css) */
+  --bg: #050505;
+  --bg-gradient-1: rgba(0, 217, 255, 0.15);
+  --bg-gradient-2: rgba(255, 62, 122, 0.12);
+  --bg-gradient-3: rgba(157, 78, 221, 0.12);
+
+  --card: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --glass: blur(20px);
+
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-dim: rgba(255, 255, 255, 0.35);
+
+  --cyan: #00d9ff;
+  --pink: #ff3e7a;
+  --purple: #9d4edd;
+
+  --ok: #45ff8f;
+  --warn: #ffd166;
+  --danger: #ff3e5e;
+
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 25px rgba(0, 217, 255, 0.15);
+
+  --radius: 20px;
+  --radius-sm: 12px;
+
+  --font-main: "Inter", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+
+  --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  font-family: var(--font-main);
+  color: var(--text);
+  min-height: 100vh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overflow: hidden;
+  /* Default locked state */
+}
+
+body.unlocked {
+  overflow: auto;
+}
+
+/* ============================================================ 
+   BACKGROUND FX
+============================================================ */
+.cyber-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 10% 20%, var(--bg-gradient-1), transparent 40%),
+    radial-gradient(circle at 90% 10%, var(--bg-gradient-2), transparent 40%),
+    radial-gradient(circle at 50% 90%, var(--bg-gradient-3), transparent 50%);
+  pointer-events: none;
+}
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+}
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  animation: scan 8s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-10vh);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.5;
+  }
+
+  90% {
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+
+/* ============================================================ 
+   LAYOUT
+============================================================ */
+.oda-wrap {
+  width: min(100% - 32px, 1100px);
+  margin-inline: auto;
+  padding-block: 40px;
+
+  /* Lock Blur Effects */
+  filter: blur(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.8s var(--ease);
+}
+
+body.unlocked .oda-wrap {
+  filter: none;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Header */
+.oda-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.oda-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+  margin: 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0.7));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.oda-ver {
+  font-size: 14px;
+  color: var(--cyan);
+  background: rgba(0, 217, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-left: 8px;
+  letter-spacing: 0;
+  -webkit-text-fill-color: var(--cyan);
+}
+
+.oda-subtitle {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.oda-badge {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--pink);
+  border: 1px solid rgba(255, 62, 122, 0.3);
+  background: rgba(255, 62, 122, 0.1);
+  padding: 6px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 15px rgba(255, 62, 122, 0.1);
+}
+
+/* Grid Layout */
+.oda-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .oda-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================ 
+   CARDS
+============================================================ */
+.oda-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  backdrop-filter: var(--glass);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.oda-cardHead {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.oda-cardHead h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.oda-hint {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.oda-cardBody {
+  padding: 24px;
+}
+
+/* Result Card Sticky on Desktop */
+@media (min-width: 901px) {
+  .result-card {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+/* ============================================================ 
+   SECTIONS (FIELDSETS)
+============================================================ */
+fieldset.oda-section {
+  border: 1px solid var(--card-border);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px 20px;
+  margin: 0 0 20px 0;
+  min-width: 0;
+}
+
+legend.oda-sectionTitle {
+  padding: 0 8px;
+  color: var(--cyan);
+  font-family: var(--font-display);
+}
+
+.oda-sectionTitle strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.oda-mini {
+  margin-left: 10px;
+  font-size: 11px;
+  color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--font-main);
+  vertical-align: middle;
+}
+
+.oda-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.oda-mt {
+  margin-top: 16px;
+}
+
+.oda-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Inputs */
+.oda-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: var(--font-main);
+  outline: none;
+  transition: all 0.2s var(--ease);
+  width: 100%;
+}
+
+.oda-input:focus {
+  border-color: var(--cyan);
+  background: rgba(0, 217, 255, 0.05);
+  box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.1);
+}
+
+.oda-input:hover:not(:focus) {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Select arrow */
+select.oda-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+/* ============================================================ 
+   ACTIONS
+============================================================ */
+.oda-actions {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.oda-actions button:nth-child(n+3) {
+  grid-column: span 1;
+}
+
+.oda-actions button:nth-child(3) {
+  grid-column: 1 / 2;
+}
+
+.oda-actions button:nth-child(4) {
+  grid-column: 2 / 3;
+}
+
+.oda-btn {
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  font-family: var(--font-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.oda-btn:active {
+  transform: scale(0.96);
+}
+
+.oda-btnPrimary {
+  background: linear-gradient(135deg, var(--cyan), #00a8c6);
+  color: #000;
+  box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+}
+
+.oda-btnPrimary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(0, 217, 255, 0.4);
+}
+
+.oda-btnGhost {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.oda-btnGhost:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.oda-btnWhats {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ok);
+  border: 1px solid rgba(69, 255, 143, 0.3);
+}
+
+.oda-btnWhats:hover {
+  background: rgba(69, 255, 143, 0.1);
+  border-color: rgba(69, 255, 143, 0.6);
+}
+
+/* ============================================================ 
+   RESULTS & BREAKDOWN
+============================================================ */
+.oda-totalBox {
+  text-align: center;
+}
+
+.oda-pill {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.oda-big {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+  margin-bottom: 16px;
+}
+
+.profit-badge {
+  display: inline-flex;
+  background: rgba(69, 255, 143, 0.1);
+  border: 1px solid rgba(69, 255, 143, 0.3);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--ok);
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.oda-breakdown {
+  text-align: left;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--card-border);
+}
+
+.oda-line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.oda-warn-text {
+  color: var(--warn);
+}
+
+.oda-sep {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 12px 0;
+}
+
+.small-text {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.oda-error {
+  margin-top: 16px;
+  background: rgba(255, 62, 94, 0.15);
+  border: 1px solid rgba(255, 62, 94, 0.4);
+  color: #ffadb6;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  display: none;
+}
+
+/* ============================================================ 
+   SECURITY LOCK
+============================================================ */
+.security-lock {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.security-lock.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lock-box {
+  background: rgba(20, 20, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 24px;
+  text-align: center;
+  width: 90%;
+  max-width: 320px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+.lock-icon {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.lock-box h2 {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  color: white;
+}
+
+.lock-box p {
+  margin: 0 0 24px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.lock-box input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 16px;
+  outline: none;
+}
+
+.lock-box input:focus {
+  border-color: var(--cyan);
+}
+
+.lock-box button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: var(--cyan);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.lock-box button:hover {
+  filter: brightness(1.1);
+}
+
+.lock-error {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 12px !important;
+  min-height: 18px;
+}
+
+@media (max-width: 500px) {
+  .oda-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .oda-actions button:nth-child(n) {
+    grid-column: span 1;
+  }
+}

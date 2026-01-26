@@ -1,0 +1,41 @@
+/* Hide slide numbers */
+.slide-number {
+    display: none !important;
+}
+
+/* Remove gaps */
+.projects-page {
+    padding-top: 0 !important;
+}
+
+.projects-hero {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.section-container {
+    padding-top: 0 !important;
+}
+
+.featured-carousel {
+    margin-top: -80px !important;
+    margin-bottom: 60px;
+}
+
+@media (max-width: 980px) {
+    .featured-carousel {
+        margin-top: -70px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .featured-carousel {
+        margin-top: -60px !important;
+    }
+}
+
+@media (max-width: 520px) {
+    .featured-carousel {
+        margin-top: -50px !important;
+    }
+}

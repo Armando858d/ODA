@@ -11,25 +11,35 @@
         content="Galería completa de proyectos de impresión 3D: esculturas personalizadas, prototipos, joyería y más. Alta precisión y acabados profesionales." />
     <meta name="theme-color" content="#0a0a0a" />
 
-    <!-- Fuentes -->
+    <!-- Fuentes (Optimized) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Preload Critical CSS -->
+    <link rel="preload" href="css/index_estilo.css" as="style" />
+
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" />
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" />
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Font Awesome (defer) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    </noscript>
 
-    <!-- GSAP -->
+    <!-- GSAP (defer) -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <!-- Estilos -->
-    <link rel="stylesheet" href="index_estilo.css" />
-    <link rel="stylesheet" href="carousel-fullscreen.css" />
-    <link rel="stylesheet" href="carousel-title-overlay.css" />
+    <link rel="stylesheet" href="css/index_estilo.css?v=2" />
+    <link rel="stylesheet" href="css/carousel-fullscreen.css?v=4" />
+    <link rel="stylesheet" href="css/carousel-title-overlay.css?v=3" />
 
-    <link rel="stylesheet" href="scroll-animation.css" />
+    <link rel="stylesheet" href="css/scroll-animation.css" />
+    <link rel="stylesheet" href="css/proyectos-styles.css" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml"
@@ -45,8 +55,8 @@
         <div class="video-background">
             <div class="video-wrapper">
                 <video autoplay muted loop playsinline preload="metadata">
-                    <source src="BIG.mp4" type="video/mp4" media="(min-width: 900px)" />
-                    <source src="3D.mp4" type="video/mp4" />
+                    <source src="assets/videos/BIG.mp4" type="video/mp4" media="(min-width: 900px)" />
+                    <source src="assets/videos/3D.mp4" type="video/mp4" />
                 </video>
                 <div class="video-overlay"></div>
                 <div class="video-filter"></div>
@@ -71,7 +81,7 @@
             <div class="nav-logo">
                 <a href="index.html" class="logo-link" aria-label="Ir al inicio">
                     <div class="logo-3d" aria-hidden="true">
-                        <img src="oda.png" alt="ODA" class="logo-img" />
+                        <img src="assets/images/oda.png" alt="ODA" class="logo-img" height="55" width="55" />
                         <span class="logo-text">ODA</span>
                         <div class="logo-glow"></div>
                     </div>
@@ -110,7 +120,7 @@
                         <span class="link-text">CONTACTO</span>
                     </a>
 
-                    <a href="iniciooda.html" class="nav-link cta-button">
+                    <a href="index.html#contacto" class="nav-link cta-button">
                         <span class="link-icon"><i class="fas fa-briefcase"></i></span>
                         <span class="link-text">SERVICIOS ODA</span>
                     </a>
@@ -189,16 +199,16 @@
                     <article class="project-card">
                         <div class="project-image project-1">
                             <div class="image-overlay">
-                                <h3>ESCULTURA PERSONALIZADA</h3>
-                                <p>ARTE EN 3D • 15 CM</p>
+                                <h3>REGALO PERSONALIZADO</h3>
+                                <p>Hecho a tu gusto • Único</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">01</div>
                             <div class="project-tags">
-                                <span>EDICION PERSONALIZADA</span>
-                                <span>PINTURA A MANO</span>
-                                <span>LISTO PARA REGALO</span>
+                                <span>REGALO</span>
+                                <span>NOMBRE</span>
+                                <span>ESPECIAL</span>
                             </div>
                         </div>
                     </article>
@@ -207,16 +217,16 @@
                     <article class="project-card">
                         <div class="project-image project-2">
                             <div class="image-overlay">
-                                <h3>IMPRESION</h3>
-                                <p>IMPRESION 3D • 15 CM</p>
+                                <h3>FIGURA VENOM</h3>
+                                <p>Impresión premium • Detalle HD</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">02</div>
                             <div class="project-tags">
                                 <span>ACABADO PRO</span>
-                                <span>UN SOLO COLOR</span>
                                 <span>COLECCIONABLE</span>
+                                <span>UN SOLO COLOR</span>
                             </div>
                         </div>
                     </article>
@@ -225,16 +235,16 @@
                     <article class="project-card">
                         <div class="project-image project-3">
                             <div class="image-overlay">
-                                <h3>ESCULTURA UNICA</h3>
-                                <p>Diseño • Lujo y detalle</p>
+                                <h3>RECUERDO INOLVIDABLE</h3>
+                                <p>Tu bebé en 3D • Calidad premium</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">03</div>
                             <div class="project-tags">
-                                <span>RESINA</span>
-                                <span>DETALLE</span>
-                                <span>EXCLUSIVO</span>
+                                <span>RECUERDO</span>
+                                <span>ÚNICO</span>
+                                <span>PREMIUM</span>
                             </div>
                         </div>
                     </article>
@@ -243,16 +253,16 @@
                     <article class="project-card">
                         <div class="project-image project-4">
                             <div class="image-overlay">
-                                <h3>PROTOTIPO FUNCIONAL</h3>
-                                <p>Ingeniería • Alta precisión</p>
+                                <h3>REGALO ESPECIAL</h3>
+                                <p>Personalizado • Hecho a tu gusto</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">04</div>
                             <div class="project-tags">
-                                <span>ABS</span>
-                                <span>FUNCIONAL</span>
-                                <span>PRECISO</span>
+                                <span>REGALO</span>
+                                <span>PERSONAL</span>
+                                <span>ÚNICO</span>
                             </div>
                         </div>
                     </article>
@@ -261,16 +271,16 @@
                     <article class="project-card">
                         <div class="project-image project-5">
                             <div class="image-overlay">
-                                <h3>MINIATURA DETALLADA</h3>
-                                <p>Colección • 8 CM</p>
+                                <h3>CENTROS DE MESA XV AÑOS</h3>
+                                <p>Personalizados • Súper detallados</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">05</div>
                             <div class="project-tags">
-                                <span>RESINA</span>
-                                <span>ALTA DEFINICIÓN</span>
+                                <span>PERSONALIZADO</span>
                                 <span>PINTADO</span>
+                                <span>PREMIUM</span>
                             </div>
                         </div>
                     </article>
@@ -279,16 +289,16 @@
                     <article class="project-card">
                         <div class="project-image project-6">
                             <div class="image-overlay">
-                                <h3>PIEZA ARQUITECTÓNICA</h3>
-                                <p>Maqueta • 30 CM</p>
+                                <h3>MUÑECA PERSONALIZADA</h3>
+                                <p>Tu idea en 3D • Alta precisión</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">06</div>
                             <div class="project-tags">
-                                <span>PLA</span>
-                                <span>ARQUITECTURA</span>
-                                <span>PROFESIONAL</span>
+                                <span>CUSTOM</span>
+                                <span>PRO</span>
+                                <span>DETALLADA</span>
                             </div>
                         </div>
                     </article>
@@ -297,16 +307,16 @@
                     <article class="project-card">
                         <div class="project-image project-7">
                             <div class="image-overlay">
-                                <h3>ACCESORIO GAMING</h3>
-                                <p>Personalizado • RGB</p>
+                                <h3>RETRATO 3D PERSONALIZADO</h3>
+                                <p>Personalizado • Con base y nombre</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">07</div>
                             <div class="project-tags">
-                                <span>PETG</span>
-                                <span>GAMING</span>
-                                <span>LED</span>
+                                <span>PERSONALIZADO</span>
+                                <span>PREMIUM</span>
+                                <span>COLECCIONABLE</span>
                             </div>
                         </div>
                     </article>
@@ -315,16 +325,16 @@
                     <article class="project-card">
                         <div class="project-image project-8">
                             <div class="image-overlay">
-                                <h3>FIGURA COLECCIONABLE</h3>
-                                <p>Edición limitada • 20 CM</p>
+                                <h3>FIGURA PERSONALIZADA</h3>
+                                <p>Tu personaje favorito • Hecho en 3D</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">08</div>
                             <div class="project-tags">
-                                <span>PLA+</span>
-                                <span>COLECCIÓN</span>
-                                <span>PREMIUM</span>
+                                <span>PERSONALIZADO</span>
+                                <span>COLOR A MANO</span>
+                                <span>PRO</span>
                             </div>
                         </div>
                     </article>
@@ -333,16 +343,16 @@
                     <article class="project-card">
                         <div class="project-image project-9">
                             <div class="image-overlay">
-                                <h3>HERRAMIENTA CUSTOM</h3>
-                                <p>Funcional • Resistente</p>
+                                <h3>FIGURAS PERSONALIZADAS</h3>
+                                <p>Con detalle • Con estilo • A tu gusto</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">09</div>
                             <div class="project-tags">
-                                <span>NYLON</span>
-                                <span>RESISTENTE</span>
-                                <span>ÚTIL</span>
+                                <span>CUSTOM</span>
+                                <span>DETALLE</span>
+                                <span>CALIDAD</span>
                             </div>
                         </div>
                     </article>
@@ -351,16 +361,16 @@
                     <article class="project-card">
                         <div class="project-image project-10">
                             <div class="image-overlay">
-                                <h3>DISEÑO PERSONALIZADO</h3>
-                                <p>Único • Premium</p>
+                                <h3>CORAZÓN ANATÓMICO 3D</h3>
+                                <p>Detalle realista • Alta precisión</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">10</div>
                             <div class="project-tags">
-                                <span>CUSTOM</span>
-                                <span>DISEÑO</span>
-                                <span>EXCLUSIVO</span>
+                                <span>ANATOMÍA</span>
+                                <span>PRO</span>
+                                <span>PREMIUM</span>
                             </div>
                         </div>
                     </article>
@@ -369,16 +379,16 @@
                     <article class="project-card">
                         <div class="project-image project-11">
                             <div class="image-overlay">
-                                <h3>MODELO A ESCALA</h3>
-                                <p>Réplica • Detallada</p>
+                                <h3>LÁMPARA DE REGALO</h3>
+                                <p>Un detalle único • Súper cute</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">11</div>
                             <div class="project-tags">
-                                <span>ESCALA</span>
-                                <span>PRECISO</span>
-                                <span>RÉPLICA</span>
+                                <span>REGALO</span>
+                                <span>ÚNICO</span>
+                                <span>CUSTOM</span>
                             </div>
                         </div>
                     </article>
@@ -387,15 +397,15 @@
                     <article class="project-card">
                         <div class="project-image project-12">
                             <div class="image-overlay">
-                                <h3>ARTE DECORATIVO</h3>
-                                <p>Hogar • Moderno</p>
+                                <h3>REGALO PERFECTO</h3>
+                                <p>Bonita • Única • Súper cute</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">12</div>
                             <div class="project-tags">
-                                <span>DECORACIÓN</span>
-                                <span>ARTE</span>
+                                <span>REGALO</span>
+                                <span>CUTE</span>
                                 <span>HOGAR</span>
                             </div>
                         </div>
@@ -405,16 +415,16 @@
                     <article class="project-card">
                         <div class="project-image project-13">
                             <div class="image-overlay">
-                                <h3>PIEZA TÉCNICA</h3>
-                                <p>Funcional • Industrial</p>
+                                <h3>DECORACIÓN MODERNA</h3>
+                                <p>Minimalista • Elegante</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">13</div>
                             <div class="project-tags">
-                                <span>TÉCNICO</span>
-                                <span>INDUSTRIAL</span>
-                                <span>FUNCIONAL</span>
+                                <span>HOGAR</span>
+                                <span>MODERNO</span>
+                                <span>MINIMAL</span>
                             </div>
                         </div>
                     </article>
@@ -441,16 +451,16 @@
                     <article class="project-card">
                         <div class="project-image project-15">
                             <div class="image-overlay">
-                                <h3>EDICIÓN LIMITADA</h3>
-                                <p>Colección • Exclusiva</p>
+                                <h3>MODELADO EN SOLIDWORKS</h3>
+                                <p>Diseño técnico • Medidas exactas</p>
                             </div>
                         </div>
                         <div class="project-info">
                             <div class="project-number">15</div>
                             <div class="project-tags">
-                                <span>LIMITADO</span>
-                                <span>COLECCIÓN</span>
-                                <span>EXCLUSIVO</span>
+                                <span>SOLIDWORKS</span>
+                                <span>TÉCNICO</span>
+                                <span>EXACTO</span>
                             </div>
                         </div>
                     </article>
@@ -484,17 +494,20 @@
                 </div>
 
                 <div class="footer-social" aria-label="Redes sociales">
-                    <a href="#" class="social-link" aria-label="Instagram">
+                    <a href="https://www.instagram.com/oda858dj?igsh=MXF3OTl0dzBpODR0eA==" class="social-link"
+                        aria-label="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="social-link" aria-label="Facebook">
+                    <a href="https://www.facebook.com/ServiceODA" target="_blank" rel="noopener noreferrer"
+                        class="social-link" aria-label="Facebook">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="social-link" aria-label="TikTok">
+                    <a href="https://www.tiktok.com/@oda858d?_r=1&_t=ZS-93NfFNAv3mZ" class="social-link"
+                        aria-label="TikTok">
                         <i class="fab fa-tiktok"></i>
                     </a>
-                    <a href="https://wa.me/524492795557" target="_blank" rel="noopener" class="social-link whatsapp"
-                        aria-label="WhatsApp">
+                    <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20sus%20servicios%20de%20impresi%C3%B3n%203D."
+                        target="_blank" rel="noopener noreferrer" class="social-link whatsapp" aria-label="WhatsApp">
                         <i class="fab fa-whatsapp"></i>
                     </a>
                 </div>
@@ -507,7 +520,7 @@
                     <a href="index.html#proceso">Proceso</a>
                     <a href="proyectos.html">Proyectos</a>
                     <a href="index.html#contacto">Contacto</a>
-                    <a href="iniciooda.html">Servicios ODA</a>
+                    <a href="index.html#contacto">Contacto</a>
                 </div>
 
                 <div class="footer-copyright">
@@ -519,7 +532,8 @@
     </footer>
 
     <!-- WhatsApp Float -->
-    <a href="https://wa.me/524492795557" target="_blank" rel="noopener" class="whatsapp-float" id="whatsappFloat"
+    <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20necesito%20una%20cotizaci%C3%B3n%20express%20para%20una%20impresi%C3%B3n%203D."
+        target="_blank" rel="noopener noreferrer" class="whatsapp-float" id="whatsappFloat"
         aria-label="Cotización express por WhatsApp">
         <div class="float-icon" aria-hidden="true">
             <i class="fab fa-whatsapp"></i>
@@ -532,8 +546,8 @@
     </a>
 
     <!-- Scripts -->
-    <script defer src="index_script.js"></script>
-    <script defer src="proyectos.js"></script>
+    <script defer src="js/index_script.js?v=2"></script>
+    <script defer src="js/proyectos.js?v=2"></script>
 </body>
 
 </html>

@@ -58,7 +58,7 @@
   const TEXTAREA_LIMIT = 500;
 
   // 👉 Tu imagen (silueta gato sentado)
-  const CAT_IMAGE_SRC = "cat-sit.png";
+  const CAT_IMAGE_SRC = "assets/images/cat-sit.png";
 
   // offset dinámico (nav real + aire)
   const getNavOffset = () => {
@@ -724,6 +724,65 @@
     startRun();
   }
 
+  // ---------- Contact Form (Formspree AJAX) ----------
+  function bindContactForm() {
+    const form = $("#contactForm");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const btn = form.querySelector("button");
+      const btnIcon = btn.querySelector(".button-icon");
+      const btnText = btn.querySelector(".button-text");
+
+      // Guardar estado original
+      const originalIcon = btnIcon ? btnIcon.innerHTML : "";
+      const originalText = btnText ? btnText.textContent : "ENVIAR";
+
+      // Estado de carga
+      if (btnText) btnText.textContent = "ENVIANDO...";
+      if (btnIcon) btnIcon.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+      try {
+        const response = await fetch("https://formspree.io/f/mzddzvkj", {
+          method: "POST",
+          body: new FormData(form),
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          // Éxito
+          if (btnText) btnText.textContent = "¡ENVIADO!";
+          if (btnIcon) btnIcon.innerHTML = '<i class="fas fa-check"></i>';
+          form.reset();
+          if ($("#charCount")) $("#charCount").textContent = "0";
+
+          // Restaurar botón después de unos segundos
+          setTimeout(() => {
+            if (btnText) btnText.textContent = originalText;
+            if (btnIcon) btnIcon.innerHTML = originalIcon;
+          }, 4000);
+
+        } else {
+          // Error del servidor
+          throw new Error('Error en el envío');
+        }
+      } catch (error) {
+        // Error de red
+        if (btnText) btnText.textContent = "ERROR";
+        if (btnIcon) btnIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+
+        setTimeout(() => {
+          if (btnText) btnText.textContent = originalText;
+          if (btnIcon) btnIcon.innerHTML = originalIcon;
+        }, 3000);
+      }
+    });
+  }
+
   // ---------- Init ----------
   function init() {
     document.body.style.visibility = "visible";
@@ -735,8 +794,7 @@
     bindMobileMenu();
     bindSmoothScroll();
     bindCharCounter();
-
-
+    bindContactForm(); // ✅ Activar el formulario de contacto
 
     // animateStats(); // ❌ Se llama en hideLoader() para esperar al usuario
     if (!document.getElementById("printerLoader")) animateStats(); // Fallback si no hay loader
