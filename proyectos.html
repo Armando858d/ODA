@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5.0" />
+    <meta name="color-scheme" content="dark" />
+
+    <title>Nuestros Proyectos | ODA STUDIO</title>
+    <meta name="description"
+        content="Galería completa de proyectos de impresión 3D: esculturas personalizadas, prototipos, joyería y más. Alta precisión y acabados profesionales." />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Fuentes (Optimized) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Preload Critical CSS -->
+    <link rel="preload" href="css/index_estilo.css" as="style" />
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" />
+
+    <!-- Font Awesome (defer) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    </noscript>
+
+    <!-- GSAP (defer) -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/index_estilo.css?v=2" />
+    <link rel="stylesheet" href="css/carousel-fullscreen.css?v=4" />
+    <link rel="stylesheet" href="css/carousel-title-overlay.css?v=3" />
+
+    <link rel="stylesheet" href="css/scroll-animation.css" />
+    <link rel="stylesheet" href="css/proyectos-styles.css" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+</head>
+
+<body class="projects-page">
+    <!-- Skip link -->
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+
+    <!-- Background -->
+    <div class="cyber-background" aria-hidden="true">
+        <div class="video-background">
+            <div class="video-wrapper">
+                <video autoplay muted loop playsinline preload="metadata">
+                    <source src="assets/videos/BIG.mp4" type="video/mp4" media="(min-width: 900px)" />
+                    <source src="assets/videos/3D.mp4" type="video/mp4" />
+                </video>
+                <div class="video-overlay"></div>
+                <div class="video-filter"></div>
+            </div>
+        </div>
+
+        <div class="grid-overlay">
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+        </div>
+
+        <div class="particle-field" id="particles"></div>
+        <div class="scan-effect"></div>
+        <div class="hologram-effect"></div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="cyber-nav" id="cyberNav" aria-label="Navegación principal">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" class="logo-link" aria-label="Ir al inicio">
+                    <div class="logo-3d" aria-hidden="true">
+                        <img src="assets/images/oda.png" alt="ODA" class="logo-img" height="55" width="55" />
+                        <span class="logo-text">ODA</span>
+                        <div class="logo-glow"></div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="nav-menu" id="navMenu">
+                <button class="close-menu-btn" type="button" aria-label="Cerrar menú">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <div class="nav-marker"></div>
+                <div class="menu-container">
+                    <a href="index.html#hero" class="nav-link">
+                        <span class="link-icon"><i class="fas fa-home"></i></span>
+                        <span class="link-text">INICIO</span>
+                    </a>
+
+                    <a href="index.html#servicios" class="nav-link">
+                        <span class="link-icon"><i class="fas fa-cube"></i></span>
+                        <span class="link-text">SERVICIOS</span>
+                    </a>
+
+                    <a href="index.html#proceso" class="nav-link">
+                        <span class="link-icon"><i class="fas fa-cogs"></i></span>
+                        <span class="link-text">PROCESO</span>
+                    </a>
+
+                    <a href="proyectos.html" class="nav-link active">
+                        <span class="link-icon"><i class="fas fa-layer-group"></i></span>
+                        <span class="link-text">PROYECTOS</span>
+                    </a>
+
+                    <a href="index.html#contacto" class="nav-link">
+                        <span class="link-icon"><i class="fas fa-paper-plane"></i></span>
+                        <span class="link-text">CONTACTO</span>
+                    </a>
+
+                    <a href="index.html#contacto" class="nav-link cta-button">
+                        <span class="link-icon"><i class="fas fa-briefcase"></i></span>
+                        <span class="link-text">SERVICIOS ODA</span>
+                    </a>
+                </div>
+            </div>
+
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú" aria-expanded="false"
+                aria-controls="navMenu" type="button">
+                <span class="toggle-bar"></span>
+                <span class="toggle-bar"></span>
+                <span class="toggle-bar"></span>
+                <div class="toggle-glow"></div>
+            </button>
+        </div>
+
+        <div class="nav-progress" id="navProgress" aria-hidden="true"></div>
+    </nav>
+
+    <!-- Main -->
+    <main id="main">
+        <!-- Hero Section -->
+        <section class="projects-hero">
+            <div class="section-container">
+                <!-- Featured Carousel with Header -->
+                <div class="featured-carousel">
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="carouselTrack">
+                            <!-- Slides will be populated by JavaScript -->
+                        </div>
+
+                        <button class="carousel-btn prev" id="prevBtn" aria-label="Proyecto anterior">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+
+                        <button class="carousel-btn next" id="nextBtn" aria-label="Siguiente proyecto">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+
+                        <div class="carousel-indicators" id="carouselIndicators">
+                            <!-- Indicators will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scroll Indicator Fullscreen (Mobile/Tablet Only) -->
+                <div class="scroll-indicator" id="scrollIndicator">
+                    <div class="scroll-indicator-content">
+                        <span class="scroll-indicator-text">DESLIZA PARA VER MÁS</span>
+                        <div class="scroll-indicator-icon"></div>
+                        <div class="scroll-indicator-arrow">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Header -->
+                <header class="section-header">
+                    <h1 class="section-title">
+                        <span class="title-main">NUESTROS</span>
+                        <span class="title-accent">PROYECTOS</span>
+                    </h1>
+
+                    <p class="section-subtitle">
+                        Cada pieza cuenta una historia. Explora nuestro portafolio completo de impresiones 3D premium.
+                    </p>
+
+                    <div class="section-divider" aria-hidden="true">
+                        <div class="divider-line"></div>
+                        <div class="divider-dot"></div>
+                    </div>
+                </header>
+
+                <!-- Projects Grid -->
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <article class="project-card">
+                        <div class="project-image project-1">
+                            <div class="image-overlay">
+                                <h3>REGALO PERSONALIZADO</h3>
+                                <p>Hecho a tu gusto • Único</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">01</div>
+                            <div class="project-tags">
+                                <span>REGALO</span>
+                                <span>NOMBRE</span>
+                                <span>ESPECIAL</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 2 -->
+                    <article class="project-card">
+                        <div class="project-image project-2">
+                            <div class="image-overlay">
+                                <h3>FIGURA VENOM</h3>
+                                <p>Impresión premium • Detalle HD</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">02</div>
+                            <div class="project-tags">
+                                <span>ACABADO PRO</span>
+                                <span>COLECCIONABLE</span>
+                                <span>UN SOLO COLOR</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 3 -->
+                    <article class="project-card">
+                        <div class="project-image project-3">
+                            <div class="image-overlay">
+                                <h3>RECUERDO INOLVIDABLE</h3>
+                                <p>Tu bebé en 3D • Calidad premium</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">03</div>
+                            <div class="project-tags">
+                                <span>RECUERDO</span>
+                                <span>ÚNICO</span>
+                                <span>PREMIUM</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 4 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-4">
+                            <div class="image-overlay">
+                                <h3>REGALO ESPECIAL</h3>
+                                <p>Personalizado • Hecho a tu gusto</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">04</div>
+                            <div class="project-tags">
+                                <span>REGALO</span>
+                                <span>PERSONAL</span>
+                                <span>ÚNICO</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 5 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-5">
+                            <div class="image-overlay">
+                                <h3>CENTROS DE MESA XV AÑOS</h3>
+                                <p>Personalizados • Súper detallados</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">05</div>
+                            <div class="project-tags">
+                                <span>PERSONALIZADO</span>
+                                <span>PINTADO</span>
+                                <span>PREMIUM</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 6 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-6">
+                            <div class="image-overlay">
+                                <h3>MUÑECA PERSONALIZADA</h3>
+                                <p>Tu idea en 3D • Alta precisión</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">06</div>
+                            <div class="project-tags">
+                                <span>CUSTOM</span>
+                                <span>PRO</span>
+                                <span>DETALLADA</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 7 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-7">
+                            <div class="image-overlay">
+                                <h3>RETRATO 3D PERSONALIZADO</h3>
+                                <p>Personalizado • Con base y nombre</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">07</div>
+                            <div class="project-tags">
+                                <span>PERSONALIZADO</span>
+                                <span>PREMIUM</span>
+                                <span>COLECCIONABLE</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 8 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-8">
+                            <div class="image-overlay">
+                                <h3>FIGURA PERSONALIZADA</h3>
+                                <p>Tu personaje favorito • Hecho en 3D</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">08</div>
+                            <div class="project-tags">
+                                <span>PERSONALIZADO</span>
+                                <span>COLOR A MANO</span>
+                                <span>PRO</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 9 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-9">
+                            <div class="image-overlay">
+                                <h3>FIGURAS PERSONALIZADAS</h3>
+                                <p>Con detalle • Con estilo • A tu gusto</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">09</div>
+                            <div class="project-tags">
+                                <span>CUSTOM</span>
+                                <span>DETALLE</span>
+                                <span>CALIDAD</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 10 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-10">
+                            <div class="image-overlay">
+                                <h3>CORAZÓN ANATÓMICO 3D</h3>
+                                <p>Detalle realista • Alta precisión</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">10</div>
+                            <div class="project-tags">
+                                <span>ANATOMÍA</span>
+                                <span>PRO</span>
+                                <span>PREMIUM</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 11 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-11">
+                            <div class="image-overlay">
+                                <h3>LÁMPARA DE REGALO</h3>
+                                <p>Un detalle único • Súper cute</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">11</div>
+                            <div class="project-tags">
+                                <span>REGALO</span>
+                                <span>ÚNICO</span>
+                                <span>CUSTOM</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 12 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-12">
+                            <div class="image-overlay">
+                                <h3>REGALO PERFECTO</h3>
+                                <p>Bonita • Única • Súper cute</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">12</div>
+                            <div class="project-tags">
+                                <span>REGALO</span>
+                                <span>CUTE</span>
+                                <span>HOGAR</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 13 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-13">
+                            <div class="image-overlay">
+                                <h3>DECORACIÓN MODERNA</h3>
+                                <p>Minimalista • Elegante</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">13</div>
+                            <div class="project-tags">
+                                <span>HOGAR</span>
+                                <span>MODERNO</span>
+                                <span>MINIMAL</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 14 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-14">
+                            <div class="image-overlay">
+                                <h3>REGALO ESPECIAL</h3>
+                                <p>Personalizado • Único</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">14</div>
+                            <div class="project-tags">
+                                <span>REGALO</span>
+                                <span>PERSONAL</span>
+                                <span>ESPECIAL</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Project 15 - Placeholder -->
+                    <article class="project-card">
+                        <div class="project-image project-15">
+                            <div class="image-overlay">
+                                <h3>MODELADO EN SOLIDWORKS</h3>
+                                <p>Diseño técnico • Medidas exactas</p>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-number">15</div>
+                            <div class="project-tags">
+                                <span>SOLIDWORKS</span>
+                                <span>TÉCNICO</span>
+                                <span>EXACTO</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- CTA Section -->
+                <div class="projects-cta-section">
+                    <div class="cta-content">
+                        <h2>¿Tienes un proyecto en mente?</h2>
+                        <p>Convierte tu idea en realidad con impresión 3D de alta calidad.</p>
+                        <a href="index.html#contacto" class="cta-button primary">
+                            <span class="button-text">SOLICITAR COTIZACIÓN</span>
+                            <div class="button-icon">
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+                            <div class="button-glow"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="cyber-footer">
+        <div class="footer-container">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <div class="footer-logo">ODA</div>
+                    <p class="footer-tagline">TECNOLOGÍA 3D DE VANGUARDIA</p>
+                </div>
+
+                <div class="footer-social" aria-label="Redes sociales">
+                    <a href="https://www.instagram.com/oda858dj?igsh=MXF3OTl0dzBpODR0eA==" class="social-link"
+                        aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.facebook.com/ServiceODA" target="_blank" rel="noopener noreferrer"
+                        class="social-link" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@oda858d?_r=1&_t=ZS-93NfFNAv3mZ" class="social-link"
+                        aria-label="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n%20sobre%20sus%20servicios%20de%20impresi%C3%B3n%203D."
+                        target="_blank" rel="noopener noreferrer" class="social-link whatsapp" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-links">
+                    <a href="index.html#hero">Inicio</a>
+                    <a href="index.html#servicios">Servicios</a>
+                    <a href="index.html#proceso">Proceso</a>
+                    <a href="proyectos.html">Proyectos</a>
+                    <a href="index.html#contacto">Contacto</a>
+                    <a href="index.html#contacto">Contacto</a>
+                </div>
+
+                <div class="footer-copyright">
+                    <p class="copyright-note">Impresión 3D Premium en Aguascalientes</p>
+                    <p>© 2024 ODA. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20necesito%20una%20cotizaci%C3%B3n%20express%20para%20una%20impresi%C3%B3n%203D."
+        target="_blank" rel="noopener noreferrer" class="whatsapp-float" id="whatsappFloat"
+        aria-label="Cotización express por WhatsApp">
+        <div class="float-icon" aria-hidden="true">
+            <i class="fab fa-whatsapp"></i>
+            <div class="float-pulse"></div>
+        </div>
+        <div class="float-text">
+            <span>COTIZACIÓN EXPRESS</span>
+            <div class="text-badge">24/7</div>
+        </div>
+    </a>
+
+    <!-- Scripts -->
+    <script defer src="js/index_script.js?v=2"></script>
+    <script defer src="js/proyectos.js?v=2"></script>
+</body>
+
+</html>
