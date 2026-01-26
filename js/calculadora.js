@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const minPrice = $("minPrice");
   const extras = $("extras");
   const note = $("note");
+  const pdfNote = $("pdfNote");
 
   // ====== Buttons ======
   const btnCalc = $("btnCalc");
@@ -280,6 +281,7 @@ _Cálculo interno v2.0_`;
     minPrice.value = "120";
     extras.value = "0";
     note.value = "";
+    pdfNote.value = "";
 
     errorBox.style.display = "none";
     errorBox.textContent = "";
@@ -467,6 +469,29 @@ _Cálculo interno v2.0_`;
         doc.setTextColor(...colorAccent);
         doc.text(total, pageWidth - margin - 5, y + 5, { align: "right" });
 
+        // --- PDF NOTE (Below Total) ---
+        y += 15;
+        const pdfNoteTxt = (pdfNote.value || "").trim();
+
+        if (pdfNoteTxt) {
+          doc.setFont("helvetica", "bold"); // Bold for label
+          doc.setFontSize(9);
+          doc.setTextColor(...colorBlack);
+          doc.text("NOTA:", margin, y);
+
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(9);
+          doc.setTextColor(...colorBlack);
+
+          // Split long text
+          const splitPdfNote = doc.splitTextToSize(pdfNoteTxt, pageWidth - (margin * 2) - 15);
+          doc.text(splitPdfNote, margin + 15, y);
+
+          // Adjust Y for footer based on note height
+          // y += (splitPdfNote.length * 4) + 10; 
+          // Terms are fixed at bottom usually, but let's check legals
+        }
+
         // --- TERMS & CONDITIONS (Footer) ---
         const legalY = 245;
 
@@ -521,7 +546,7 @@ _Cálculo interno v2.0_`;
     filamentPriceKg, pieceWeightG, kgWeightG, materialMultiplier,
     lightHours, lightMinutes, lightRate, wearPercent,
     jobType, extraRateMode, laborHours, laborMinutes,
-    riskPercent, minPrice, extras, note
+    riskPercent, minPrice, extras, note, pdfNote
   ].forEach((el) => {
     if (el) {
       el.addEventListener("input", () => {
