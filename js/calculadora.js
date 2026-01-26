@@ -487,13 +487,15 @@ _Cálculo interno v2.0_`;
           "1. VIGENCIA: La presente cotización tiene una validez de 15 días hábiles a partir de su emisión.",
           "2. CONFIRMACIÓN: Se requiere un anticipo del 50% para agendar producción y congelar precios.",
           "3. ENTREGA: Los tiempos están sujetos a la carga de trabajo al momento de recibir el anticipo.",
-          "4. AVISO: Los materiales y costos pueden variar sin previo aviso una vez vencida la vigencia."
+          "4. AVISO: Los materiales y costos pueden variar sin previo aviso una vez vencida la vigencia.",
+          "5. URGENCIAS: Las solicitudes con entrega urgente (servicio express) estarán sujetas a un ajuste en el costo final, según el tiempo requerido y la carga de trabajo."
         ];
 
         let termY = legalY + 6;
         terms.forEach(term => {
-          doc.text(term, margin, termY);
-          termY += 4;
+          const splitTitle = doc.splitTextToSize(term, pageWidth - (margin * 2));
+          doc.text(splitTitle, margin, termY);
+          termY += (4 * splitTitle.length);
         });
 
         // Decorative Bottom Bar
