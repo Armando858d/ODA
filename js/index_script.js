@@ -5,7 +5,7 @@
    - Nav progress + active links
    - Menú móvil pro + scroll lock real
    - Contador textarea (500)
-   - Video autoplay fallback
+   - Contador textarea (500)
 ============================ */
 
 (() => {
@@ -579,32 +579,7 @@
     }
   }
 
-  // ---------- Video fallback ----------
-  function setupVideo() {
-    const vid = $("#bgVideo");
-    if (!vid) return;
 
-    const tryPlay = async () => {
-      try {
-        await vid.play();
-      } catch (_) { }
-    };
-
-    setTimeout(tryPlay, 350);
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") tryPlay();
-    });
-
-    // iOS unlock
-    const unlock = () => {
-      tryPlay();
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("touchstart", unlock);
-    };
-    window.addEventListener("pointerdown", unlock, { passive: true });
-    window.addEventListener("touchstart", unlock, { passive: true });
-  }
 
   // ---------- Optional GSAP (si está cargado) ----------
   function setupGSAP() {
