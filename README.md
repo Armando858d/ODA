@@ -43,7 +43,7 @@ Sitio web oficial y herramientas internas para ODA STUDIO, una agencia de impres
 > **Nota de Seguridad**: La autenticación actual es básica (lado del cliente) y solo para propósitos demostrativos o de uso interno de baja seguridad. No almacenar datos sensibles.
 
 La herramienta de calculadora require una clave de acceso (uso interno).
-Clave: `oda2026@`
+
 
 ---
 © 2024-2026 ODA STUDIO. Todos los derechos reservados.
