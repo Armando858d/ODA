@@ -4,21 +4,21 @@
 
 // Project data for carousel
 const projects = [
-    { id: 1, title: 'REGALO PERSONALIZADO', subtitle: 'Hecho a tu gusto • Único', tags: ['REGALO', 'NOMBRE', 'ESPECIAL'], class: 'project-1' },
-    { id: 2, title: 'FIGURA VENOM', subtitle: 'Impresión premium • Detalle HD', tags: ['ACABADO PRO', 'UN SOLO COLOR', 'COLECCIONABLE'], class: 'project-2' },
-    { id: 3, title: 'RECUERDO INOLVIDABLE', subtitle: 'Tu bebé en 3D • Calidad premium', tags: ['RECUERDO', 'ÚNICO', 'PREMIUM'], class: 'project-3' },
-    { id: 4, title: 'CORAZÓN ANATÓMICO 3D', subtitle: 'Detalle realista • Alta precisión', tags: ['ANATOMÍA', 'PRO', 'PREMIUM'], class: 'project-4' },
-    { id: 5, title: 'CENTROS DE MESA XV AÑOS', subtitle: 'Personalizados • Súper detallados', tags: ['PERSONALIZADO', 'PINTADO', 'PREMIUM'], class: 'project-5' },
-    { id: 6, title: 'MUÑECA PERSONALIZADA', subtitle: 'Tu idea en 3D • Alta precisión', tags: ['CUSTOM', 'PRO', 'DETALLADA'], class: 'project-6' },
-    { id: 7, title: 'RETRATO 3D PERSONALIZADO', subtitle: 'Personalizado • Con base y nombre', tags: ['PERSONALIZADO', 'PREMIUM', 'COLECCIONABLE'], class: 'project-7' },
-    { id: 8, title: 'FIGURA PERSONALIZADA', subtitle: 'Tu personaje favorito • Hecho en 3D', tags: ['PERSONALIZADO', 'COLOR A MANO', 'PRO'], class: 'project-8' },
-    { id: 9, title: 'FIGURAS PERSONALIZADAS', subtitle: 'Con detalle • Con estilo • A tu gusto', tags: ['CUSTOM', 'DETALLE', 'CALIDAD'], class: 'project-9' },
-    { id: 10, title: 'REGALO ESPECIAL', subtitle: 'Personalizado • Hecho a tu gusto', tags: ['REGALO', 'PERSONAL', 'ÚNICO'], class: 'project-10' },
-    { id: 11, title: 'LÁMPARA DE REGALO', subtitle: 'Un detalle único • Súper cute', tags: ['REGALO', 'ÚNICO', 'CUSTOM'], class: 'project-11' },
-    { id: 12, title: 'REGALO PERFECTO', subtitle: 'Bonita • Única • Súper cute', tags: ['REGALO', 'CUTE', 'HOGAR'], class: 'project-12' },
-    { id: 13, title: 'DECORACIÓN MODERNA', subtitle: 'Minimalista • Elegante', tags: ['HOGAR', 'MODERNO', 'MINIMAL'], class: 'project-13' },
-    { id: 14, title: 'REGALO ESPECIAL', subtitle: 'Personalizado • Único', tags: ['REGALO', 'PERSONAL', 'ESPECIAL'], class: 'project-14' },
-    { id: 15, title: 'MODELADO EN SOLIDWORKS', subtitle: 'Diseño técnico • Medidas exactas', tags: ['SOLIDWORKS', 'TÉCNICO', 'EXACTO'], class: 'project-15' }
+    { id: 1, title: 'REGALO PERSONALIZADO', subtitle: 'Pieza exclusiva • Edición única', tags: ['REGALO', 'EXCLUSIVO', 'ESPECIAL'], class: 'project-1' },
+    { id: 2, title: 'FIGURA VENOM', subtitle: 'Figura sólida con recubrimiento de exhibición', tags: ['ACABADO PRO', 'COLECCIONABLE', 'EXHIBICIÓN'], class: 'project-2' },
+    { id: 3, title: 'RECUERDO INOLVIDABLE', subtitle: 'Escultura personalizada • Calidad de exhibición', tags: ['RECUERDO', 'ÚNICO', 'PREMIUM'], class: 'project-3' },
+    { id: 4, title: 'CORAZÓN ANATÓMICO 3D', subtitle: 'Art Toy Custom • Pieza de colección', tags: ['ART TOY', 'COLECCIÓN', 'PREMIUM'], class: 'project-4' },
+    { id: 5, title: 'CENTROS DE MESA XV AÑOS', subtitle: 'Producción a medida • Acabado premium', tags: ['PERSONALIZADO', 'ACABADO PRO', 'PREMIUM'], class: 'project-5' },
+    { id: 6, title: 'MUÑECA PERSONALIZADA', subtitle: 'Coleccionable Custom • Acabado de exhibición', tags: ['CUSTOM', 'EXHIBICIÓN', 'DETALLADA'], class: 'project-6' },
+    { id: 7, title: 'RETRATO 3D PERSONALIZADO', subtitle: 'Pieza de exhibición • Edición única', tags: ['PERSONALIZADO', 'PREMIUM', 'COLECCIONABLE'], class: 'project-7' },
+    { id: 8, title: 'FIGURA PERSONALIZADA', subtitle: 'Art Toy personalizado • Acabado artesanal', tags: ['PERSONALIZADO', 'ARTESANAL', 'COLECCIÓN'], class: 'project-8' },
+    { id: 9, title: 'FIGURAS PERSONALIZADAS', subtitle: 'Colección exclusiva • Acabado premium', tags: ['CUSTOM', 'DETALLE', 'CALIDAD'], class: 'project-9' },
+    { id: 10, title: 'REGALO ESPECIAL', subtitle: 'Pieza única • Calidad de colección', tags: ['REGALO', 'COLECCIÓN', 'ÚNICO'], class: 'project-10' },
+    { id: 11, title: 'LÁMPARA DE REGALO', subtitle: 'Decoración exclusiva • Acabado artesanal', tags: ['REGALO', 'ÚNICO', 'CUSTOM'], class: 'project-11' },
+    { id: 12, title: 'REGALO PERFECTO', subtitle: 'Figura decorativa • Acabado de exhibición', tags: ['REGALO', 'EXHIBICIÓN', 'HOGAR'], class: 'project-12' },
+    { id: 13, title: 'DECORACIÓN MODERNA', subtitle: 'Coleccionable de alta gama', tags: ['HOGAR', 'MODERNO', 'PREMIUM'], class: 'project-13' },
+    { id: 14, title: 'REGALO ESPECIAL', subtitle: 'Pieza exclusiva • Edición limitada', tags: ['REGALO', 'EXCLUSIVO', 'ESPECIAL'], class: 'project-14' },
+    { id: 15, title: 'MODELADO EN SOLIDWORKS', subtitle: 'Ingeniería de producto • Precisión industrial', tags: ['SOLIDWORKS', 'TÉCNICO', 'INDUSTRIAL'], class: 'project-15' }
 ];
 
 // Carousel state

@@ -4973,3 +4973,89 @@ h3 {
   z-index: 0;
   pointer-events: none;
 }
+
+/* ============================================================
+   SOCIAL SIDEBAR — Fixed Left
+============================================================ */
+.social-sidebar {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 998;
+  display: flex;
+  flex-direction: column;
+  background: rgba(10, 10, 10, 0.60);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: none;
+  border-radius: 0 16px 16px 0;
+  padding: 8px 0;
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.35);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.social-sidebar .social-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  color: rgba(255, 255, 255, 0.50);
+  font-size: 17px;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-sidebar .social-icon::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  left: 12px;
+  bottom: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.social-sidebar .social-icon:last-child::after {
+  display: none;
+}
+
+.social-sidebar .social-icon:hover {
+  transform: scale(1.2);
+}
+
+.social-sidebar .social-icon.ig:hover {
+  color: #e1306c;
+  filter: drop-shadow(0 0 12px rgba(225, 48, 108, 0.55));
+}
+
+.social-sidebar .social-icon.fb:hover {
+  color: #1877f2;
+  filter: drop-shadow(0 0 12px rgba(24, 119, 242, 0.55));
+}
+
+.social-sidebar .social-icon.tt:hover {
+  color: #00f2ea;
+  filter: drop-shadow(0 0 12px rgba(0, 242, 234, 0.55));
+}
+
+.social-sidebar .social-icon.wa:hover {
+  color: #25d366;
+  filter: drop-shadow(0 0 12px rgba(37, 211, 102, 0.55));
+}
+
+/* Hide footer social on desktop (sidebar replaces it) */
+@media (min-width: 769px) {
+  .footer-social {
+    display: none;
+  }
+}
+
+/* Hide sidebar on mobile, keep footer social */
+@media (max-width: 768px) {
+  .social-sidebar {
+    display: none;
+  }
+}
