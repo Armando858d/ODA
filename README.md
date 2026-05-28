@@ -1,6 +1,6 @@
-# ODA STUDIO - Diseño y Fabricación Digital ⚡
+# 4RTB4N STUDIO - Diseño y Fabricación Digital ⚡
 
-Sitio web oficial y herramientas internas para ODA STUDIO, una agencia de impresión 3D premium en Aguascalientes.
+Sitio web oficial y herramientas internas para 4RTB4N STUDIO, una agencia de impresión 3D premium en Aguascalientes.
 
 ## 🚀 Características
 
@@ -28,7 +28,7 @@ Sitio web oficial y herramientas internas para ODA STUDIO, una agencia de impres
 ## 📂 Estructura del Proyecto
 
 ```
-/ODA
+/4RTB4N
 ├── assets/          # Imágenes y videos (optimizados)
 ├── css/             # Estilos modulares
 ├── js/              # Lógica de negocio y animación
@@ -46,4 +46,4 @@ La herramienta de calculadora require una clave de acceso (uso interno).
 
 
 ---
-© 2024-2026 ODA STUDIO. Todos los derechos reservados.
+© 2024-2026 4RTB4N STUDIO. Todos los derechos reservados.

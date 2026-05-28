@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const jobName = JOB_LABEL[jobType.value] ?? "Trabajo";
     const noteTxt = (note.value || "").trim();
 
-    return `*COTIZACIÓN ODA STUDIO* ⚡
+    return `*COTIZACIÓN 4RTB4N STUDIO* ⚡
 📦 *Trabajo:* ${jobName}
 💰 *Total:* ${money(data.totalFinal)}
 
@@ -358,14 +358,14 @@ _Cálculo interno v2.0_`;
         doc.setFont("helvetica", "bold");
         doc.setFontSize(18);
         doc.setTextColor(...colorBlack);
-        doc.text("ODA SERVICIOS", margin + 30, y + 5);
+        doc.text("4RTB4N SERVICIOS", margin + 30, y + 5);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(...colorGrey);
         doc.text("IMPRESIÓN 3D & FABRICACIÓN DIGITAL", margin + 30, y + 10);
         doc.text("Aguascalientes, Ags.", margin + 30, y + 15);
-        doc.text("https://armando858d.github.io/ODA/index.html#hero", margin + 30, y + 20);
+        doc.text("https://armando858d.github.io/4RTB4N/index.html#hero", margin + 30, y + 20);
 
         // Quote Details (Right Side Box)
         const now = new Date();
@@ -529,10 +529,10 @@ _Cálculo interno v2.0_`;
 
         doc.setFontSize(7);
         doc.setTextColor(255, 255, 255);
-        doc.text("ODA SERVICIOS - DOCUMENTO GENERADO DIGITALMENTE", pageWidth / 2, pageHeight - 2, { align: "center" });
+        doc.text("4RTB4N SERVICIOS - DOCUMENTO GENERADO DIGITALMENTE", pageWidth / 2, pageHeight - 2, { align: "center" });
 
         // --- SAVE ---
-        doc.save(`Cotizacion_ODA_Folio_${folio}.pdf`);
+        doc.save(`Cotizacion_4RTB4N_Folio_${folio}.pdf`);
 
       } catch (e) {
         console.error("PDF Error:", e);

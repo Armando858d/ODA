@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5.0" />
   <meta name="color-scheme" content="dark" />
 
-  <title>ODA STUDIO | Diseño y Manufactura de Coleccionables</title>
+  <title>4RTB4N STUDIO | Diseño y Manufactura de Coleccionables</title>
   <meta name="description"
     content="Estudio de diseño y manufactura de figuras coleccionables con acabados de grado industrial. Art Toys, figuras de exhibición y producción a escala en Aguascalientes." />
   <meta name="theme-color" content="#0a0a0a" />
@@ -17,13 +17,13 @@
   <meta name="format-detection" content="telephone=no" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="ODA STUDIO | Diseño y Manufactura de Coleccionables" />
+  <meta property="og:title" content="4RTB4N STUDIO | Diseño y Manufactura de Coleccionables" />
   <meta property="og:description"
     content="Diseño, manufactura y encapsulado de figuras con acabados industriales. Art Toys y coleccionables de alta gama." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://armando858d.github.io/ODA/" />
+  <meta property="og:url" content="https://armando858d.github.io/4RTB4N/" />
   <!-- OPCIONAL: sube una imagen preview.jpg a tu repo -->
-  <meta property="og:image" content="https://armando858d.github.io/ODA/assets/images/oda.png" />
+  <meta property="og:image" content="https://armando858d.github.io/4RTB4N/assets/images/logo.png" />
 
   <!-- Fuentes (Optimized) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -76,75 +76,19 @@
         SOLO SE AJUSTA ESTRUCTURA
   ========================== -->
   <div class="printer-loader" id="printerLoader" aria-label="Cargando experiencia">
-    <div class="loader-container">
-      <div class="printer-3d" role="img" aria-label="Animación de impresora 3D">
-        <div class="printer-frame">
-          <div class="print-surface">
-            <div class="printing-figure" id="printingFigure" aria-hidden="true"></div>
-          </div>
-
-          <div class="printer-head" aria-hidden="true">
-            <div class="extruder">
-              <div class="nozzle">
-                <div class="filament-flow"></div>
-              </div>
-            </div>
-            <div class="head-glow"></div>
-          </div>
-
-          <div class="printer-controls">
-            <div class="controls-row" aria-hidden="false">
-              <div class="temp-display" aria-label="Temperatura de impresión">
-                <span class="temp-value">215°</span>
-                <div class="temp-bar" aria-hidden="true">
-                  <div class="temp-fill"></div>
-                </div>
-              </div>
-
-              <div class="progress-display" aria-label="Progreso de impresión">
-                <div class="progress-text">IMPRIMIENDO</div>
-                <div class="progress-bar" aria-hidden="true">
-                  <div class="progress-fill" id="printProgress"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="filament-spool" aria-hidden="true">
-          <div class="spool-core"></div>
-          <div class="spool-filament"></div>
-        </div>
-
-        <div class="printer-light" aria-hidden="true"></div>
+    <div class="loader-container graffiti-loader">
+      <div class="loader-logo-container">
+        <img src="assets/images/logo.png" alt="4RTB4N" class="loader-logo">
       </div>
-
-      <div class="loader-text">
-        <div class="logo-hologram" aria-label="ODA">
-          <span class="logo-char" data-char="O">O</span>
-          <span class="logo-char" data-char="D">D</span>
-          <span class="logo-char" data-char="A">A</span>
-        </div>
-
-        <div class="tagline">STUDIO 3D</div>
-
-        <!-- aria-live SOLO aquí -->
-        <div class="loading-status" id="loadingStatus" aria-live="polite">
-          INICIALIZANDO PRODUCCIÓN...
-        </div>
-
-        <div class="loading-details" aria-label="Detalles de carga">
-          <span class="detail">CALIDAD: GRADO INDUSTRIAL</span>
-          <span class="detail">ACABADO: RESINA ALTA DURABILIDAD</span>
-        </div>
-
-        <div class="global-progress" aria-label="Progreso de carga">
-          <div class="global-bar" aria-hidden="true">
-            <div class="global-fill" id="globalProgress"></div>
-          </div>
-          <div class="global-text">CARGANDO EXPERIENCIA ODA</div>
-        </div>
+      
+      <div class="loader-text graffiti-text-loader">
+        CREANDO ARTE...
       </div>
+      
+      <div class="graffiti-progress-container">
+        <div class="graffiti-progress-bar" id="globalProgress"></div>
+      </div>
+    </div>
     </div>
   </div>
 
@@ -172,64 +116,60 @@
         NAV
   ========================== -->
   <nav class="cyber-nav" id="cyberNav" aria-label="Navegación principal">
-    <div class="nav-container">
-      <div class="nav-logo">
+    <div class="nav-container nav-grid-streetwear">
+      
+      <!-- MOBILE TOGGLE (Solo visible en móvil) -->
+      <div class="nav-mobile-toggle-wrapper">
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú" aria-expanded="false"
+          aria-controls="navMenu" type="button">
+          <span class="toggle-bar"></span>
+          <span class="toggle-bar"></span>
+          <span class="toggle-bar"></span>
+        </button>
+      </div>
+
+      <!-- LEFT: LOGO -->
+      <div class="nav-logo-streetwear">
         <a href="#hero" class="logo-link" aria-label="Ir al inicio">
-          <div class="logo-3d" aria-hidden="true">
-            <img src="assets/images/oda.png" alt="ODA" class="logo-img" height="55" width="55" />
-            <span class="logo-text">ODA</span>
-            <div class="logo-glow"></div>
-          </div>
+          <img src="assets/images/logo.png" alt="4RTB4N" class="nav-simple-logo" />
         </a>
       </div>
 
+      <!-- CENTER: MENÚ PRINCIPAL -->
       <div class="nav-menu" id="navMenu">
-        <!-- Close button for mobile -->
+        <!-- Botón para cerrar en móvil -->
         <button class="close-menu-btn" type="button" aria-label="Cerrar menú">
           <i class="fas fa-times"></i>
         </button>
+        
+        <div class="nav-marker"></div> <!-- Barra deslizante restaurada -->
 
-        <div class="nav-marker"></div> <!-- Barra deslizante -->
-        <div class="menu-container">
+        <div class="menu-container streetwear-menu">
           <a href="#hero" class="nav-link active">
-            <span class="link-icon"><i class="fas fa-home"></i></span>
             <span class="link-text">INICIO</span>
           </a>
-
           <a href="#servicios" class="nav-link">
-            <span class="link-icon"><i class="fas fa-cube"></i></span>
             <span class="link-text">SERVICIOS</span>
           </a>
-
           <a href="#proceso" class="nav-link">
-            <span class="link-icon"><i class="fas fa-cogs"></i></span>
             <span class="link-text">PROCESO</span>
           </a>
-
           <a href="#proyectos" class="nav-link">
-            <span class="link-icon"><i class="fas fa-layer-group"></i></span>
             <span class="link-text">PROYECTOS</span>
           </a>
-
           <a href="#contacto" class="nav-link">
-            <span class="link-icon"><i class="fas fa-paper-plane"></i></span>
             <span class="link-text">CONTACTO</span>
-          </a>
-
-          <a href="#contacto" class="nav-link cta-button">
-            <span class="link-icon"><i class="fas fa-briefcase"></i></span>
-            <span class="link-text">SERVICIOS ODA</span>
           </a>
         </div>
       </div>
 
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú" aria-expanded="false"
-        aria-controls="navMenu" type="button">
-        <span class="toggle-bar"></span>
-        <span class="toggle-bar"></span>
-        <span class="toggle-bar"></span>
-        <div class="toggle-glow"></div>
-      </button>
+      <!-- RIGHT: ACCIONES -->
+      <div class="nav-actions-streetwear">
+        <a href="#" class="nav-action-btn" aria-label="Buscar"><i class="fas fa-search"></i></a>
+        <a href="#" class="nav-action-btn" aria-label="Iniciar Sesión"><i class="fas fa-user"></i></a>
+        <a href="#" class="nav-action-btn" aria-label="Carrito"><i class="fas fa-shopping-cart"></i></a>
+      </div>
+      
     </div>
 
     <div class="nav-progress" id="navProgress" aria-hidden="true"></div>
@@ -240,13 +180,13 @@
     <a href="https://www.instagram.com/oda858dj?igsh=MXF3OTl0dzBpODR0eA==" target="_blank" rel="noopener" class="social-icon ig" aria-label="Instagram">
       <i class="fab fa-instagram"></i>
     </a>
-    <a href="https://www.facebook.com/ServiceODA" target="_blank" rel="noopener" class="social-icon fb" aria-label="Facebook">
+    <a href="https://www.facebook.com/Service4RTB4N" target="_blank" rel="noopener" class="social-icon fb" aria-label="Facebook">
       <i class="fab fa-facebook-f"></i>
     </a>
     <a href="https://www.tiktok.com/@oda858d?_r=1&amp;_t=ZS-93NfFNAv3mZ" target="_blank" rel="noopener" class="social-icon tt" aria-label="TikTok">
       <i class="fab fa-tiktok"></i>
     </a>
-    <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20me%20interesa%20cotizar%20la%20producci%C3%B3n%20de%20una%20figura%2Fproyecto%20especial." target="_blank" rel="noopener" class="social-icon wa" aria-label="WhatsApp">
+    <a href="https://wa.me/524492795557?text=Hola%204RTB4N%2C%20me%20interesa%20cotizar%20la%20producci%C3%B3n%20de%20una%20figura%2Fproyecto%20especial." target="_blank" rel="noopener" class="social-icon wa" aria-label="WhatsApp">
       <i class="fab fa-whatsapp"></i>
     </a>
   </div>
@@ -259,143 +199,57 @@
     <!-- =========================
           HERO
     ========================== -->
-    <section id="hero" class="cyber-hero" aria-label="Inicio">
-      <div class="hero-container">
-        <div class="hero-content">
+    <section id="hero" class="cyber-hero full-bg-hero" aria-label="Inicio">
+      
+      <!-- BACKGROUND CAROUSEL -->
+      <div class="hero-bg-carousel" id="heroCarousel">
+        <div class="hero-slide active" style="background-image: url('assets/images/fabulosos/1.png');"></div>
+        <div class="hero-slide" style="background-image: url('assets/images/fabulosos/2.png');"></div>
+        <div class="hero-slide" style="background-image: url('assets/images/fabulosos/3.png');"></div>
+        <div class="hero-slide" style="background-image: url('assets/images/fabulosos/4.png');"></div>
+        <div class="hero-overlay-dark"></div>
+      </div>
 
-          <h1 class="hero-title">
-            <div class="title-line line-1">
-              <span class="title-word word-1">DISEÑO &</span>
-            </div>
-            <div class="title-line line-2">
-              <span class="title-word word-2">MANUFACTURA</span>
-              <span class="title-word word-3">PREMIUM</span>
-            </div>
+      <div class="hero-container hero-grid-layout">
+        
+        <!-- CENTER LOGO & TITLE -->
+        <div class="hero-center-content">
+          <div class="logo-hover-hero-center">
+            <!-- AQUÍ PUEDES PONER TU IMAGEN DE FONDO -->
+            <div class="hero-name-bg-image"></div>
+            <img src="assets/images/lnombre.png" alt="4RTB4N Name" class="hero-name-img-hover">
+            <img src="assets/images/logo.png" alt="4RTB4N Logo" class="hero-icon-img-hover">
+          </div>
+
+          <h1 class="hero-title-center">
+            <span class="title-word">ARTE URBANO</span>
           </h1>
 
-          <!-- Moved Badge Here -->
-          <div class="hero-badge">
-            <div class="badge-line"></div>
-            <span class="badge-text">FIGURAS & COLECCIONABLES DE ALTA GAMA</span>
-            <div class="badge-line"></div>
           </div>
 
-          <div class="hero-description">
-            <p class="description-text">
-              Diseño, manufactura y encapsulado de figuras con acabados de grado industrial,
-              listas para exhibición y comercialización.
-            </p>
-            <div class="description-line"></div>
+        <!-- RIGHT STATS -->
+        <div class="hero-right-stats">
+          <div class="stat-card glass-stat">
+            <div class="stat-value" data-count="250">0</div>
+            <div class="stat-label">PROYECTOS</div>
+            <div class="stat-progress"><div class="progress-track"></div></div>
           </div>
-
-          <div class="hero-stats">
-            <div class="stat-card">
-              <div class="stat-value" data-count="250">0</div>
-              <div class="stat-label">PROYECTOS</div>
-              <div class="stat-progress">
-                <div class="progress-track"></div>
-              </div>
-            </div>
-
-            <div class="stat-card">
-              <!-- ✅ FIX: número separado del % para animación limpia -->
-              <div class="stat-value">
-                <span class="stat-number" data-count="95" data-fill="95">0</span><span class="percent">%</span>
-              </div>
-              <div class="stat-label">SATISFACCIÓN</div>
-              <div class="stat-progress">
-                <div class="progress-track"></div>
-              </div>
-            </div>
-
-            <div class="stat-card">
-              <div class="stat-value" data-count="48" data-fill="50">0</div>
-              <div class="stat-label">HORAS</div>
-              <div class="stat-label-sub">Tiempo promedio</div>
-              <div class="stat-progress">
-                <div class="progress-track"></div>
-              </div>
-            </div>
+          <div class="stat-card glass-stat">
+            <div class="stat-value"><span class="stat-number" data-count="95" data-fill="95">0</span><span class="percent">%</span></div>
+            <div class="stat-label">SATISFACCIÓN</div>
+            <div class="stat-progress"><div class="progress-track"></div></div>
           </div>
-
-          <div class="hero-cta">
-            <a href="#servicios" class="cta-button primary">
-              <span class="button-text">VER SERVICIOS</span>
-              <div class="button-icon"><i class="fas fa-arrow-right"></i></div>
-              <div class="button-glow"></div>
-            </a>
-
-            <a href="#contacto" class="cta-button secondary">
-              <span class="button-text">COTIZAR AHORA</span>
-              <span class="button-badge">RÁPIDO</span>
-            </a>
+          <div class="stat-card glass-stat">
+            <div class="stat-value" data-count="48" data-fill="50">0</div>
+            <div class="stat-label">HORAS</div>
+            <div class="stat-label-sub">Tiempo promedio</div>
+            <div class="stat-progress"><div class="progress-track"></div></div>
           </div>
         </div>
 
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hero-printer-wrapper">
-            <!-- Label movido arriba -->
-            <div class="weekly-label">DISEÑO DE LA SEMANA</div>
-
-            <div class="printer-3d" role="img" aria-label="Impresión destacada">
-              <div class="printer-frame">
-                <div class="print-surface">
-                  <div class="printing-figure" id="heroPrintingFigure"></div>
-                  <!-- Scanner laser added -->
-                  <div class="hero-scanner"></div>
-                </div>
-
-                <div class="printer-head" style="display:flex">
-                  <div class="extruder">
-                    <div class="nozzle">
-                      <div class="filament-flow"></div>
-                    </div>
-                  </div>
-                  <div class="head-glow"></div>
-                </div>
-
-                <div class="printer-controls">
-                  <div class="controls-row">
-                    <div class="temp-display">
-                      <span class="temp-value">210°</span>
-                      <div class="temp-bar">
-                        <div class="temp-fill"></div>
-                      </div>
-                    </div>
-                    <div class="progress-display">
-                      <div class="progress-text">IMPRIMIENDO</div>
-                      <div class="progress-bar">
-                        <div class="progress-fill" style="width: 100%; animation: none;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Spools/Lights decorative -->
-              <div class="filament-spool">
-                <div class="spool-core"></div>
-                <div class="spool-filament"></div>
-              </div>
-              <div class="printer-light"></div>
-            </div>
-
-            <!-- Botón nuevo abajo -->
-            <a href="proyectos.html" class="weekly-btn">
-              VER MÁS PROYECTOS
-              <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-        </div>
       </div>
 
-      <div class="scroll-indicator" aria-hidden="true">
-        <div class="mouse-icon">
-          <div class="mouse-wheel"></div>
-        </div>
-        <div class="scroll-text">DESPLAZAR</div>
-      </div>
-    </section>
+      </section>
 
     <!-- =========================
           SERVICIOS
@@ -423,15 +277,16 @@
           </div>
         </header>
 
+        
         <div class="services-grid">
-          <!-- Impresión 3D -->
+          <!-- Card 1: Manufactura Digital -->
           <article class="service-card">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-print"></i>
                 <div class="icon-pulse"></div>
               </div>
-              <h3 class="card-title">MANUFACTURA DIGITAL</h3>
+              <h3 class="card-title">1. Manufactura Digital</h3>
               <div class="card-tag">
                 <span class="tag-text">PREMIUM</span>
               </div>
@@ -445,18 +300,17 @@
               </div>
 
               <p class="card-description">
-                Producción de figuras y piezas con tecnología de manufactura digital.
-                Resistencia técnica, versatilidad de materiales y acabados de grado industrial.
+                Materialización de piezas y figuras mediante fabricación digital. Garantizamos integridad estructural, tolerancias precisas y versatilidad de polímeros para proyectos que exigen grado industrial y comercial.
               </p>
 
               <div class="card-specs">
                 <div class="spec">
-                  <div class="spec-value">Industrial</div>
-                  <div class="spec-label">Acabado</div>
+                  <div class="spec-value">Funcional</div>
+                  <div class="spec-label">Industrial</div>
                 </div>
                 <div class="spec">
-                  <div class="spec-value">Escala</div>
-                  <div class="spec-label">Producción</div>
+                  <div class="spec-value">Producción</div>
+                  <div class="spec-label">Escala</div>
                 </div>
               </div>
             </div>
@@ -471,57 +325,61 @@
             <div class="card-glow" aria-hidden="true"></div>
           </article>
 
-          <!-- Diseño 3D -->
+          <!-- Card 2: Ingeniería y Modelado 3D -->
           <article class="service-card featured">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-cube"></i>
                 <div class="icon-pulse"></div>
               </div>
-              <h3 class="card-title">DISEÑO 3D</h3>
+              <h3 class="card-title">2. Ingeniería y Modelado 3D</h3>
               <div class="card-tag">
-                <span class="tag-text">POPULAR</span>
+                <span class="tag-text">MÁS SOLICITADO</span>
               </div>
             </div>
 
             <div class="card-content">
               <div class="card-features">
-                <span class="feature">Fusion 360</span>
-                <span class="feature">Blender</span>
                 <span class="feature">SolidWorks</span>
-                <span class="feature">Termoformado</span>
+                <span class="feature">Blender</span>
+                <span class="feature">Paramétrico</span>
+                <span class="feature">Orgánico</span>
               </div>
 
               <p class="card-description">
-                Diseño 3D a medida: desde cero o listo para producción.
-                Modelado, optimización y desarrollo de empaques termoformados a la medida.
+                Diseño tridimensional a la medida: desde la conceptualización desde cero hasta archivos listos para producción. Modelado mecánico, optimización de geometrías y desarrollo de soluciones técnicas.
               </p>
 
-
+              <div class="card-specs">
+                <div class="spec">
+                  <div class="spec-value">Desarrollo</div>
+                  <div class="spec-label">Precisión</div>
+                </div>
+                <div class="spec">
+                  <div class="spec-value">3D</div>
+                  <div class="spec-label">Prototipado</div>
+                </div>
+              </div>
             </div>
 
             <div class="card-footer">
-              <div class="featured-badge">
-                <i class="fas fa-star"></i>
-                <span>MÁS SOLICITADO</span>
-              </div>
-              <a href="#proyectos" class="card-link">
-                <span>Ver portfolio</span>
+              <a href="proyectos.html" class="card-link">
+                <span>Ver portafolio</span>
                 <i class="fas fa-arrow-right"></i>
               </a>
             </div>
-
+            
             <div class="card-glow" aria-hidden="true"></div>
           </article>
 
-          <!-- Acabado Pro -->
+          <!-- Card 3: Acabados de Exhibición y Arte Manual -->
           <article class="service-card">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-paint-brush"></i>
                 <div class="icon-pulse"></div>
               </div>
-              <h3 class="card-title">ACABADO PRO</h3>
+              <h3 class="card-title">3. Acabados de Exhibición y Arte Manual</h3>
               <div class="card-tag">
                 <span class="tag-text">EXCLUSIVO</span>
               </div>
@@ -529,29 +387,31 @@
 
             <div class="card-content">
               <div class="card-features">
-                <span class="feature">Resina</span>
-                <span class="feature">Acrílico</span>
-                <span class="feature">Encapsulado</span>
-                <span class="feature">Exhibición</span>
+                <span class="feature">Superficies Lisas</span>
+                <span class="feature">Pintura a Mano</span>
+                <span class="feature">Resina y Acrílico</span>
               </div>
 
               <p class="card-description">
-                Acabados idénticos a la inyección de plástico mediante recubrimientos en resina,
-                pintura acrílica de precisión y encapsulado brillante.
+                Acabados idénticos a la inyección de plástico. Tratamiento de superficies para eliminar texturas, logrando piezas completamente lisas, coronadas con pintura artesanal de precisión y recubrimientos brillantes para un nivel de exhibición impecable.
               </p>
 
-              <div class="quality-indicator">
-                <div class="quality-bar">
-                  <div class="quality-fill"></div>
+              <div class="card-specs">
+                <div class="spec">
+                  <div class="spec-value">Detalle</div>
+                  <div class="spec-label">Coleccionismo</div>
                 </div>
-                <div class="quality-text">ACABADO DE EXHIBICIÓN</div>
+                <div class="spec">
+                  <div class="spec-value">Arte</div>
+                  <div class="spec-label">Intervención</div>
+                </div>
               </div>
             </div>
 
             <div class="card-footer">
-              <a href="#contacto" class="card-link premium">
+              <a href="#contacto" class="card-link">
                 <span>Solicitar acabado</span>
-                <i class="fas fa-crown"></i>
+                <i class="fas fa-arrow-right"></i>
               </a>
             </div>
 
@@ -573,12 +433,12 @@
           </div>
 
           <h2 class="section-title">
-            <span class="title-main">NUESTRO</span>
-            <span class="title-accent">FLUJO</span>
+            <span class="title-main">NUESTRA</span>
+            <span class="title-accent">METODOLOGÍA</span>
           </h2>
 
           <p class="section-subtitle">
-            De tu idea a la pieza final — rápido, preciso y premium.
+            De la conceptualización a la pieza final — precisión técnica, agilidad y calidad certificada.
           </p>
 
           <div class="section-divider" aria-hidden="true">
@@ -594,9 +454,9 @@
               <div class="marker-glow"></div>
             </div>
             <div class="step-content">
-              <h3 class="step-title">CONSULTA</h3>
+              <h3 class="step-title">CONSULTORÍA</h3>
               <p class="step-description">
-                Nos cuentas tu idea y para qué la necesitas. Te damos una propuesta con precio y tiempo.
+                Analizamos tu proyecto y sus requerimientos específicos. Te entregamos una propuesta detallada que incluye viabilidad técnica, costos y tiempos exactos de producción.
               </p>
             </div>
           </div>
@@ -607,9 +467,9 @@
               <div class="marker-glow"></div>
             </div>
             <div class="step-content">
-              <h3 class="step-title">DISEÑO</h3>
+              <h3 class="step-title">DESARROLLO Y OPTIMIZACIÓN</h3>
               <p class="step-description">
-                Creamos el modelo 3D o arreglamos tu archivo para que se imprima bien.
+                Diseñamos el modelo 3D desde cero o auditamos tu archivo existente, optimizando su geometría para garantizar una manufactura digital impecable.
               </p>
             </div>
           </div>
@@ -620,9 +480,9 @@
               <div class="marker-glow"></div>
             </div>
             <div class="step-content">
-              <h3 class="step-title">IMPRESIÓN</h3>
+              <h3 class="step-title">MANUFACTURA Y CONTROL</h3>
               <p class="step-description">
-                Imprimimos tu pieza con buen detalle y revisamos que salga correcta.
+                Materializamos tu pieza utilizando tecnología de fabricación avanzada. Aplicamos una estricta revisión durante y después del proceso para asegurar resolución, resistencia y tolerancias perfectas.
               </p>
             </div>
           </div>
@@ -633,9 +493,9 @@
               <div class="marker-glow"></div>
             </div>
             <div class="step-content">
-              <h3 class="step-title">ENTREGA</h3>
+              <h3 class="step-title">ACABADO Y ENTREGA</h3>
               <p class="step-description">
-                Te entregamos la pieza terminada, bien protegida y lista para usar o lucir.
+                Realizamos el tratamiento final de la pieza y te entregamos un producto con calidad de exhibición o uso industrial, perfectamente protegido y listo para su aplicación.
               </p>
             </div>
           </div>
@@ -818,7 +678,7 @@
               </div>
               <h4 class="info-title">WHATSAPP</h4>
               <p class="info-text">Respuesta en menos de 30 minutos</p>
-              <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20me%20interesa%20cotizar%20la%20producci%C3%B3n%20de%20una%20figura%2Fproyecto%20especial.%20%F0%9F%9A%80"
+              <a href="https://wa.me/524492795557?text=Hola%204RTB4N%2C%20me%20interesa%20cotizar%20la%20producci%C3%B3n%20de%20una%20figura%2Fproyecto%20especial.%20%F0%9F%9A%80"
                 target="_blank" rel="noopener" class="info-link">
                 <span>Enviar mensaje</span>
                 <i class="fas fa-external-link-alt"></i>
@@ -861,7 +721,7 @@
     <div class="footer-container">
       <div class="footer-main">
         <div class="footer-brand">
-          <div class="footer-logo">ODA</div>
+          <div class="footer-logo">4RTB4N</div>
           <p class="footer-tagline">FIGURAS & COLECCIONABLES DE ALTA GAMA</p>
         </div>
 
@@ -870,14 +730,14 @@
             aria-label="Instagram">
             <i class="fab fa-instagram"></i>
           </a>
-          <a href="https://www.facebook.com/ServiceODA" target="_blank" rel="noopener" class="social-link"
+          <a href="https://www.facebook.com/Service4RTB4N" target="_blank" rel="noopener" class="social-link"
             aria-label="Facebook">
             <i class="fab fa-facebook-f"></i>
           </a>
           <a href="https://www.tiktok.com/@oda858d?_r=1&_t=ZS-93NfFNAv3mZ" class="social-link" aria-label="TikTok">
             <i class="fab fa-tiktok"></i>
           </a>
-          <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20me%20interesa%20cotizar%20la%20producci%C3%B3n%20de%20una%20figura%2Fproyecto%20especial."
+          <a href="https://wa.me/524492795557?text=Hola%204RTB4N%2C%20me%20interesa%20cotizar%20la%20producci%C3%B3n%20de%20una%20figura%2Fproyecto%20especial."
             target="_blank" rel="noopener" class="social-link whatsapp" aria-label="WhatsApp">
             <i class="fab fa-whatsapp"></i>
           </a>
@@ -891,13 +751,13 @@
           <a href="#proceso">Proceso</a>
           <a href="#proyectos">Proyectos</a>
           <a href="#contacto">Contacto</a>
-          <a href="#servicios">Servicios ODA</a>
+          <a href="#servicios">Servicios 4RTB4N</a>
         </div>
 
         <div class="footer-copyright">
 
           <p class="copyright-note">Diseño y Manufactura de Coleccionables en Aguascalientes</p>
-          <p>© 2024 ODA. Todos los derechos reservados.</p>
+          <p>© 2024 4RTB4N. Todos los derechos reservados.</p>
         </div>
       </div>
     </div>
@@ -906,7 +766,7 @@
   <!-- =========================
         WHATSAPP FLOAT
   ========================== -->
-  <a href="https://wa.me/524492795557?text=Hola%20ODA%2C%20me%20interesa%20cotizar%20la%20producci%C3%B3n%20de%20una%20figura%2Fproyecto%20especial.%20%F0%9F%9A%80"
+  <a href="https://wa.me/524492795557?text=Hola%204RTB4N%2C%20me%20interesa%20cotizar%20la%20producci%C3%B3n%20de%20una%20figura%2Fproyecto%20especial.%20%F0%9F%9A%80"
     target="_blank" rel="noopener" class="whatsapp-float" id="whatsappFloat"
     aria-label="Cotización express por WhatsApp">
     <div class="float-icon" aria-hidden="true">

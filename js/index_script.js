@@ -1,5 +1,5 @@
 /* ============================
-   ODA STUDIO - JS VIP FINAL ✅
+   4RTB4N - JS VIP FINAL ✅
    - Loader impresora realista
    - Gato imprimiéndose por capas (cat-sit.png)
    - Nav progress + active links
@@ -16,7 +16,7 @@
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
   const prefersReduced =
-    window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const rafThrottle = (fn) => {
     let ticking = false;
@@ -62,7 +62,7 @@
 
   // offset dinámico (nav real + aire)
   const getNavOffset = () => {
-    const h = navEl?.getBoundingClientRect().height ?? 78;
+    const h = navEl ? navEl.getBoundingClientRect().height : 78;
     return Math.round(h + 10);
   };
 
@@ -704,57 +704,48 @@
     const form = $("#contactForm");
     if (!form) return;
 
-    form.addEventListener("submit", async (e) => {
+        form.addEventListener("submit", function(e) {
       e.preventDefault();
 
       const btn = form.querySelector("button");
       const btnIcon = btn.querySelector(".button-icon");
       const btnText = btn.querySelector(".button-text");
 
-      // Guardar estado original
       const originalIcon = btnIcon ? btnIcon.innerHTML : "";
       const originalText = btnText ? btnText.textContent : "ENVIAR";
 
-      // Estado de carga
       if (btnText) btnText.textContent = "ENVIANDO...";
       if (btnIcon) btnIcon.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-      try {
-        const response = await fetch("https://formspree.io/f/mzddzvkj", {
-          method: "POST",
-          body: new FormData(form),
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-
+      fetch("https://formspree.io/f/mzddzvkj", {
+        method: "POST",
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(function(response) {
         if (response.ok) {
-          // Éxito
           if (btnText) btnText.textContent = "¡ENVIADO!";
           if (btnIcon) btnIcon.innerHTML = '<i class="fas fa-check"></i>';
           form.reset();
-          if ($("#charCount")) $("#charCount").textContent = "0";
+          if (document.querySelector("#charCount")) document.querySelector("#charCount").textContent = "0";
 
-          // Restaurar botón después de unos segundos
-          setTimeout(() => {
+          setTimeout(function() {
             if (btnText) btnText.textContent = originalText;
             if (btnIcon) btnIcon.innerHTML = originalIcon;
           }, 4000);
-
         } else {
-          // Error del servidor
           throw new Error('Error en el envío');
         }
-      } catch (error) {
-        // Error de red
+      })
+      .catch(function(error) {
         if (btnText) btnText.textContent = "ERROR";
         if (btnIcon) btnIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
 
-        setTimeout(() => {
+        setTimeout(function() {
           if (btnText) btnText.textContent = originalText;
           if (btnIcon) btnIcon.innerHTML = originalIcon;
         }, 3000);
-      }
+      });
     });
   }
 
@@ -796,3 +787,21 @@
     init();
   }
 })();
+
+// ==========================================
+// HERO BACKGROUND CAROUSEL
+// ==========================================
+function initHeroCarousel() {
+  const slides = document.querySelectorAll('#heroCarousel .hero-slide');
+  if (slides.length === 0) return;
+
+  let currentSlide = 0;
+  
+  setInterval(() => {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+  }, 5000);
+}
+
+
