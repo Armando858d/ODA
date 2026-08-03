@@ -1,12 +1,17 @@
 /* ============================================================
-   PROJECTS PAGE SPECIFIC STYLES
+   PROJECTS PAGE SPECIFIC STYLES - URBAN THEME
 ============================================================ */
+
+/* 1. Projects Hero */
 .projects-page {
     padding-top: 80px;
 }
 
 .projects-hero {
     padding: 80px 0 60px;
+    background-color: #0d0d0d;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
     min-height: auto;
 }
 
@@ -14,28 +19,154 @@
     margin-bottom: 50px;
 }
 
-.projects-hero .projects-grid {
+/* 2. Projects Grid */
+.projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
     margin-bottom: 60px;
+    padding: 0 15px;
 }
 
+@media (min-width: 768px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .projects-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 3. Project Cards */
+.project-card {
+    border-radius: 2px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #111;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 255, 255, 0.15); /* subtle cyan glow */
+    border-color: rgba(0, 255, 255, 0.3);
+}
+
+.project-image {
+    position: relative;
+    height: 220px; /* Mobile */
+    background-size: cover;
+    background-position: center;
+}
+
+@media (min-width: 1024px) {
+    .project-image {
+        height: 280px; /* Desktop */
+    }
+}
+
+.image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.2));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-card:hover .image-overlay {
+    opacity: 1;
+}
+
+.image-overlay h3 {
+    color: #fff;
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.image-overlay p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.project-info {
+    padding: 15px;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.project-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.2);
+    font-family: var(--fontTitle, 'Space Grotesk', sans-serif);
+}
+
+.project-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.project-tags span {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #1a1a1a;
+    color: #00d9ff;
+    padding: 4px 8px;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 217, 255, 0.2);
+}
+
+/* 4. CTA Section */
 .projects-cta-section {
     margin-top: 60px;
     padding: 60px 30px;
-    border-radius: var(--radius2);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0a0a0a;
+    border: 2px solid #222;
+    border-left: 4px solid #00d9ff;
     text-align: center;
+    position: relative;
+}
+
+.projects-cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px);
+    pointer-events: none;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 1;
 }
 
 .cta-content h2 {
-    font-family: var(--fontTitle);
     font-weight: 900;
     font-size: 32px;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--pink), var(--cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: var(--fontTitle, sans-serif);
 }
 
 .cta-content p {
@@ -52,35 +183,30 @@
     align-items: center;
     gap: 12px;
     padding: 16px 24px;
-    border-radius: 18px;
-    border: 1px solid rgba(255, 62, 122, 0.28);
-    background: linear-gradient(90deg, rgba(255, 62, 122, 0.12), rgba(0, 217, 255, 0.06));
-    transition: transform .2s ease, border-color .2s ease;
-    position: relative;
-    overflow: hidden;
+    border: 2px solid #00d9ff;
+    background: transparent;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 .cta-content .cta-button:hover {
+    background: #00d9ff;
+    color: #000;
     transform: translateY(-2px);
-    border-color: rgba(255, 62, 122, 0.4);
+    box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
 }
 
 .cta-content .button-text {
-    font-family: var(--fontTitle);
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.22em;
-    color: #fff;
+    font-family: var(--fontTitle, sans-serif);
 }
 
 .cta-content .button-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 16px;
-    display: grid;
-    place-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    background: rgba(0, 0, 0, 0.18);
+    font-size: 1.2rem;
 }
 
 @media (max-width: 768px) {
@@ -100,65 +226,21 @@
 /* ============================================================
    PROJECT BACKGROUNDS (CAROUSEL)
 ============================================================ */
-.project-1 {
-    background-image: url('../assets/images/angel1.png');
-}
-
-.project-2 {
-    background-image: url('../assets/images/ven1.png');
-}
-
-.project-3 {
-    background-image: url('../assets/images/bebe1.png');
-}
-
-.project-4 {
-    background-image: url('../assets/images/corazon1.png');
-}
-
-.project-5 {
-    background-image: url('../assets/images/elefante1.png');
-}
-
-.project-6 {
-    background-image: url('../assets/images/elena1.png');
-}
-
-.project-7 {
-    background-image: url('../assets/images/jan1.png');
-}
-
-.project-8 {
-    background-image: url('../assets/images/jan2.png');
-}
-
-.project-9 {
-    background-image: url('../assets/images/mujer1.png');
-}
-
-.project-10 {
-    background-image: url('../assets/images/sen1.png');
-}
-
-.project-11 {
-    background-image: url('../assets/images/snoppy.png');
-}
-
-.project-12 {
-    background-image: url('../assets/images/hello1.png');
-}
-
-.project-13 {
-    background-image: url('../assets/images/conejo1.png');
-}
-
-.project-14 {
-    background-image: url('../assets/images/sofiplano1.png');
-}
-
-.project-15 {
-    background-image: url('../assets/images/camaraplano1.png');
-}
+.project-1 { background-image: url('../assets/images/angel1.png'); }
+.project-2 { background-image: url('../assets/images/ven1.png'); }
+.project-3 { background-image: url('../assets/images/bebe1.png'); }
+.project-4 { background-image: url('../assets/images/corazon1.png'); }
+.project-5 { background-image: url('../assets/images/elefante1.png'); }
+.project-6 { background-image: url('../assets/images/elena1.png'); }
+.project-7 { background-image: url('../assets/images/jan1.png'); }
+.project-8 { background-image: url('../assets/images/jan2.png'); }
+.project-9 { background-image: url('../assets/images/mujer1.png'); }
+.project-10 { background-image: url('../assets/images/sen1.png'); }
+.project-11 { background-image: url('../assets/images/snoppy.png'); }
+.project-12 { background-image: url('../assets/images/hello1.png'); }
+.project-13 { background-image: url('../assets/images/conejo1.png'); }
+.project-14 { background-image: url('../assets/images/sofiplano1.png'); }
+.project-15 { background-image: url('../assets/images/camaraplano1.png'); }
 
 .slide-background {
     background-size: cover;

@@ -5213,477 +5213,81 @@ h3 {
   transition: width 0.1s linear;
 }
 
+
 /* ============================================================
-   STREETWEAR NAVBAR LAYOUT & HERO HOVER
+   A. NAVBAR (Desktop & Mobile)
 ============================================================ */
 .nav-grid-streetwear {
-  display: flex !important;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   width: 100%;
-  padding: 0 10px;
 }
-
-.nav-mobile-toggle-wrapper {
-  display: none; /* Hide on desktop */
-}
-
-.nav-logo-streetwear {
-  display: flex;
-  align-items: center;
-}
-
-.nav-logo-streetwear .nav-simple-logo {
-  height: 40px;
-  width: auto;
-  transition: transform 0.3s ease;
-  filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
-}
-
-.nav-logo-streetwear:hover .nav-simple-logo {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 10px rgba(0,229,255,0.5));
-}
-
-.streetwear-menu {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Iconos de AcciÃ³n a la Derecha */
-.nav-actions-streetwear {
-  display: flex;
-  gap: 15px;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.nav-action-btn {
-  color: var(--primary-color, #fff);
-  font-size: 18px;
-  padding: 8px;
-  transition: color 0.3s ease, transform 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-action-btn:hover {
-  color: var(--neon-cyan, #00E5FF);
-  transform: translateY(-2px);
-  text-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
-}
-
-/* ============================================================
-   HERO LOGO HOVER EFFECT (LNOMBRE -> LOGO)
-============================================================ */
-.logo-hover-hero {
-  position: relative;
-  width: 100%;
-  max-width: 800px; /* MUCHO MÃS GRANDE */
-  height: 200px;    /* MUCHO MÃS ALTO */
-  margin: 0 0 30px 0; /* Margen abajo, alineado a la izq */
-  display: flex;
-  justify-content: flex-start; /* Alineado a la izq */
-  align-items: center;
-  cursor: pointer;
-}
-
-.hero-name-img-hover,
-.hero-icon-img-hover {
-  position: absolute;
-  top: 50%;
-  left: 0; /* Anclado a la izquierda */
-  transform: translateY(-50%);
-  max-width: 100%;
-  max-height: 100%;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.hero-name-img-hover {
-  opacity: 1;
-}
-
-.hero-icon-img-hover {
-  opacity: 0;
-  transform: translateY(-50%) scale(0.6);
-  height: 180px; /* TamaÃ±o del icono al hacer hover (Muy grande) */
-  width: auto;
-  filter: drop-shadow(0 0 20px rgba(0,229,255,0.4));
-}
-
-.logo-hover-hero:hover .hero-name-img-hover {
-  opacity: 0;
-  transform: translateY(-50%) scale(1.05);
-}
-
-.logo-hover-hero:hover .hero-icon-img-hover {
-  opacity: 1;
-  transform: translateY(-50%) scale(1);
-}
-
-/* ============================================================
-   RESPONSIVE STREETWEAR NAVBAR
-============================================================ */
-@media (max-width: 1100px) {
-  .nav-grid-streetwear {
-    display: grid !important;
-    grid-template-columns: 1fr auto 1fr;
-    padding: 0;
-  }
-
-  .nav-mobile-toggle-wrapper {
-    display: flex;
-    justify-content: flex-start;
-  }
-  
-  .nav-logo-streetwear {
-    justify-content: center;
-  }
-
-/* ============================================================
-   HERO FULL-SCREEN CAROUSEL BACKGROUND
-============================================================ */
-.full-bg-hero {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  min-height: 800px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
-
-.hero-bg-carousel {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-.hero-slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0;
-  transition: opacity 1.5s ease-in-out, transform 10s linear;
-  transform: scale(1.05);
-}
-
-.hero-slide.active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.hero-overlay-dark {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(5,5,5,0.7) 0%, rgba(5,5,5,0.4) 50%, rgba(5,5,5,0.9) 100%);
-  z-index: 1;
-}
-
-/* CONTENIDO PRINCIPAL */
-.hero-grid-layout {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 1600px;
-  margin: 0 auto;
-}
-
-.hero-center-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  max-width: 900px;
-  padding: 0 20px;
-}
-
-.hero-title-center {
-  font-family: 'Termina', sans-serif;
-  font-size: 5rem;
-  color: #fff;
-  text-transform: uppercase;
-  margin: 10px 0;
-  text-shadow: 0 0 20px rgba(255, 62, 122, 0.5);
-}
-
-.hero-description-center {
-  margin: 20px 0 40px;
-  max-width: 600px;
-  color: #e0e0e0;
-  font-size: 1.2rem;
-  line-height: 1.6;
-}
-
-.hero-cta-center {
+.nav-menu {
+  order: 1;
   display: flex;
   gap: 20px;
-  justify-content: center;
 }
-
-/* LOGO CENTRADO HOVER */
-.logo-hover-hero-center {
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  height: 280px;
+.nav-logo-streetwear {
+  order: 2;
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  cursor: pointer;
 }
-
-.logo-hover-hero-center .hero-name-img-hover,
-.logo-hover-hero-center .hero-icon-img-hover {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 100%;
-  max-height: 100%;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.logo-hover-hero-center .hero-name-img-hover {
-  opacity: 1;
-}
-
-.logo-hover-hero-center .hero-icon-img-hover {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.6);
-  height: 240px; 
+.nav-simple-logo {
+  height: 40px;
   width: auto;
-  filter: drop-shadow(0 0 20px rgba(0,229,255,0.4));
+}
+.nav-actions-streetwear {
+  order: 3;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+.nav-mobile-toggle-wrapper {
+  display: none;
+}
+@media (max-width: 767px) {
+  .nav-grid-streetwear {
+    grid-template-columns: auto 1fr auto;
+  }
+  .nav-mobile-toggle-wrapper {
+    display: block;
+    order: 1;
+  }
+  .nav-logo-streetwear {
+    order: 2;
+  }
+  .nav-actions-streetwear {
+    order: 3;
+  }
+  /* The .nav-menu mobile overlay is handled by the base CSS (line ~613 and ~2940) */
+  /* with .nav-menu.open { opacity: 1; visibility: visible; } */
+  /* No need to override here — just ensure nav-menu is hidden by default on mobile */
+  .nav-menu {
+    order: 4;
+  }
 }
 
-.logo-hover-hero-center:hover .hero-name-img-hover {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(1.05);
-}
-
-.logo-hover-hero-center:hover .hero-icon-img-hover {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-/* ESTADÃSTICAS A LA DERECHA */
-.hero-right-stats {
-  position: absolute;
-  right: 60px;
-  top: 50%;
-  transform: translateY(-50%);
+/* ============================================================
+   B. HERO SECTION
+============================================================ */
+.hero-grid-layout {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  z-index: 2;
-}
-
-.glass-stat {
-  background: rgba(255, 255, 255, 0.03) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  padding: 25px !important;
-  border-radius: 16px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-  width: 220px;
-  transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-.glass-stat:hover {
-  transform: translateY(-5px);
-  border-color: var(--neon-cyan) !important;
-}
-
-@media (max-width: 1100px) {
-  .hero-title-center {
-    font-size: 3.5rem;
-  }
-  
-  .hero-right-stats {
-    position: relative;
-    right: auto;
-    top: auto;
-    transform: none;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 50px;
-  }
-  
-  .hero-grid-layout {
-    flex-direction: column;
-    padding-top: 100px;
-  }
-  
-  .glass-stat {
-    width: 150px;
-    padding: 15px !important;
-  }
-  
-  .logo-hover-hero-center {
-    height: 180px;
-    max-width: 600px;
-  }
-  .logo-hover-hero-center .hero-icon-img-hover {
-    height: 150px;
-  }
-}
-
-/* ============================================================
-   RESPONSIVE PHONES ( < 768px )
-============================================================ */
-@media (max-width: 768px) {
-  .hero-title-center {
-    font-size: 2.2rem;
-    margin-top: 0;
-  }
-  
-  .hero-description-center {
-    font-size: 1rem;
-    padding: 0 10px;
-    margin-bottom: 20px;
-  }
-
-  .logo-hover-hero-center {
-    height: 120px;
-    max-width: 350px;
-    margin-bottom: 10px;
-  }
-
-  .logo-hover-hero-center .hero-icon-img-hover {
-    height: 110px;
-  }
-
-  .hero-right-stats {
-    margin-top: 30px;
-    gap: 15px;
-  }
-
-  .glass-stat {
-    width: 130px;
-    padding: 12px !important;
-  }
-
-  .glass-stat .stat-value {
-    font-size: 24px !important;
-  }
-
-  .glass-stat .stat-label {
-    font-size: 11px !important;
-  }
-
-  .hero-cta-center {
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
-    gap: 15px;
-  }
-
-  .hero-cta-center .cta-button {
-    width: 100%;
-    max-width: 280px;
-    justify-content: center;
-  }
-}
-
-
-
-/* ============================================================
-   STREETWEAR LAYOUT (RESTORED & POLISHED)
-============================================================ */
-
-/* LOADER FIX FOR DESKTOP */
-.printer-loader {
-  background-color: #050505 !important;
-  background-image: radial-gradient(circle at center, #1a1a1a 0%, #000000 70%) !important;
-}
-
-.graffiti-text-loader {
-  font-family: "Permanent Marker", cursive, sans-serif !important;
-  font-size: clamp(32px, 5vw, 48px) !important;
-  text-transform: uppercase;
-  color: #ffffff !important;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 2px 2px 0px rgba(80, 80, 80, 0.5) !important;
-  animation: flickerGraffiti 0.15s infinite alternate !important;
-  letter-spacing: 5px !important;
-  transform: rotate(-2deg);
-}
-
-.loader-logo-container img {
-  width: clamp(150px, 20vw, 250px) !important;
-  filter: drop-shadow(0 0 20px rgba(255,255,255,0.4)) !important;
-  animation: pulseGraffiti 1.5s infinite alternate !important;
-}
-
-@keyframes flickerGraffiti {
-  0% { transform: rotate(-2deg) scale(1); text-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 2px 2px 0px rgba(80, 80, 80, 0.5); }
-  100% { transform: rotate(-1deg) scale(1.02); text-shadow: 0 0 15px rgba(255, 255, 255, 1), 4px 4px 0px rgba(120, 120, 120, 0.5); }
-}
-@keyframes pulseGraffiti {
-  0% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 15px rgba(255,255,255,0.3)); }
-  100% { transform: scale(1.05) rotate(2deg); filter: drop-shadow(0 0 35px rgba(255,255,255,0.7)); }
-}
-.graffiti-progress-container {
-  display: none !important;
-}
-
-/* HERO GRID LAYOUT - RESTORE FULL HEIGHT */
-.hero-grid-layout {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-  min-height: 100vh !important;
-  padding-top: 80px !important; /* Space for nav */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 100px;
   position: relative;
 }
-
-/* CENTER CONTENT (LOGO & TEXT) */
-.hero-center-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  width: 100%;
-  max-width: 800px;
-}
-
-/* LNOMBE LOGO - LARGE BUT ELEGANT */
 .logo-hover-hero-center {
   position: relative;
-  width: 90vw !important;
-  max-width: 650px !important; /* Fixed max width prevents distortion */
-  height: 250px !important;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto 20px auto !important;
-  cursor: pointer;
+  width: 90vw;
+  max-width: 650px;
+  height: 250px;
+  margin: 0 auto;
 }
-
-.logo-hover-hero-center .hero-name-img-hover,
-.logo-hover-hero-center .hero-icon-img-hover {
+.hero-name-img-hover {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -5691,232 +5295,186 @@ h3 {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
-
-.logo-hover-hero-center .hero-name-img-hover { opacity: 1; }
-.logo-hover-hero-center .hero-icon-img-hover { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-
-.logo-hover-hero-center:hover .hero-name-img-hover { opacity: 0; transform: translate(-50%, -50%) scale(1.05); }
-.logo-hover-hero-center:hover .hero-icon-img-hover { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-
-/* ARTE URBANO - RESTORED BELOW LOGO */
+.hero-icon-img-hover {
+  display: none;
+}
 .hero-title-center {
-  display: block !important;
-  font-size: clamp(24px, 4vw, 36px) !important;
-  letter-spacing: 15px !important;
+  display: block;
+  font-size: clamp(22px, 4vw, 36px);
+  letter-spacing: 12px;
   text-transform: uppercase;
-  color: #ffffff !important;
-  text-shadow: 2px 2px 10px rgba(0,0,0,0.8), 0 0 20px rgba(0,229,255,0.4) !important;
-  margin: 0 !important;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.8), 0 0 20px rgba(0, 229, 255, 0.5);
+  margin-bottom: 30px;
   text-align: center;
-  font-weight: 800;
 }
-
-/* STATS - RESTORED TO RIGHT SIDE FOR DESKTOP */
 .hero-right-stats {
-  position: absolute !important;
-  right: 5% !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 20px !important;
-  z-index: 20 !important;
-  width: auto !important;
-  margin-top: 0 !important;
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
 }
-
 .glass-stat {
-  width: 160px !important;
-  padding: 20px !important;
-  background: rgba(10, 10, 10, 0.4) !important;
-  backdrop-filter: blur(15px) !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
+  background: rgba(10, 10, 10, 0.5);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
   text-align: center;
 }
-
-/* RESPONSIVE STACKING FOR MOBILE */
-@media (max-width: 1100px) {
+@media (min-width: 1024px) {
   .hero-right-stats {
-    position: relative !important;
-    right: auto !important;
-    top: auto !important;
-    transform: none !important;
-    flex-direction: row !important;
-    justify-content: center !important;
-    margin-top: 40px !important;
-    width: 100% !important;
-    gap: 15px !important;
-  }
-  .hero-grid-layout {
-    justify-content: flex-start !important;
-    padding-top: 120px !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .logo-hover-hero-center {
-    height: 180px !important;
-    max-width: 400px !important;
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    margin-top: 0;
   }
   .glass-stat {
-    width: 120px !important;
-    padding: 12px !important;
+    width: 160px;
   }
 }
 
 /* ============================================================
-   STRICT MOBILE RESPONSIVE FIXES
+   C. LOADER
 ============================================================ */
-@media (max-width: 768px) {
-  /* Prevent horizontal overflow on mobile */
-  html, body {
-    overflow-x: hidden !important;
-    width: 100% !important;
-    max-width: 100vw !important;
-  }
-  
-  /* Fix Hero Logo size on mobile */
-  .logo-hover-hero-center {
-    width: 90vw !important;
-    max-width: 100% !important;
-    height: 140px !important;
-    margin-bottom: 10px !important;
-  }
-  
-  .logo-hover-hero-center .hero-icon-img-hover {
-    height: 120px !important;
-    width: auto !important;
-  }
-
-  .logo-hover-hero-center .hero-name-img-hover {
-    height: 100% !important;
-    width: 100% !important;
-    object-fit: contain !important;
-  }
-
-  /* Title resize on mobile */
-  .hero-title-center {
-    font-size: 20px !important;
-    letter-spacing: 8px !important;
-    margin-bottom: 20px !important;
-  }
-
-  /* Force stats to column on small phones to prevent overflow */
-  .hero-right-stats {
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 15px !important;
-    width: 100% !important;
-    margin-top: 10px !important;
-  }
-  
-  .glass-stat {
-    width: 90% !important;
-    max-width: 320px !important;
-    padding: 15px !important;
-  }
-
-  /* Fix the nav grid spacing on mobile so it doesn't push off screen */
-  .nav-grid-streetwear {
-    padding: 0 10px !important;
-  }
+.printer-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #050505 radial-gradient(circle at center, rgba(30,30,30,0.8) 0%, #050505 70%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-
-/* Extra small devices */
-@media (max-width: 480px) {
-  .logo-hover-hero-center {
-    height: 110px !important;
-  }
-  .hero-title-center {
-    font-size: 18px !important;
-    letter-spacing: 5px !important;
-  }
-  .glass-stat {
-    width: 95% !important;
-  }
+.loader-logo-container img {
+  width: clamp(150px, 20vw, 250px);
+  animation: pulseGraffiti 2s infinite alternate ease-in-out;
+}
+.graffiti-text-loader {
+  font-family: 'Permanent Marker', cursive, sans-serif;
+  font-size: clamp(32px, 5vw, 48px);
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(0, 229, 255, 0.8);
+  animation: flickerGraffiti 3s infinite;
+  margin-top: 20px;
+}
+.graffiti-progress-container {
+  display: none;
+}
+@keyframes pulseGraffiti {
+  0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
+  100% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(0,229,255,0.4)); }
+}
+@keyframes flickerGraffiti {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.5; }
 }
 
 /* ============================================================
-   CENTER NAV LOGO & DISABLE HERO HOVER FIXES
+   D. URBAN STYLE ENHANCEMENTS
 ============================================================ */
-
-/* Disable any lingering hover effects on the hero logo */
-.logo-hover-hero-center {
-  pointer-events: none; /* Disables interaction completely */
+.section-container {
+  position: relative;
 }
-.logo-hover-hero-center .hero-name-img-hover {
-  opacity: 1 !important;
-  transform: translate(-50%, -50%) scale(1) !important;
+.section-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.03%22/%3E%3C/svg%3E');
+  z-index: 0;
 }
-.logo-hover-hero-center .hero-icon-img-hover {
-  display: none !important;
+.service-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-/* Redesign Desktop Navbar to have the Logo in the center */
-@media (min-width: 769px) {
-  .nav-grid-streetwear {
-    display: grid !important;
-    grid-template-columns: 1fr auto 1fr !important;
-    align-items: center !important;
-  }
-  
-  /* Visual Reordering using Flex/Grid Order */
-  .nav-logo-streetwear {
-    order: 2 !important;
-    display: flex !important;
-    justify-content: center !important;
-  }
-  
-  .nav-menu {
-    order: 1 !important;
-    display: flex !important;
-    justify-content: flex-start !important;
-  }
-  
-  .nav-actions-streetwear {
-    order: 3 !important;
-    display: flex !important;
-    justify-content: flex-end !important;
-  }
-
-  /* Make sure the logo is correctly sized when centered */
-  .nav-simple-logo {
-    height: 40px !important;
-    width: auto !important;
-  }
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 229, 255, 0.15);
+}
+.section-title {
+  border-left: 4px solid var(--neon-cyan, #00E5FF);
+  padding-left: 15px;
+}
+.card-tag .tag-text {
+  font-size: 11px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,229,255,0.2) 100%);
+  padding: 4px 8px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+}
+.stat-counter, .stat-value {
+  font-weight: 800;
+  color: var(--neon-cyan, #00E5FF);
 }
 
-/* Mobile adjustments for centered logo (often the burger menu is on the left) */
-@media (max-width: 768px) {
-  .nav-grid-streetwear {
-    display: grid !important;
-    grid-template-columns: 1fr auto 1fr !important;
-    align-items: center !important;
-    padding: 0 15px !important;
+/* ============================================================
+   E & F. RESPONSIVE FIXES
+============================================================ */
+html, body {
+  overflow-x: hidden;
+}
+.section-container {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+}
+/* Base grids (Mobile First - 1 col) */
+.services-grid, 
+.projects-grid, 
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.process-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+/* Tablet (>= 768px) */
+@media (min-width: 768px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .nav-mobile-toggle-wrapper {
-    order: 1 !important;
-    display: flex !important;
-    justify-content: flex-start !important;
+  .process-timeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
-  
-  .nav-logo-streetwear {
-    order: 2 !important;
-    display: flex !important;
-    justify-content: center !important;
+}
+/* Small Desktop (>= 1024px) */
+@media (min-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
-  
-  .nav-actions-streetwear {
-    order: 3 !important;
-    display: flex !important;
-    justify-content: flex-end !important;
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  /* The menu itself needs to remain an overlay */
-  .nav-menu {
-    order: 4 !important;
+  .contact-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+/* Large Desktop (>= 1280px) */
+@media (min-width: 1280px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

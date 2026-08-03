@@ -1,17 +1,17 @@
 :root {
-  /* Variables Premium (Sync with index_estilo.css) */
-  --bg: #050505;
+  /* Variables Urban (4RTB4N Urban Theme) */
+  --bg: #0a0a0a;
   --bg-gradient-1: rgba(0, 217, 255, 0.15);
   --bg-gradient-2: rgba(255, 62, 122, 0.12);
   --bg-gradient-3: rgba(157, 78, 221, 0.12);
 
-  --card: rgba(255, 255, 255, 0.03);
+  --card: rgba(15, 15, 15, 0.9);
   --card-border: rgba(255, 255, 255, 0.08);
   --glass: blur(20px);
 
-  --text: #ffffff;
-  --text-muted: rgba(255, 255, 255, 0.6);
-  --text-dim: rgba(255, 255, 255, 0.35);
+  --text: #f5f0e8;
+  --text-muted: rgba(245, 240, 232, 0.65);
+  --text-dim: rgba(245, 240, 232, 0.35);
 
   --cyan: #00d9ff;
   --pink: #ff3e7a;
@@ -21,11 +21,11 @@
   --warn: #ffd166;
   --danger: #ff3e5e;
 
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 25px rgba(0, 217, 255, 0.15);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 217, 255, 0.08);
+  --shadow-glow: 0 0 25px rgba(0, 217, 255, 0.2);
 
-  --radius: 20px;
-  --radius-sm: 12px;
+  --radius: 2px;
+  --radius-sm: 2px;
 
   --font-main: "Inter", sans-serif;
   --font-display: "Space Grotesk", sans-serif;
@@ -85,8 +85,8 @@ body.unlocked {
   left: 0;
   right: 0;
   height: 2px;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  background: rgba(0, 217, 255, 0.15);
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
   animation: scan 8s linear infinite;
   opacity: 0.5;
 }
@@ -146,7 +146,8 @@ body.unlocked .oda-wrap {
   font-size: 28px;
   margin: 0;
   letter-spacing: -0.02em;
-  background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0.7));
+  text-transform: uppercase;
+  background: linear-gradient(90deg, var(--text), rgba(245, 240, 232, 0.7));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -156,7 +157,7 @@ body.unlocked .oda-wrap {
   color: var(--cyan);
   background: rgba(0, 217, 255, 0.1);
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: 2px;
   vertical-align: middle;
   margin-left: 8px;
   letter-spacing: 0;
@@ -177,9 +178,10 @@ body.unlocked .oda-wrap {
   border: 1px solid rgba(255, 62, 122, 0.3);
   background: rgba(255, 62, 122, 0.1);
   padding: 6px 12px;
-  border-radius: 20px;
+  border-radius: 2px;
   letter-spacing: 0.05em;
-  box-shadow: 0 0 15px rgba(255, 62, 122, 0.1);
+  text-transform: uppercase;
+  box-shadow: 0 0 15px rgba(255, 62, 122, 0.15);
 }
 
 /* Grid Layout */
@@ -223,6 +225,7 @@ body.unlocked .oda-wrap {
   font-weight: 600;
   margin: 0;
   letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .oda-hint {
@@ -250,8 +253,8 @@ body.unlocked .oda-wrap {
 ============================================================ */
 fieldset.oda-section {
   border: 1px solid var(--card-border);
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 16px;
+  background: rgba(10, 10, 10, 0.5);
+  border-radius: 2px;
   padding: 16px 20px 20px;
   margin: 0 0 20px 0;
   min-width: 0;
@@ -261,6 +264,8 @@ legend.oda-sectionTitle {
   padding: 0 8px;
   color: var(--cyan);
   font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .oda-sectionTitle strong {
@@ -274,7 +279,7 @@ legend.oda-sectionTitle {
   color: var(--text-dim);
   background: rgba(255, 255, 255, 0.05);
   padding: 2px 8px;
-  border-radius: 4px;
+  border-radius: 2px;
   font-family: var(--font-main);
   vertical-align: middle;
 }
@@ -300,32 +305,33 @@ legend.oda-sectionTitle {
 
 /* Inputs */
 .oda-input {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: rgba(10, 10, 10, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text);
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: 2px;
   font-size: 15px;
   font-family: var(--font-main);
   outline: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
   transition: all 0.2s var(--ease);
   width: 100%;
 }
 
 .oda-input:focus {
   border-color: var(--cyan);
-  background: rgba(0, 217, 255, 0.05);
-  box-shadow: 0 0 0 4px rgba(0, 217, 255, 0.1);
+  background: rgba(0, 217, 255, 0.04);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 217, 255, 0.2);
 }
 
 .oda-input:hover:not(:focus) {
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* Select arrow */
 select.oda-input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f5f0e8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 16px;
@@ -356,13 +362,15 @@ select.oda-input {
 
 .oda-btn {
   border: none;
-  border-radius: 12px;
+  border-radius: 2px;
   font-weight: 700;
   font-size: 14px;
   padding: 14px;
   cursor: pointer;
   transition: all 0.2s var(--ease);
-  font-family: var(--font-main);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -370,32 +378,33 @@ select.oda-input {
 }
 
 .oda-btn:active {
-  transform: scale(0.96);
+  transform: scale(0.97);
 }
 
 .oda-btnPrimary {
   background: linear-gradient(135deg, var(--cyan), #00a8c6);
-  color: #000;
+  color: #0a0a0a;
   box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
 }
 
 .oda-btnPrimary:hover {
   filter: brightness(1.1);
-  box-shadow: 0 6px 20px rgba(0, 217, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 217, 255, 0.45);
 }
 
 .oda-btnGhost {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .oda-btnGhost:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .oda-btnWhats {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--ok);
   border: 1px solid rgba(69, 255, 143, 0.3);
 }
@@ -418,6 +427,7 @@ select.oda-input {
   font-weight: 700;
   color: var(--text-dim);
   margin-bottom: 10px;
+  text-transform: uppercase;
 }
 
 .oda-big {
@@ -425,8 +435,8 @@ select.oda-input {
   font-size: 48px;
   font-weight: 700;
   line-height: 1;
-  color: #fff;
-  text-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  text-shadow: 0 0 30px rgba(0, 217, 255, 0.25);
   margin-bottom: 16px;
 }
 
@@ -435,17 +445,19 @@ select.oda-input {
   background: rgba(69, 255, 143, 0.1);
   border: 1px solid rgba(69, 255, 143, 0.3);
   padding: 6px 14px;
-  border-radius: 20px;
+  border-radius: 2px;
   font-size: 13px;
   color: var(--ok);
   font-weight: 600;
   margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .oda-breakdown {
   text-align: left;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
+  background: rgba(10, 10, 10, 0.6);
+  border-radius: 2px;
   padding: 16px;
   border: 1px solid var(--card-border);
 }
@@ -479,7 +491,7 @@ select.oda-input {
   border: 1px solid rgba(255, 62, 94, 0.4);
   color: #ffadb6;
   padding: 12px;
-  border-radius: 12px;
+  border-radius: 2px;
   font-size: 13px;
   display: none;
 }
@@ -490,7 +502,10 @@ select.oda-input {
 .security-lock {
   position: fixed;
   inset: 0;
-  background: #000;
+  background: #0a0a0a;
+  background-image:
+    radial-gradient(circle at 50% 30%, rgba(0, 217, 255, 0.12), transparent 60%),
+    radial-gradient(circle at 50% 80%, rgba(255, 62, 122, 0.08), transparent 60%);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -504,64 +519,90 @@ select.oda-input {
 }
 
 .lock-box {
-  background: rgba(20, 20, 20, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(12, 12, 12, 0.95);
+  border: 1px solid rgba(0, 217, 255, 0.25);
   padding: 40px;
-  border-radius: 24px;
+  border-radius: 2px;
   text-align: center;
   width: 90%;
-  max-width: 320px;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+  max-width: 340px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 217, 255, 0.15), inset 0 0 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.lock-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--pink));
 }
 
 .lock-icon {
   font-size: 40px;
   margin-bottom: 20px;
+  filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.4));
 }
 
 .lock-box h2 {
   margin: 0 0 10px;
   font-family: var(--font-display);
-  color: white;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 20px;
 }
 
 .lock-box p {
   margin: 0 0 24px;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .lock-box input {
   width: 100%;
   padding: 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--cyan);
+  font-family: var(--font-display);
   margin-bottom: 12px;
   text-align: center;
   font-size: 16px;
+  letter-spacing: 0.1em;
   outline: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s var(--ease);
 }
 
 .lock-box input:focus {
   border-color: var(--cyan);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 217, 255, 0.25);
 }
 
 .lock-box button {
   width: 100%;
   padding: 14px;
-  border-radius: 12px;
+  border-radius: 2px;
   border: none;
   background: var(--cyan);
-  color: #000;
-  font-weight: bold;
+  color: #0a0a0a;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
+  box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+  transition: all 0.2s var(--ease);
 }
 
 .lock-box button:hover {
   filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(0, 217, 255, 0.45);
 }
 
 .lock-error {
@@ -572,6 +613,16 @@ select.oda-input {
 }
 
 @media (max-width: 500px) {
+  .oda-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .oda-row {
+    grid-template-columns: 1fr;
+  }
+
   .oda-actions {
     grid-template-columns: 1fr;
   }
