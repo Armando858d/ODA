@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>4RTB4N STUDIO | Checkout</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <link rel="stylesheet" href="css/index_estilo.css" />
+  <link rel="stylesheet" href="css/checkout.css" />
+</head>
+<body>
+
+  <!-- BACKGROUND -->
+  <div class="cyber-background" aria-hidden="true">
+    <div class="grid-overlay">
+      <div class="grid-line"></div>
+      <div class="grid-line"></div>
+      <div class="grid-line"></div>
+      <div class="grid-line"></div>
+    </div>
+    <div class="particle-field" id="particles"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="cyber-nav" id="cyberNav">
+    <div class="nav-container nav-grid-streetwear">
+      <div class="nav-logo-streetwear">
+        <a href="index.html" class="logo-link">
+          <img src="assets/images/logo.png" alt="4RTB4N" class="nav-simple-logo" onerror="this.src=''" />
+        </a>
+      </div>
+      <div class="nav-menu">
+        <div class="menu-container streetwear-menu">
+          <a href="index.html" class="nav-link"><span class="link-text">INICIO</span></a>
+          <a href="tienda.html" class="nav-link"><span class="link-text">TIENDA</span></a>
+        </div>
+      </div>
+      <div class="nav-actions-streetwear">
+        <a href="#" class="nav-action-btn" id="cartToggle"><i class="fas fa-shopping-cart"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="checkout-container">
+      <!-- Order Summary -->
+      <div class="checkout-section">
+        <h2 class="checkout-title">RESUMEN DEL PEDIDO</h2>
+        <div id="summary-items" class="summary-items"></div>
+        <div class="summary-totals">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="summary-subtotal">$0</span>
+          </div>
+          <div class="summary-row">
+            <span>Envío</span>
+            <span id="summary-shipping">$0</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total a pagar</span>
+            <span id="summary-total">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipping Form -->
+      <div class="checkout-section">
+        <h2 class="checkout-title">DATOS DE ENVÍO</h2>
+        <form id="checkout-form">
+          <div class="form-group">
+            <label>Nombre completo *</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Teléfono *</label>
+              <input type="tel" name="phone" pattern="[0-9]{10}" placeholder="10 dígitos" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Calle y número *</label>
+            <input type="text" name="address" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Colonia *</label>
+            <input type="text" name="neighborhood" class="form-control" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Ciudad *</label>
+              <input type="text" name="city" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Estado *</label>
+              <select name="state" class="form-control" required>
+                <option value="">Selecciona...</option>
+                <option value="AGS">Aguascalientes</option>
+                <option value="JAL">Jalisco</option>
+                <option value="CDMX">CDMX</option>
+                <option value="NL">Nuevo León</option>
+                <option value="OTHER">Otro</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Código Postal *</label>
+            <input type="text" name="zip" pattern="[0-9]{5}" placeholder="5 dígitos" class="form-control" required>
+          </div>
+
+          <h3 style="color: #fff; margin: 30px 0 15px; font-family: var(--font-display);">OPCIONES DE ENVÍO</h3>
+          <div class="shipping-options">
+            <label class="shipping-option">
+              <div>
+                <strong style="color: #fff; display: block;">Local (Aguascalientes)</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">1-2 días hábiles</span>
+              </div>
+              <strong style="color: var(--cyan);">$50 MXN</strong>
+              <input type="radio" name="shipping" value="50" data-name="Local">
+            </label>
+            <label class="shipping-option">
+              <div>
+                <strong style="color: #fff; display: block;">Zona Centro</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">2-4 días hábiles</span>
+              </div>
+              <strong style="color: var(--cyan);">$150 MXN</strong>
+              <input type="radio" name="shipping" value="150" data-name="Centro">
+            </label>
+            <label class="shipping-option">
+              <div>
+                <strong style="color: #fff; display: block;">Nacional Resto del País</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">3-5 días hábiles</span>
+              </div>
+              <strong style="color: var(--cyan);">$220 MXN</strong>
+              <input type="radio" name="shipping" value="220" data-name="Nacional">
+            </label>
+          </div>
+
+          <button type="submit" class="btn-mercadopago">
+            PAGAR CON MERCADO PAGO <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/cart.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Pendiente - 4RTB4N STUDIO</title>
+    <link rel="stylesheet" href="index_estilo.css">
+    <style>
+        .result-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--color-background, #121212);
+            color: var(--color-text, #ffffff);
+            font-family: 'Inter', sans-serif;
+        }
+        .result-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .icon {
+            font-size: 64px;
+            color: #FFC107;
+            margin-bottom: 20px;
+        }
+        h1 { margin-bottom: 10px; }
+        p { color: #aaaaaa; margin-bottom: 30px; }
+        .btn {
+            display: inline-block;
+            background: #ffffff;
+            color: #000000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        <div class="result-card">
+            <div class="icon">⏳</div>
+            <h1>Pago Pendiente</h1>
+            <p>Tu pago está en proceso. Te notificaremos cuando se apruebe.</p>
+            <a href="index.html" class="btn">Volver a la tienda</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -16,3 +16,19 @@ Thumbs.db
 node_modules/
 dist/
 .cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+.eggs/
+venv/
+.venv/
+
+# Backend credentials (NEVER commit)
+backend/.env
+
+# Generated shipping labels
+backend/labels/
