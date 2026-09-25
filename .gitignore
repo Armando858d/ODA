@@ -1,34 +1,150 @@
-# OS
-.DS_Store
-Thumbs.db
+# ============================================================
+#  .gitignore — 4RTB4N STUDIO
+# ============================================================
 
-# Editor
-.vscode/
-*.swp
-*.swo
+# ------------------------------------------------------------
+# 🔒 CREDENCIALES — NUNCA subir al repositorio
+# ------------------------------------------------------------
+backend/.env
+.env
+.env.*
+!.env.example        # Sí se permite el ejemplo (sin valores reales)
 
-# Temp
-*.tmp
-*.temp
-*.log
-
-# Build artifacts
-node_modules/
-dist/
-.cache/
-
-# Python
+# ------------------------------------------------------------
+# 🐍 Python
+# ------------------------------------------------------------
 __pycache__/
 *.py[cod]
 *.pyo
-*.egg-info/
+*.pyd
+*.pyw
+*.pywz
 *.egg
+*.egg-info/
 .eggs/
+dist/
+build/
+*.spec
+
+# Entornos virtuales
 venv/
 .venv/
+env/
+.env_python/
+ENV/
+env.bak/
+venv.bak/
 
-# Backend credentials (NEVER commit)
-backend/.env
+# mypy / pylint / coverage
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
 
-# Generated shipping labels
-backend/labels/
+# ------------------------------------------------------------
+# 📦 Node / Frontend (por si acaso en el futuro)
+# ------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.parcel-cache/
+.cache/
+dist/
+.next/
+.nuxt/
+.output/
+
+# ------------------------------------------------------------
+# 🗂️ Archivos generados por el backend
+# ------------------------------------------------------------
+backend/labels/          # Guías de envío PDF generadas
+backend/data/*.json      # Datos generados en runtime (no de producto)
+backend/uploads/         # Archivos subidos por usuarios
+
+# ------------------------------------------------------------
+# 🖥️ Sistemas operativos
+# ------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ------------------------------------------------------------
+# ✏️ Editores e IDEs
+# ------------------------------------------------------------
+# VS Code
+.vscode/
+!.vscode/extensions.json   # Sí se permite la lista de extensiones recomendadas
+
+# JetBrains (PyCharm, WebStorm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim / Emacs
+*.swp
+*.swo
+*~
+\#*\#
+.#*
+
+# ------------------------------------------------------------
+# 📄 Logs y archivos temporales
+# ------------------------------------------------------------
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.pid
+*.seed
+*.pid.lock
+
+# ------------------------------------------------------------
+# 📁 Misc
+# ------------------------------------------------------------
+.sass-cache/
+.eslintcache
+.stylelintcache
