@@ -1,58 +1,165 @@
-<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Pago Exitoso! - 4RTB4N STUDIO</title>
-    <link rel="stylesheet" href="index_estilo.css">
-    <style>
-        .result-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: var(--color-background, #121212);
-            color: var(--color-text, #ffffff);
-            font-family: 'Inter', sans-serif;
-        }
-        .result-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .icon {
-            font-size: 64px;
-            color: #4CAF50;
-            margin-bottom: 20px;
-        }
-        h1 { margin-bottom: 10px; }
-        p { color: #aaaaaa; margin-bottom: 30px; }
-        .btn {
-            display: inline-block;
-            background: #ffffff;
-            color: #000000;
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-        .btn:hover { transform: scale(1.05); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Pago Exitoso | 4RTB4N STUDIO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/index_estilo.css" />
+  <link rel="stylesheet" href="css/shared-enhancements.css" />
+  <style>
+    body { background: #050505; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+    .result-page { width: 100%; max-width: 560px; }
+    .result-card {
+      background: rgba(10,10,12,0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(0, 255, 136, 0.08);
+      animation: fadeUpIn 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes fadeUpIn { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+    .success-icon-wrap {
+      width: 88px; height: 88px;
+      background: radial-gradient(circle, rgba(0,255,136,0.15), transparent 70%);
+      border: 2px solid rgba(0, 255, 136, 0.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 28px;
+      animation: icon-pop 0.5s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes icon-pop { from { opacity:0; transform: scale(0.4); } to { opacity:1; transform: scale(1); } }
+    .success-icon-wrap i { font-size: 2.4rem; color: #00ff88; }
+    h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; color: #fff; margin-bottom: 10px; }
+    .subtitle { color: #a0a0a0; font-family: 'Inter', sans-serif; margin-bottom: 32px; line-height: 1.6; }
+    .order-details {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .order-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-family: 'Inter', sans-serif; font-size: 0.9rem;
+    }
+    .order-row:last-child { border-bottom: none; }
+    .order-row span:first-child { color: #a0a0a0; }
+    .order-row span:last-child { color: #fff; font-weight: 600; }
+    .order-row.total span:last-child { color: #00d9ff; font-size: 1.1rem; }
+    .steps-info {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+      margin-bottom: 32px;
+    }
+    .step-info-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .step-info-item i { font-size: 1.3rem; color: #00d9ff; margin-bottom: 8px; display: block; }
+    .step-info-item p { font-size: 0.72rem; color: #a0a0a0; font-family: 'Inter', sans-serif; margin: 0; line-height: 1.4; }
+    .btn-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary, .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; border-radius: 10px;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 0.9rem; text-decoration: none; letter-spacing: 0.5px;
+      transition: all 0.25s ease; text-transform: uppercase;
+    }
+    .btn-primary { background: #00d9ff; color: #000; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,217,255,0.35); }
+    .btn-secondary { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #fff; }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+    .brand-tag { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.75rem; color: rgba(255,255,255,0.25); letter-spacing: 2px; text-transform: uppercase; margin-top: 28px; }
+  </style>
 </head>
 <body>
-    <div class="result-container">
-        <div class="result-card">
-            <div class="icon">✅</div>
-            <h1>¡Pago Exitoso!</h1>
-            <p>Tu orden ha sido confirmada y estamos preparándola.</p>
-            <a href="index.html" class="btn">Volver a la tienda</a>
+  <!-- Background grid -->
+  <div style="position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,255,136,0.04), transparent);pointer-events:none;z-index:0;"></div>
+
+  <div class="result-page" style="position:relative;z-index:1;">
+    <div class="result-card">
+      <div class="success-icon-wrap">
+        <i class="fas fa-check"></i>
+      </div>
+      <h1>Pago Exitoso</h1>
+      <p class="subtitle">Tu orden fue confirmada. Estamos preparando tu pedido con la calidad que nos caracteriza.</p>
+
+      <div class="order-details" id="orderDetails">
+        <div class="order-row">
+          <span>Numero de orden</span>
+          <span id="detailOrderId">—</span>
         </div>
+        <div class="order-row">
+          <span>Cliente</span>
+          <span id="detailCustomer">—</span>
+        </div>
+        <div class="order-row">
+          <span>Articulos</span>
+          <span id="detailItems">—</span>
+        </div>
+        <div class="order-row">
+          <span>Envio</span>
+          <span id="detailShipping">—</span>
+        </div>
+        <div class="order-row total">
+          <span>Total pagado</span>
+          <span id="detailTotal">—</span>
+        </div>
+      </div>
+
+      <div class="steps-info">
+        <div class="step-info-item">
+          <i class="fas fa-box"></i>
+          <p>Preparando tu pedido</p>
+        </div>
+        <div class="step-info-item">
+          <i class="fas fa-truck"></i>
+          <p>Guia de envio generada</p>
+        </div>
+        <div class="step-info-item">
+          <i class="fas fa-envelope"></i>
+          <p>Confirmacion por email</p>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <a href="tienda.html" class="btn-primary"><i class="fas fa-store"></i> Seguir comprando</a>
+        <a href="https://wa.me/524492795557" target="_blank" class="btn-secondary" rel="noopener"><i class="fab fa-whatsapp"></i> Contactar</a>
+      </div>
+      <p class="brand-tag">4RTB4N STUDIO</p>
     </div>
+  </div>
+
+  <!-- WhatsApp Float -->
+  <a href="https://wa.me/524492795557" target="_blank" class="whatsapp-float" aria-label="Contactar por WhatsApp" rel="noopener noreferrer">
+    <div class="float-icon"><i class="fab fa-whatsapp"></i></div>
+  </a>
+
+  <script>
+    // Load order details from localStorage
+    try {
+      const order = JSON.parse(localStorage.getItem('4rtb4n_last_order'));
+      if (order) {
+        document.getElementById('detailOrderId').textContent  = order.order_id || '—';
+        document.getElementById('detailCustomer').textContent = order.customer_name || '—';
+        document.getElementById('detailItems').textContent    = order.items ? order.items.reduce((s,i)=>s+i.quantity,0) + ' articulo(s)' : '—';
+        document.getElementById('detailShipping').textContent = order.shipping_cost ? '$' + order.shipping_cost.toLocaleString('es-MX') + ' MXN' : '—';
+        document.getElementById('detailTotal').textContent    = order.total ? '$' + order.total.toLocaleString('es-MX') + ' MXN' : '—';
+        localStorage.removeItem('4rtb4n_last_order');
+      }
+    } catch(e) { console.log('No order data found'); }
+  </script>
 </body>
 </html>

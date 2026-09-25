@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -13,6 +13,7 @@
 
   <link rel="stylesheet" href="css/index_estilo.css" />
   <link rel="stylesheet" href="css/checkout.css" />
+  <link rel="stylesheet" href="css/shared-enhancements.css" />
 </head>
 <body>
 
@@ -48,6 +49,25 @@
   </nav>
 
   <main>
+  <div class="checkout-steps" id="checkoutSteps" aria-label="Progreso del pedido">
+    <div class="step-item completed" id="step1">
+      <div class="step-number"><i class="fas fa-shopping-cart"></i></div>
+      <div class="step-label">Carrito</div>
+    </div>
+    <div class="step-item active" id="step2">
+      <div class="step-number">2</div>
+      <div class="step-label">Datos y Envio</div>
+    </div>
+    <div class="step-item" id="step3">
+      <div class="step-number">3</div>
+      <div class="step-label">Pago</div>
+    </div>
+    <div class="step-item" id="step4">
+      <div class="step-number">4</div>
+      <div class="step-label">Confirmacion</div>
+    </div>
+  </div>
+
     <div class="checkout-container">
       <!-- Order Summary -->
       <div class="checkout-section">
@@ -59,7 +79,7 @@
             <span id="summary-subtotal">$0</span>
           </div>
           <div class="summary-row">
-            <span>Envío</span>
+            <span>EnvÃ­o</span>
             <span id="summary-shipping">$0</span>
           </div>
           <div class="summary-row total">
@@ -71,7 +91,7 @@
 
       <!-- Shipping Form -->
       <div class="checkout-section">
-        <h2 class="checkout-title">DATOS DE ENVÍO</h2>
+        <h2 class="checkout-title">DATOS DE ENVÃO</h2>
         <form id="checkout-form">
           <div class="form-group">
             <label>Nombre completo *</label>
@@ -83,12 +103,12 @@
               <input type="email" name="email" class="form-control" required>
             </div>
             <div class="form-group">
-              <label>Teléfono *</label>
-              <input type="tel" name="phone" pattern="[0-9]{10}" placeholder="10 dígitos" class="form-control" required>
+              <label>TelÃ©fono *</label>
+              <input type="tel" name="phone" pattern="[0-9]{10}" placeholder="10 dÃ­gitos" class="form-control" required>
             </div>
           </div>
           <div class="form-group">
-            <label>Calle y número *</label>
+            <label>Calle y nÃºmero *</label>
             <input type="text" name="address" class="form-control" required>
           </div>
           <div class="form-group">
@@ -107,41 +127,41 @@
                 <option value="AGS">Aguascalientes</option>
                 <option value="JAL">Jalisco</option>
                 <option value="CDMX">CDMX</option>
-                <option value="NL">Nuevo León</option>
+                <option value="NL">Nuevo LeÃ³n</option>
                 <option value="OTHER">Otro</option>
               </select>
             </div>
           </div>
           <div class="form-group">
-            <label>Código Postal *</label>
-            <input type="text" name="zip" pattern="[0-9]{5}" placeholder="5 dígitos" class="form-control" required>
+            <label>CÃ³digo Postal *</label>
+            <input type="text" name="zip" pattern="[0-9]{5}" placeholder="5 dÃ­gitos" class="form-control" required>
           </div>
 
-          <h3 style="color: #fff; margin: 30px 0 15px; font-family: var(--font-display);">OPCIONES DE ENVÍO</h3>
+          <h3 style="color: #fff; margin: 30px 0 15px; font-family: var(--font-display);">OPCIONES DE ENVÃO</h3>
           <div class="shipping-options">
             <label class="shipping-option">
               <div>
                 <strong style="color: #fff; display: block;">Local (Aguascalientes)</strong>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">1-2 días hábiles</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">1-2 dÃ­as hÃ¡biles</span>
               </div>
               <strong style="color: var(--cyan);">$50 MXN</strong>
-              <input type="radio" name="shipping" value="50" data-name="Local">
+              <input type="radio" name="shipping" value="50" data-zone="local" data-name="Local">
             </label>
             <label class="shipping-option">
               <div>
                 <strong style="color: #fff; display: block;">Zona Centro</strong>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">2-4 días hábiles</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">2-4 dÃ­as hÃ¡biles</span>
               </div>
               <strong style="color: var(--cyan);">$150 MXN</strong>
-              <input type="radio" name="shipping" value="150" data-name="Centro">
+              <input type="radio" name="shipping" value="150" data-zone="centro" data-name="Centro">
             </label>
             <label class="shipping-option">
               <div>
-                <strong style="color: #fff; display: block;">Nacional Resto del País</strong>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">3-5 días hábiles</span>
+                <strong style="color: #fff; display: block;">Nacional Resto del PaÃ­s</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">3-5 dÃ­as hÃ¡biles</span>
               </div>
               <strong style="color: var(--cyan);">$220 MXN</strong>
-              <input type="radio" name="shipping" value="220" data-name="Nacional">
+              <input type="radio" name="shipping" value="220" data-zone="nacional" data-name="Nacional">
             </label>
           </div>
 
@@ -157,3 +177,4 @@
   <script src="js/checkout.js"></script>
 </body>
 </html>
+

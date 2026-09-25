@@ -1,4 +1,4 @@
-class CartManager {
+﻿class CartManager {
   constructor() {
     this.key = '4rtb4n_cart';
     this.items = this.getItems();
@@ -89,7 +89,7 @@ class CartManager {
         <button class="close-cart-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
       </div>
       <div class="cart-items-container">
-        ${items.length === 0 ? '<div class="empty-cart">Tu carrito está vacío</div>' : items.map(item => `
+        ${items.length === 0 ? '<div class="empty-cart">Tu carrito estÃ¡ vacÃ­o</div>' : items.map(item => `
           <div class="cart-item">
             <img src="assets/images/${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.src='assets/images/logo.png'">
             <div class="cart-item-details">
@@ -149,6 +149,12 @@ class CartManager {
     
     const count = this.getCount();
     badge.textContent = count;
+    if (count > 0) {
+      badge.classList.remove('bounce');
+      void badge.offsetWidth; // reflow
+      badge.classList.add('bounce');
+      setTimeout(() => badge.classList.remove('bounce'), 500);
+    }
     badge.style.display = count > 0 ? 'flex' : 'none';
   }
 
@@ -196,3 +202,4 @@ class CartManager {
 
 window.cartManager = new CartManager();
 document.addEventListener('DOMContentLoaded', () => window.cartManager.init());
+

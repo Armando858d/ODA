@@ -1,58 +1,109 @@
-<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pago Pendiente - 4RTB4N STUDIO</title>
-    <link rel="stylesheet" href="index_estilo.css">
-    <style>
-        .result-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: var(--color-background, #121212);
-            color: var(--color-text, #ffffff);
-            font-family: 'Inter', sans-serif;
-        }
-        .result-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .icon {
-            font-size: 64px;
-            color: #FFC107;
-            margin-bottom: 20px;
-        }
-        h1 { margin-bottom: 10px; }
-        p { color: #aaaaaa; margin-bottom: 30px; }
-        .btn {
-            display: inline-block;
-            background: #ffffff;
-            color: #000000;
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-        .btn:hover { transform: scale(1.05); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Pago en proceso | 4RTB4N STUDIO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/index_estilo.css" />
+  <link rel="stylesheet" href="css/shared-enhancements.css" />
+  <style>
+    body { background:#050505; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; }
+    .result-page { width:100%; max-width:520px; }
+    .result-card {
+      background: rgba(10,10,12,0.75);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,193,7,0.2);
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(255,193,7,0.06);
+      animation: fadeUpIn 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes fadeUpIn{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+    .pending-icon-wrap {
+      width: 88px; height: 88px;
+      background: radial-gradient(circle, rgba(255,193,7,0.12), transparent 70%);
+      border: 2px solid rgba(255,193,7,0.35);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 28px;
+      animation: icon-pop 0.5s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes icon-pop{from{opacity:0;transform:scale(0.4);}to{opacity:1;transform:scale(1);}}
+    .pending-icon-wrap i { font-size:2.2rem; color:#ffc107; animation: spin-slow 3s linear infinite; }
+    @keyframes spin-slow { from{transform:rotate(0deg);}to{transform:rotate(360deg);} }
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:1.9rem; color:#fff; margin-bottom:10px; }
+    .subtitle { color:#a0a0a0; font-family:'Inter',sans-serif; margin-bottom:28px; line-height:1.6; }
+    .info-box {
+      background: rgba(255,193,7,0.05);
+      border: 1px solid rgba(255,193,7,0.15);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .info-box h3 { font-family:'Space Grotesk',sans-serif; font-size:0.8rem; color:#ffd54f; letter-spacing:1px; text-transform:uppercase; margin-bottom:12px; }
+    .info-step { display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; }
+    .info-step:last-child { margin-bottom:0; }
+    .info-step-num { width:22px; height:22px; background:rgba(255,193,7,0.15); border:1px solid rgba(255,193,7,0.3); border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:0.7rem; color:#ffc107; font-weight:700; flex-shrink:0; }
+    .info-step p { font-family:'Inter',sans-serif; font-size:0.85rem; color:#a0a0a0; margin:0; line-height:1.5; }
+    .btn-group { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+    .btn-primary, .btn-secondary {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:13px 26px; border-radius:10px;
+      font-family:'Space Grotesk',sans-serif; font-weight:700;
+      font-size:0.9rem; text-decoration:none; letter-spacing:0.5px;
+      transition:all 0.25s ease; text-transform:uppercase;
+    }
+    .btn-primary { background:rgba(0,217,255,0.1); color:#00d9ff; border:1px solid #00d9ff; }
+    .btn-primary:hover { background:#00d9ff; color:#000; }
+    .btn-secondary { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#fff; }
+    .btn-secondary:hover { background:rgba(255,255,255,0.1); }
+    .brand-tag { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.75rem; color:rgba(255,255,255,0.2); letter-spacing:2px; text-transform:uppercase; margin-top:28px; }
+  </style>
 </head>
 <body>
-    <div class="result-container">
-        <div class="result-card">
-            <div class="icon">⏳</div>
-            <h1>Pago Pendiente</h1>
-            <p>Tu pago está en proceso. Te notificaremos cuando se apruebe.</p>
-            <a href="index.html" class="btn">Volver a la tienda</a>
+  <div style="position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,193,7,0.03),transparent);pointer-events:none;z-index:0;"></div>
+
+  <div class="result-page" style="position:relative;z-index:1;">
+    <div class="result-card">
+      <div class="pending-icon-wrap">
+        <i class="fas fa-spinner"></i>
+      </div>
+      <h1>Pago en proceso</h1>
+      <p class="subtitle">Tu pago esta siendo verificado. Esto puede tomar algunos minutos.</p>
+
+      <div class="info-box">
+        <h3>Que hacer ahora</h3>
+        <div class="info-step">
+          <div class="info-step-num">1</div>
+          <p>Revisa tu correo electronico — recibirás una confirmacion cuando el pago sea aprobado.</p>
         </div>
+        <div class="info-step">
+          <div class="info-step-num">2</div>
+          <p>No vuelvas a intentar el pago — podria generar un cargo duplicado.</p>
+        </div>
+        <div class="info-step">
+          <div class="info-step-num">3</div>
+          <p>Si tienes dudas, contactanos por WhatsApp con tu numero de orden.</p>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <a href="tienda.html" class="btn-primary"><i class="fas fa-store"></i> Ver mas productos</a>
+        <a href="https://wa.me/524492795557?text=Hola%204RTB4N%2C%20mi%20pago%20esta%20pendiente%2C%20pueden%20ayudarme%3F" target="_blank" class="btn-secondary" rel="noopener"><i class="fab fa-whatsapp"></i> Estado de pedido</a>
+      </div>
+      <p class="brand-tag">4RTB4N STUDIO</p>
     </div>
+  </div>
+
+  <a href="https://wa.me/524492795557" target="_blank" class="whatsapp-float" aria-label="Contactar por WhatsApp" rel="noopener noreferrer">
+    <div class="float-icon"><i class="fab fa-whatsapp"></i></div>
+  </a>
 </body>
 </html>
