@@ -1,8 +1,8 @@
 import CATALOG from './catalog.mjs';
 
-export class APIError extends Error {
-  constructor(status, message) { super(message); this.status = status; }
-}
+import {APIError} from './errors.mjs';
+export {APIError} from './errors.mjs';
+import {authenticate,admin} from './admin.mjs';
 const fail = (status, message) => { throw new APIError(status, message); };
 const encoder = new TextEncoder();
 const hex = bytes => [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('');
@@ -145,7 +145,7 @@ export default {
   async fetch(request,env){
     const u=new URL(request.url),path=u.pathname,origin=request.headers.get('Origin')||'';let siteOrigin='';try{siteOrigin=new URL(env.SITE_URL).origin}catch{}
     const headers={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Vary':'Origin'};
-    if(origin&&origin===siteOrigin)Object.assign(headers,{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'Content-Type, Idempotency-Key','Access-Control-Allow-Methods':'GET, POST, OPTIONS'});
+    if(origin&&origin===siteOrigin)Object.assign(headers,{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'Content-Type, Idempotency-Key, Authorization','Access-Control-Allow-Methods':'GET, POST, OPTIONS'});
     try{
       let result;
       if(request.method==='OPTIONS'){if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');return new Response(null,{status:204,headers});}
@@ -153,7 +153,11 @@ export default {
       else if(path==='/api/health'&&request.method==='GET'){if(!env.DB)fail(503,'Base de datos pendiente.');await one(env,'SELECT id FROM orders LIMIT 1');result={ok:true,payments_enabled:config(env).enabled};}
       else if(path.startsWith('/api/')){
         limit(request,path);
-        if(path==='/api/checkout'&&request.method==='POST'){
+        if(path.startsWith('/api/admin/')){
+          if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');
+          await authenticate(request,env);
+          result=await admin(path,request.method,request.method==='POST'?await readBody(request):null,env,mp);
+        }else if(path==='/api/checkout'&&request.method==='POST'){
           if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');result=await checkout(await readBody(request),request.headers.get('Idempotency-Key'),env);
         }else if(path==='/api/webhooks/mercadopago'&&request.method==='POST'){
           const id=u.searchParams.get('data.id')||'';

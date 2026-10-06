@@ -6,8 +6,8 @@ import worker,{config,validate,checkout,applyPayment,orderStatus,hmac,signatureV
 
 // SQLite runs the actual migration/trigger SQL; this adapter follows D1's atomic batch contract.
 class D1 {
- constructor(){this.sql=new DatabaseSync(':memory:');this.sql.exec('PRAGMA foreign_keys=ON');for(const f of ['0001_orders.sql','0002_catalog.sql'])this.sql.exec(readFileSync(new URL('../migrations/'+f,import.meta.url),'utf8'));}
- prepare(sql){const db=this;return {bind(...args){return {sql,args,async first(){return db.sql.prepare(sql).get(...args)||null},async run(){return {meta:db.sql.prepare(sql).run(...args)}}}}};}
+ constructor(){this.sql=new DatabaseSync(':memory:');this.sql.exec('PRAGMA foreign_keys=ON');for(const f of ['0001_orders.sql','0002_catalog.sql','0003_shipping.sql'])this.sql.exec(readFileSync(new URL('../migrations/'+f,import.meta.url),'utf8'));}
+ prepare(sql){const db=this;return {bind(...args){return {sql,args,async first(){return db.sql.prepare(sql).get(...args)||null},async all(){return {results:db.sql.prepare(sql).all(...args)}},async run(){return {meta:db.sql.prepare(sql).run(...args)}}}}};}
  async batch(statements){this.sql.exec('BEGIN IMMEDIATE');try{const r=statements.map(s=>({meta:this.sql.prepare(s.sql).run(...s.args)}));this.sql.exec('COMMIT');return r}catch(e){this.sql.exec('ROLLBACK');throw e}}
 }
 function env(){return {DB:new D1(),PAYMENTS_ENABLED:'true',SITE_URL:'https://armando858d.github.io/ODA',API_URL:'https://oda.example.com',MP_ACCESS_TOKEN:'test-only-not-a-real-token',MP_WEBHOOK_SECRET:'test-webhook',STATUS_SIGNING_SECRET:'a'.repeat(48),MP_COLLECTOR_ID:'123',MP_MODE:'test',PICKUP_CONFIRMED:'true',SHIPPING_RATES_CONFIRMED:'true'};}
@@ -98,4 +98,22 @@ test('HTTP CORS, invalid bodies, signatures, config and private paths',async()=>
  assert.equal((await worker.fetch(new Request(base+'/api/webhooks/mercadopago',{method:'POST',body:'{}'}),e)).status,401);
  assert.equal((await worker.fetch(new Request(base+'/.dev.vars'),e)).status,404);
  const response=await worker.fetch(new Request(base+'/api/config'),{...e,PAYMENTS_ENABLED:'false'});assert.equal((await response.json()).enabled,false);
+});
+
+
+test('admin requires private bearer token and allowed origin',async()=>{
+ const e=env();e.ADMIN_TOKEN='s'.repeat(40);
+ const call=(token,origin='https://armando858d.github.io')=>worker.fetch(new Request('https://api.example/api/admin/status',{headers:{Origin:origin,Authorization:'Bearer '+token}}),e);
+ assert.equal((await call('bad')).status,401);
+ assert.equal((await call(e.ADMIN_TOKEN,'https://evil.example')).status,403);
+ const r=await call(e.ADMIN_TOKEN);assert.equal(r.status,200);const d=await r.json();assert.equal(d.inventory.length,14);assert.ok(!JSON.stringify(d).includes(e.ADMIN_TOKEN));
+});
+test('admin saves measured packages and rejects concurrent inventory changes',async()=>{
+ const {admin}=await import('../src/admin.mjs');const e=env();
+ const b={product_id:'venom-001',variant:0,previous_stock:0,stock:2,weight:1,length:20,width:20,height:30};
+ await admin('/api/admin/inventory','POST',b,e);assert.equal(getStock(e),2);
+ assert.equal(e.DB.sql.prepare('SELECT weight FROM package_profiles').get().weight,1);
+ await assert.rejects(admin('/api/admin/inventory','POST',{...b,weight:9,stock:8},e),{status:409});
+ assert.equal(getStock(e),2);assert.equal(e.DB.sql.prepare('SELECT weight FROM package_profiles').get().weight,1);
+ await assert.rejects(admin('/api/admin/inventory','POST',{...b,weight:0},e),{status:400});
 });
