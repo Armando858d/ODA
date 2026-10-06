@@ -10,3 +10,10 @@ const studioSocials=[['instagram','Instagram','https://www.instagram.com/oda858d
 const bottom=document.querySelector('.footer-bottom');
 if(bottom)bottom.insertAdjacentHTML('beforebegin',`<section class="studio-socials" aria-label="Redes sociales de ODA Studio"><div><span class="eyebrow">EL ESTUDIO TAMBIÉN ESTÁ AQUÍ</span><h3>SIGUE EL MOVIMIENTO.</h3></div><nav class="social-links" aria-label="Redes sociales">${studioSocials.map(([key,label,url])=>`<a class="network ${key}" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${label} de ODA Studio (abre otra pestaña)">${socialIcon(key)}</a>`).join('')}</nav></section>`);
 document.body.insertAdjacentHTML('beforeend',`<a class="whatsapp-float" href="https://wa.me/524492795557" target="_blank" rel="noopener noreferrer" aria-label="Hablar con ODA Studio por WhatsApp (abre otra pestaña)">${socialIcon('whatsapp')}</a>`);
+
+// Entrega local acordada directamente con el estudio, sin tarifa automática.
+if(page==='envios'||page==='checkout'){
+ const localContact=document.createElement('section');localContact.className='local-delivery-note';localContact.setAttribute('aria-label','Entrega local en Aguascalientes');
+ localContact.innerHTML=`<div><span class="eyebrow">¿ESTÁS EN AGUASCALIENTES, AGS.?</span><h2>COORDINAMOS TU ENTREGA.</h2><p>Si estás dentro de la ciudad de Aguascalientes, contáctanos por WhatsApp para acordar la zona, el costo y el horario de entrega. En otras localidades, consulta el envío por paquetería.</p></div><a class="btn lime" href="https://wa.me/524492795557?text=${encodeURIComponent('Hola ODA Studio, estoy dentro de la ciudad de Aguascalientes, Ags. Quiero coordinar una entrega local. Mi colonia y código postal son: ')}" target="_blank" rel="noopener noreferrer">COORDINAR POR WHATSAPP ↗</a>`;
+ document.querySelector('.page-heading')?.after(localContact);
+}
