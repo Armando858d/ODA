@@ -1,0 +1,14 @@
+﻿INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('venom-001',0,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('venom-001',1,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('elefante-002',0,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('elefante-002',1,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('snoopy-003',0,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('snoopy-003',1,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('hello-004',0,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('hello-004',1,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('gato-005',0,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('gato-005',1,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('conejo-006',0,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('conejo-006',1,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('corazon-007',0,0);
+INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES('corazon-007',1,0);

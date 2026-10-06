@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "oda-pagos",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-10-05",
+  "workers_dev": true,
+  "observability": { "enabled": false },
+  "vars": {
+    "SITE_URL": "https://armando858d.github.io/ODA",
+    "API_URL": "https://oda-pagos.oda-pagos-cloudflare.workers.dev",
+    "MP_MODE": "test",
+    "MP_MAX_INSTALLMENTS": "12",
+    "PAYMENTS_ENABLED": "false",
+    "PICKUP_CONFIRMED": "false",
+    "SHIPPING_RATES_CONFIRMED": "false",
+    "SHIPPING_LOCAL": "50",
+    "SHIPPING_CENTRO": "150",
+    "SHIPPING_NACIONAL": "220"
+  },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "oda-pedidos",
+    "database_id": "69b5732d-cdb1-4dc8-b95d-c3a7db085ff4",
+    "migrations_dir": "migrations"
+  }]
+}
