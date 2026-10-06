@@ -8,7 +8,7 @@ export const shippingConfigured=e=>!!(e.ENVIA_TOKEN&&e.SHIPPING_PROVIDER==='envi
 const base=e=>e.ENVIA_MODE==='live'?'https://api.envia.com':'https://api-test.envia.com';
 export async function envia(e,path,payload){
  if(!shippingConfigured(e))fail(503,'El cotizador está en configuración. Solicita tu envío por WhatsApp.');
- try{const r=await fetch(base(e)+path,{method:'POST',headers:{Authorization:'Bearer '+e.ENVIA_TOKEN,'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(15000)});if(!r.ok)fail(502,'La paquetería no pudo confirmar la operación. Revisa tu cuenta de Envia.com.');const data=await r.json();if(!Array.isArray(data.data)||data.meta==='error')fail(502,'La respuesta de la paquetería no es válida.');return data.data}catch(e){if(e instanceof APIError)throw e;fail(503,'La paquetería no respondió. Consulta el estado antes de repetir una compra de guía.');}
+ try{const r=await fetch(base(e)+path,{method:'POST',headers:{Authorization:'Bearer '+e.ENVIA_TOKEN,'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(15000)});if(!r.ok)fail(502,'Envia.com HTTP '+r.status+'. Verifica el token del ambiente '+e.ENVIA_MODE+'.');const data=await r.json();if(!Array.isArray(data.data)||data.meta==='error')fail(502,'La respuesta de la paquetería no es válida.');return data.data}catch(e){if(e instanceof APIError)throw e;fail(503,'La paquetería no respondió. Consulta el estado antes de repetir una compra de guía.');}
 }
 function txt(v,max=150){return typeof v==='string'&&v.trim().length<=max?v.trim():'';}
 export function address(a){
@@ -40,6 +40,7 @@ export async function rates(items,customer,e){
  const groups=await Promise.allSettled(carriers.map(async carrier=>{const raw=await envia(e,'/ship/rate/',{...payload,shipment:{type:1,carrier}});successes++;return raw.map(r=>normalizeRate(r,carrier)).filter(Boolean)}));
  const offers=groups.flatMap(g=>g.status==='fulfilled'?g.value:[]).sort((a,b)=>a.total_cents-b.total_cents).slice(0,12);
  if(!offers.length)fail(409,successes?'No hay servicios disponibles para ese paquete y destino. Consulta al estudio.':'No pudimos obtener tarifas. Revisa tu cuenta o consulta al estudio.');
+ await sql(e,'DELETE FROM shipping_quotes WHERE expires_at<? AND NOT EXISTS(SELECT 1 FROM order_shipping WHERE quote_id=shipping_quotes.id)',stamp()-86400).run();
  const expires=stamp()+600;
  const list=offers.map(r=>({...r,id:crypto.randomUUID()}));
  await e.DB.batch(list.map(r=>sql(e,'INSERT INTO shipping_quotes(id,fingerprint,payload,carrier,service,description,total_cents,estimate,mode,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?)',r.id,fingerprint,JSON.stringify({...payload,shipment:{type:1,carrier:r.carrier,service:r.service}}),r.carrier,r.service,r.description,r.total_cents,r.estimate,e.ENVIA_MODE,expires)));
@@ -60,7 +61,7 @@ export async function purchaseLabel(orderId,expectedCents,e){
  const payload=JSON.parse(row.payload),current=await envia(e,'/ship/rate/',payload);
  const matched=current.map(r=>normalizeRate(r,payload.shipment.carrier)).find(r=>r?.service===payload.shipment.service);
  if(!matched)fail(409,'El servicio elegido ya no está disponible. Revisa el pedido.');
- const maximum=Math.round(Number(e.MAX_LABEL_COST_MXN||0)*100);
+ const maximum=Number(e.MAX_LABEL_COST_MXN)>0?Math.round(Number(e.MAX_LABEL_COST_MXN)*100):row.shipping_cents;
  if(!Number.isSafeInteger(expectedCents)||expectedCents!==matched.total_cents||expectedCents>row.shipping_cents||!Number.isSafeInteger(maximum)||maximum<=0||expectedCents>maximum)fail(409,'La tarifa cambió o supera el importe autorizado. Revisa la cotización antes de comprar.');
  const attempt=crypto.randomUUID();
  const claim=await sql(e,"UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved')",attempt,stamp(),orderId,orderId).run();

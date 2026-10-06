@@ -3,6 +3,7 @@ import CATALOG from './catalog.mjs';
 import {APIError} from './errors.mjs';
 export {APIError} from './errors.mjs';
 import {authenticate,admin} from './admin.mjs';
+import {shippingConfigured,rates,resolveQuote,labelRate,purchaseLabel} from './shipping.mjs';
 const fail = (status, message) => { throw new APIError(status, message); };
 const encoder = new TextEncoder();
 const hex = bytes => [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('');
@@ -22,9 +23,9 @@ export function config(env) {
   const rates=Object.fromEntries(['local','centro','nacional'].map(k=>[k,Number(env['SHIPPING_'+k.toUpperCase()]??({local:50,centro:150,nacional:220}[k]))]));
   const validRates=Object.values(rates).every(n=>Number.isSafeInteger(n)&&n>=0&&n<=100000);
   let urls=false;try{urls=new URL(env.SITE_URL).protocol==='https:'&&new URL(env.API_URL).protocol==='https:'}catch{}
-  const shipping=env.SHIPPING_RATES_CONFIRMED==='true',pickup=env.PICKUP_CONFIRMED==='true';
+  const shipping=shippingConfigured(env)||env.SHIPPING_RATES_CONFIRMED==='true',pickup=env.PICKUP_CONFIRMED==='true';
   return {enabled:!!(env.DB&&env.PAYMENTS_ENABLED==='true'&&env.MP_ACCESS_TOKEN&&env.MP_WEBHOOK_SECRET&&env.STATUS_SIGNING_SECRET?.length>=32&&/^\d+$/.test(env.MP_COLLECTOR_ID||'')&&['test','live'].includes(env.MP_MODE)&&urls&&validRates&&(shipping||pickup)),
-    mode:env.MP_MODE||'test',max_installments:Math.max(1,Math.min(12,parseInt(env.MP_MAX_INSTALLMENTS,10)||12)),shipping_enabled:shipping,pickup_enabled:pickup,shipping_rates:rates};
+    mode:env.MP_MODE||'test',max_installments:Math.max(1,Math.min(12,parseInt(env.MP_MAX_INSTALLMENTS,10)||12)),shipping_provider:shippingConfigured(env)?'envia':'manual',shipping_enabled:shipping,pickup_enabled:pickup,shipping_rates:rates};
 }
 function field(obj,key,max,required=true) {
   const value=obj[key]??'';if(typeof value!=='string'||value.trim().length>max||(required&&!value.trim()))fail(400,'Revisa el campo '+key+'.');return value.trim();
@@ -37,7 +38,8 @@ export function validate(body,env) {
   if(c.method==='shipping'&&cfg.shipping_enabled){
     for(const [key,max] of [['zip',5],['state',60],['city',80],['colony',100],['street',150]])c[key]=field(body.customer,key,max);
     if(!/^\d{5}$/.test(c.zip)||Number(c.zip)<1000)fail(400,'Revisa tu código postal.');
-    const zip=Number(c.zip),zone=zip>=20000&&zip<=20999?'local':zip>=10000&&zip<=50000?'centro':'nacional';shipping=cfg.shipping_rates[zone]*100;
+    if(shippingConfigured(env)){for(const [key,max] of [['phone',20],['number',20],['state_code',3]])c[key]=field(body.customer,key,max);}
+    const zip=Number(c.zip),zone=zip>=20000&&zip<=20999?'local':zip>=10000&&zip<=50000?'centro':'nacional';shipping=shippingConfigured(env)?0:cfg.shipping_rates[zone]*100;
   }else if(!(c.method==='pickup'&&cfg.pickup_enabled))fail(409,'La modalidad de entrega no está habilitada.');
   const seen=new Set();const items=body.items.map(i=>{
     if(!i||typeof i.id!=='string'||!Number.isInteger(i.variant)||!Number.isInteger(i.quantity))fail(400,'Producto o cantidad no válidos.');
@@ -62,13 +64,18 @@ async function existing(row,fingerprint,env){
 export async function checkout(body,key,env) {
   if(!config(env).enabled)fail(503,'El pago en línea está en activación.');
   if(!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(key||''))fail(400,'Falta una referencia válida del intento.');
-  const {items,customer,shipping,total}=validate(body,env),fingerprint=await digest(JSON.stringify([items,customer,shipping]));
+  let {items,customer,shipping,total}=validate(body,env);
+  const dynamic=customer.method==='shipping'&&shippingConfigured(env);
+  const fingerprint=await digest(JSON.stringify([items,customer,dynamic?body.shipping_quote_id:shipping]));
   const old=await one(env,'SELECT * FROM orders WHERE request_key=?',key);if(old)return existing(old,fingerprint,env);
+  const quote=dynamic?await resolveQuote(body.shipping_quote_id,items,customer,env):null;
+  if(quote){shipping=quote.total_cents;total+=shipping;}
   const id='4RT-'+crypto.randomUUID().replaceAll('-','');
   try{
     await env.DB.batch([
       stmt(env,'INSERT INTO orders(id,request_key,fingerprint,items,customer,total_cents,shipping_cents,state,created_at,mode) VALUES(?,?,?,?,?,?,?,?,?,?)',id,key,fingerprint,JSON.stringify(items),JSON.stringify(customer),total,shipping,'creating',now(),env.MP_MODE),
-      ...items.map(i=>stmt(env,'INSERT INTO order_items(order_id,product_id,variant,quantity) VALUES(?,?,?,?)',id,i.id,i.variant,i.quantity))
+      ...items.map(i=>stmt(env,'INSERT INTO order_items(order_id,product_id,variant,quantity) VALUES(?,?,?,?)',id,i.id,i.variant,i.quantity)),
+      ...(quote?[stmt(env,'INSERT INTO order_shipping(order_id,quote_id) VALUES(?,?)',id,quote.id)]:[])
     ]);
   }catch(e){
     const concurrent=await one(env,'SELECT * FROM orders WHERE request_key=?',key);if(concurrent)return existing(concurrent,fingerprint,env);
@@ -139,7 +146,7 @@ const limits=new Map();
 function limit(request,path){
   const ip=request.headers.get('CF-Connecting-IP')||'local',key=ip+':'+(path.includes('/orders/')?'orders':path),minute=Math.floor(Date.now()/60000);
   if(limits.size>5000)limits.clear();let item=limits.get(key);if(!item||item.minute!==minute)item={minute,hits:0};item.hits++;limits.set(key,item);
-  if(item.hits>(path==='/api/checkout'?15:120))fail(429,'Demasiadas solicitudes. Intenta en un minuto.');
+  if(item.hits>(['/api/checkout','/api/shipping/quotes'].includes(path)?15:120))fail(429,'Demasiadas solicitudes. Intenta en un minuto.');
 }
 export default {
   async fetch(request,env){
@@ -156,7 +163,20 @@ export default {
         if(path.startsWith('/api/admin/')){
           if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');
           await authenticate(request,env);
-          result=await admin(path,request.method,request.method==='POST'?await readBody(request):null,env,mp);
+          const body=request.method==='POST'?await readBody(request):null;
+          const match=path.match(/^\/api\/admin\/orders\/(4RT-[a-f0-9]{32})\/(rate|label|payment)$/);
+          if(match&&request.method==='POST'){
+            const payment=await orderStatus(match[1],await hmac(env.STATUS_SIGNING_SECRET,match[1]),env);
+            result=match[2]==='payment'?payment:match[2]==='rate'?await labelRate(match[1],env):await purchaseLabel(match[1],body.expected_cents,env);
+          }else if(path==='/api/admin/test-checkout'&&request.method==='POST'){
+            if(env.MP_MODE!=='test'||env.ENVIA_MODE!=='test')fail(409,'Disponible solo en modo de prueba.');
+            result=await checkout(body,request.headers.get('Idempotency-Key'),{...env,PAYMENTS_ENABLED:'true',PICKUP_CONFIRMED:'true'});
+          }else result=await admin(path,request.method,body,env,mp);
+        }else if(path==='/api/shipping/quotes'&&request.method==='POST'){
+          if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');
+          const v=validate(await readBody(request),env);if(v.customer.method!=='shipping')fail(400,'Selecciona env?o a domicilio.');
+          for(const i of v.items){const stock=await one(env,'SELECT stock FROM inventory WHERE product_id=? AND variant=?',i.id,i.variant);if(!stock||stock.stock<i.quantity)fail(409,'No hay suficientes unidades de '+i.title+'.');}
+          result=await rates(v.items,v.customer,env);
         }else if(path==='/api/checkout'&&request.method==='POST'){
           if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');result=await checkout(await readBody(request),request.headers.get('Idempotency-Key'),env);
         }else if(path==='/api/webhooks/mercadopago'&&request.method==='POST'){

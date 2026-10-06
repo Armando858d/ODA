@@ -4,7 +4,9 @@
   "main": "src/worker.mjs",
   "compatibility_date": "2026-10-05",
   "workers_dev": true,
-  "observability": { "enabled": false },
+  "observability": {
+    "enabled": false
+  },
   "vars": {
     "SITE_URL": "https://armando858d.github.io/ODA",
     "API_URL": "https://oda-pagos.oda-pagos-cloudflare.workers.dev",
@@ -16,12 +18,19 @@
     "SHIPPING_RATES_CONFIRMED": "false",
     "SHIPPING_LOCAL": "50",
     "SHIPPING_CENTRO": "150",
-    "SHIPPING_NACIONAL": "220"
+    "SHIPPING_NACIONAL": "220",
+    "SHIPPING_PROVIDER": "envia",
+    "ENVIA_MODE": "test",
+    "ENVIA_CARRIERS": "fedex,dhl,estafeta",
+    "LABEL_PURCHASES_ENABLED": "false",
+    "MAX_LABEL_COST_MXN": "0"
   },
-  "d1_databases": [{
-    "binding": "DB",
-    "database_name": "oda-pedidos",
-    "database_id": "69b5732d-cdb1-4dc8-b95d-c3a7db085ff4",
-    "migrations_dir": "migrations"
-  }]
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "oda-pedidos",
+      "database_id": "69b5732d-cdb1-4dc8-b95d-c3a7db085ff4",
+      "migrations_dir": "migrations"
+    }
+  ]
 }

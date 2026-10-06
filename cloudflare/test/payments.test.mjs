@@ -117,3 +117,44 @@ test('admin saves measured packages and rejects concurrent inventory changes',as
  assert.equal(getStock(e),2);assert.equal(e.DB.sql.prepare('SELECT weight FROM package_profiles').get().weight,1);
  await assert.rejects(admin('/api/admin/inventory','POST',{...b,weight:0},e),{status:400});
 });
+
+async function shippingEnv(){
+ const e=env();Object.assign(e,{SHIPPING_PROVIDER:'envia',ENVIA_TOKEN:'mock-token',ENVIA_MODE:'test',ENVIA_CARRIERS:'fedex',LABEL_PURCHASES_ENABLED:'true'});stock(e);
+ e.DB.sql.prepare('INSERT INTO package_profiles VALUES(?,?,?,?,?,?)').run('venom-001',0,0.5,10,10,10);
+ const a={name:'Test',email:'test@example.com',phone:'4490000000',street:'Prueba',number:'1',district:'Centro',city:'Aguascalientes',state:'AG',country:'MX',postalCode:'20263',reference:''};
+ e.DB.sql.prepare('INSERT INTO store_settings VALUES(?,?)').run('origin',JSON.stringify(a));
+ return e;
+}
+function shippingBody(){return {items:body().items,customer:{name:'Test',email:'test@example.com',method:'shipping',phone:'4490000000',street:'Prueba',number:'1',colony:'Centro',city:'Aguascalientes',state:'Aguascalientes',state_code:'AG',zip:'20263',notes:''}};}
+const rateResponse=()=>Response.json({meta:'rate',data:[{carrier:'fedex',service:'ground',totalPrice:150,currency:'MXN',dropOff:0,deliveryEstimate:'2 d?as'}]});
+test('quote binds destination, server prices and expiry; checkout charges saved tariff',async()=>{
+ const {rates,resolveQuote}=await import('../src/shipping.mjs');const e=await shippingEnv(),b=shippingBody();
+ await mock(async url=>url.includes('mercadopago')?preference():rateResponse(),async()=>{
+  const v=validate(b,e),r=await rates(v.items,v.customer,e);b.shipping_quote_id=r.quotes[0].id;
+  await assert.rejects(resolveQuote(b.shipping_quote_id,v.items,{...v.customer,number:'99'},e),{status:409});
+  const key=crypto.randomUUID(),order=await checkout({...b,shipping:1,total:1},key,e);assert.equal(order.total,1000);
+  e.DB.sql.prepare('UPDATE shipping_quotes SET expires_at=1').run();
+  assert.deepEqual(await checkout(b,key,e),order);
+  await assert.rejects(checkout(b,crypto.randomUUID(),e),{status:409});
+ });
+});
+test('label needs approved payment and matching price, concurrent requests buy once',async()=>{
+ const {rates,purchaseLabel}=await import('../src/shipping.mjs');const e=await shippingEnv(),b=shippingBody();let purchases=0;
+ await mock(async url=>{if(url.includes('mercadopago'))return preference();if(url.includes('generate')){purchases++;return Response.json({data:[{shipmentId:1,trackingNumber:'TEST123',label:'https://labels.example/test.pdf',currency:'MXN',totalPrice:150,carrier:'fedex',service:'ground'}]})}return rateResponse()},async()=>{
+  const v=validate(b,e);b.shipping_quote_id=(await rates(v.items,v.customer,e)).quotes[0].id;
+  const o=await checkout(b,crypto.randomUUID(),e);
+  await assert.rejects(purchaseLabel(o.order_id,15000,e),{status:409});
+  await applyPayment({...payment(o.order_id),transaction_amount:1000},e);
+  await assert.rejects(purchaseLabel(o.order_id,1,e),{status:409});
+  const result=await Promise.allSettled([purchaseLabel(o.order_id,15000,e),purchaseLabel(o.order_id,15000,e)]);
+  assert.ok(result.some(r=>r.status==='fulfilled'));assert.equal(purchases,1);
+  await purchaseLabel(o.order_id,15000,e);assert.equal(purchases,1);
+ });
+});
+test('uncertain label response locks retries to prevent a second charge',async()=>{
+ const {rates,purchaseLabel}=await import('../src/shipping.mjs');const e=await shippingEnv(),b=shippingBody();let purchases=0;
+ await mock(async url=>{if(url.includes('mercadopago'))return preference();if(url.includes('generate')){purchases++;throw Error('timeout')}return rateResponse()},async()=>{
+ const v=validate(b,e);b.shipping_quote_id=(await rates(v.items,v.customer,e)).quotes[0].id;const o=await checkout(b,crypto.randomUUID(),e);await applyPayment({...payment(o.order_id),transaction_amount:1000},e);
+ await assert.rejects(purchaseLabel(o.order_id,15000,e),{status:503});await assert.rejects(purchaseLabel(o.order_id,15000,e),{status:409});assert.equal(purchases,1);
+ });
+});

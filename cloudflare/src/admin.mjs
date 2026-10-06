@@ -1,5 +1,5 @@
 import {APIError} from './errors.mjs';
-import {address} from './shipping.mjs';
+import {address,origin,packagesFor,envia} from './shipping.mjs';
 import CATALOG from './catalog.mjs';
 const sql=(e,s,...a)=>e.DB.prepare(s).bind(...a);
 export async function authenticate(request,e){
@@ -14,6 +14,12 @@ export async function admin(path,method,body,e,mp){
   const inventory=await sql(e,'SELECT i.*,p.weight,p.length,p.width,p.height FROM inventory i LEFT JOIN package_profiles p ON p.product_id=i.product_id AND p.variant=i.variant').all();
   const origin=await sql(e,"SELECT value FROM store_settings WHERE key='origin'").first();
   return {mode:e.MP_MODE,payments_enabled:e.PAYMENTS_ENABLED==='true',envia_connected:!!e.ENVIA_TOKEN,origin:origin?JSON.parse(origin.value):null,inventory:inventory.results.map(i=>{const p=CATALOG.find(p=>p.id===i.product_id);return {...i,title:(p?.name||i.product_id)+' / '+(p?.variants[i.variant]?.name||i.variant)}})};
+ }
+ if(path==='/api/admin/envia-test'&&method==='POST'){
+  if(e.ENVIA_MODE!=='test')throw new APIError(409,'Esta comprobaci?n es solo para sandbox.');
+  const from=await origin(e);const packages=await packagesFor([{id:'corazon-007',variant:0,quantity:1,title:'Coraz?n anat?mico',price_cents:55000}],e);
+  const data=await envia(e,'/ship/rate/',{origin:from,destination:from,packages,shipment:{type:1,carrier:'fedex'},settings:{currency:'MXN',printFormat:'PDF',printSize:'PAPER_4X6'}});
+  return {connected:true,services:data.length,note:'Consulta de prueba con origen y destino en el estudio; no se compr? ninguna gu?a.'};
  }
  if(path==='/api/admin/orders'&&method==='GET'){
   const r=await sql(e,'SELECT id,state,total_cents,shipping_cents,created_at,mode,items,customer FROM orders ORDER BY created_at DESC LIMIT 50').all();return {orders:r.results.map(o=>({...o,items:JSON.parse(o.items),customer:JSON.parse(o.customer)}))};
