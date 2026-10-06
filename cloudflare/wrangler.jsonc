@@ -9,6 +9,7 @@
     "SITE_URL": "https://armando858d.github.io/ODA",
     "API_URL": "https://oda-pagos.oda-pagos-cloudflare.workers.dev",
     "MP_MODE": "test",
+    "MP_COLLECTOR_ID": "3737925297",
     "MP_MAX_INSTALLMENTS": "12",
     "PAYMENTS_ENABLED": "false",
     "PICKUP_CONFIRMED": "false",
