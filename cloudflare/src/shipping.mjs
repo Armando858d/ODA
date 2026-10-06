@@ -12,9 +12,9 @@ export function enviaToken(value){
  if(!token||/[\s*\u2022\u25cf]/u.test(token))fail(409,'El token guardado contiene espacios internos o caracteres de ocultamiento. Copia el valor completo con el boton del portapapeles de Envia.com.');
  return token;
 }
-export async function envia(e,path,payload){
+export async function envia(e,path,payload,capture){
  if(!shippingConfigured(e))fail(503,'El cotizador está en configuración. Solicita tu envío por WhatsApp.');
- try{const r=await fetch(base(e)+path,{method:'POST',headers:{Authorization:'Bearer '+enviaToken(e.ENVIA_TOKEN),'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(15000)});if(!r.ok)fail(502,'Envia.com HTTP '+r.status+'. Verifica el token del ambiente '+e.ENVIA_MODE+'.');const data=await r.json();if(!Array.isArray(data.data)||data.meta==='error')fail(502,'La respuesta de la paquetería no es válida.');return data.data}catch(e){if(e instanceof APIError)throw e;fail(503,'La paquetería no respondió. Consulta el estado antes de repetir una compra de guía.');}
+ try{const r=await fetch(base(e)+path,{method:'POST',headers:{Authorization:'Bearer '+enviaToken(e.ENVIA_TOKEN),'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(15000)});const raw=await r.text();let parsed;try{parsed=JSON.parse(raw)}catch{parsed={message:raw.slice(0,1000)}}if(capture)await capture({http_status:r.status,response:parsed});if(!r.ok)fail(502,'Envia.com HTTP '+r.status+'. Verifica el token del ambiente '+e.ENVIA_MODE+'.');const data=parsed;if(!Array.isArray(data.data)||data.meta==='error')fail(502,'La respuesta de la paquetería no es válida.');return data.data}catch(e){if(e instanceof APIError)throw e;fail(503,'La paquetería no respondió. Consulta el estado antes de repetir una compra de guía.');}
 }
 function txt(v,max=150){return typeof v==='string'&&v.trim().length<=max?v.trim():'';}
 export function address(a){
@@ -73,7 +73,7 @@ export async function purchaseLabel(orderId,expectedCents,e){
  const claim=await sql(e,"UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved')",attempt,stamp(),orderId,orderId).run();
  if(claim.meta.changes!==1)fail(409,'La guía ya se está procesando o cambió el estado del pago.');
  try{
-  const data=await envia(e,'/ship/generate/',{...payload,shipment:{...payload.shipment,orderReference:orderId}});
+  const data=await envia(e,'/ship/generate/',{...payload,shipment:{...payload.shipment,orderReference:orderId}},async response=>{await sql(e,'UPDATE order_shipping SET label_data=? WHERE order_id=? AND attempt_id=?',JSON.stringify({provider_response:response}),orderId,attempt).run()});
   const labels=data.map(l=>{let url;try{url=new URL(l.label)}catch{}if(!url||url.protocol!=='https:'||url.username||url.password||typeof l.trackingNumber!=='string'||!l.trackingNumber||l.currency!=='MXN'||!l.shipmentId)fail(502,'Guía recibida incompleta. Revisa Envia.com.');return {shipment_id:String(l.shipmentId),tracking:l.trackingNumber,label_url:url.href,carrier:String(l.carrier),service:String(l.service),total:Number(l.totalPrice)};});
   if(!labels.length||labels.some(l=>!Number.isFinite(l.total)||l.total<0))fail(502,'No se confirmó la guía.');
   const result={labels,cost_warning:Math.round(labels.reduce((n,l)=>n+l.total,0)*100)>expectedCents};
@@ -85,6 +85,7 @@ export async function labelRate(orderId,e){
  if(!row||row.state!=='approved')fail(409,'El pedido no tiene envío pagado y aprobado.');
  if(row.mode!==e.ENVIA_MODE)fail(409,'El modo de la cuenta no coincide con el envío.');
  if(row.shipping_state==='ready')return {state:'ready',...JSON.parse(row.label_data)};
+ if(row.shipping_state==='needs_review'&&row.label_data){let detail;try{detail=JSON.parse(row.label_data)}catch{}if(detail?.provider_response?.response?.error?.message==='SERVICE_QUOTE_ONLY')fail(409,'Envia.com permite cotizar este servicio, pero no generar su PDF. Elige otra paqueteria para una nueva prueba; esta guia no se creo.');}
  if(row.shipping_state!=='not_started')fail(409,'La guía requiere revisión manual en Envia.com.');
  const p=JSON.parse(row.payload),data=await envia(e,'/ship/rate/',p);const r=data.map(x=>normalizeRate(x,p.shipment.carrier)).find(x=>x?.service===p.shipment.service);if(!r)fail(409,'No hay tarifa disponible para ese servicio.');
  return {state:'not_started',description:r.description,total:r.total_cents/100,total_cents:r.total_cents,paid_shipping:row.shipping_cents/100,estimate:r.estimate};
