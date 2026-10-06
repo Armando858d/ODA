@@ -158,3 +158,5 @@ test('uncertain label response locks retries to prevent a second charge',async()
  await assert.rejects(purchaseLabel(o.order_id,15000,e),{status:503});await assert.rejects(purchaseLabel(o.order_id,15000,e),{status:409});assert.equal(purchases,1);
  });
 });
+
+test('Envia token accepts harmless copy formatting but rejects hidden placeholders',async()=>{const {enviaToken}=await import('../src/shipping.mjs');assert.equal(enviaToken('  Bearer abc.def.xyz  '),'abc.def.xyz');assert.equal(enviaToken('"abc.def.xyz"'),'abc.def.xyz');assert.throws(()=>enviaToken('********'),{status:409});assert.throws(()=>enviaToken('abc def'),{status:409});});

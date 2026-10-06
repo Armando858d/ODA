@@ -6,9 +6,15 @@ const stamp=()=>Math.floor(Date.now()/1000);
 const sha=async value=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(n=>n.toString(16).padStart(2,'0')).join('');
 export const shippingConfigured=e=>!!(e.ENVIA_TOKEN&&e.SHIPPING_PROVIDER==='envia'&&['test','live'].includes(e.ENVIA_MODE));
 const base=e=>e.ENVIA_MODE==='live'?'https://api.envia.com':'https://api-test.envia.com';
+export function enviaToken(value){
+ let token=String(value||'').trim().replace(/^Bearer\s+/i,'').trim();
+ if((token.startsWith('"')&&token.endsWith('"'))||(token.startsWith("'")&&token.endsWith("'")))token=token.slice(1,-1).trim();
+ if(!token||/[\s*\u2022\u25cf]/u.test(token))fail(409,'El token guardado contiene espacios internos o caracteres de ocultamiento. Copia el valor completo con el boton del portapapeles de Envia.com.');
+ return token;
+}
 export async function envia(e,path,payload){
  if(!shippingConfigured(e))fail(503,'El cotizador está en configuración. Solicita tu envío por WhatsApp.');
- try{const r=await fetch(base(e)+path,{method:'POST',headers:{Authorization:'Bearer '+e.ENVIA_TOKEN,'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(15000)});if(!r.ok)fail(502,'Envia.com HTTP '+r.status+'. Verifica el token del ambiente '+e.ENVIA_MODE+'.');const data=await r.json();if(!Array.isArray(data.data)||data.meta==='error')fail(502,'La respuesta de la paquetería no es válida.');return data.data}catch(e){if(e instanceof APIError)throw e;fail(503,'La paquetería no respondió. Consulta el estado antes de repetir una compra de guía.');}
+ try{const r=await fetch(base(e)+path,{method:'POST',headers:{Authorization:'Bearer '+enviaToken(e.ENVIA_TOKEN),'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(15000)});if(!r.ok)fail(502,'Envia.com HTTP '+r.status+'. Verifica el token del ambiente '+e.ENVIA_MODE+'.');const data=await r.json();if(!Array.isArray(data.data)||data.meta==='error')fail(502,'La respuesta de la paquetería no es válida.');return data.data}catch(e){if(e instanceof APIError)throw e;fail(503,'La paquetería no respondió. Consulta el estado antes de repetir una compra de guía.');}
 }
 function txt(v,max=150){return typeof v==='string'&&v.trim().length<=max?v.trim():'';}
 export function address(a){
