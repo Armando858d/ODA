@@ -112,8 +112,14 @@ export async function signatureValid(signature,requestId,dataId,env) {
 export async function applyPayment(p,env) {
   if(typeof p.external_reference!=='string')return;
   const row=await one(env,'SELECT * FROM orders WHERE id=?',p.external_reference);if(!row)return;
-  const cents=Number(p.transaction_amount)*100;
-  if(p.currency_id!=='MXN'||!Number.isFinite(cents)||Math.abs(cents-row.total_cents)>0.000001||String(p.collector_id)!==env.MP_COLLECTOR_ID||p.live_mode!==(row.mode==='live'))fail(409,'El pago no coincide con el pedido.');
+  const shippingCents=Number(p.shipping_amount??0)*100;
+  const cents=Number(p.transaction_amount)*100+shippingCents;
+  if(p.currency_id!=='MXN'||!Number.isFinite(cents)||Math.abs(cents-row.total_cents)>0.000001||String(p.collector_id)!==env.MP_COLLECTOR_ID||!Number.isFinite(shippingCents)||Math.abs(shippingCents-row.shipping_cents)>0.000001||typeof p.live_mode!=='boolean')fail(409,'El pago no coincide con el pedido.');
+  if(p.live_mode===true){
+    const seller=await mp(env,'GET','/users/me');
+    const isTest=Array.isArray(seller.tags)&&seller.tags.includes('test_user');
+    if(String(seller.id)!==env.MP_COLLECTOR_ID||isTest!==(row.mode==='test'))fail(409,'El ambiente de la cuenta no coincide con el pedido.');
+  }else if(row.mode!=='test')fail(409,'Un pago de prueba no puede aprobar una venta real.');
   const id=String(p.id),statuses=['approved','pending','in_process','rejected','cancelled','refunded','charged_back'],updated=Date.parse(p.date_last_updated);
   if(!/^\d+$/.test(id)||!statuses.includes(p.status)||!Number.isFinite(updated))fail(502,'Respuesta de pago no válida.');
   await env.DB.batch([

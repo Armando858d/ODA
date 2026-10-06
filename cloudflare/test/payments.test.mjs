@@ -144,7 +144,7 @@ test('label needs approved payment and matching price, concurrent requests buy o
   const v=validate(b,e);b.shipping_quote_id=(await rates(v.items,v.customer,e)).quotes[0].id;
   const o=await checkout(b,crypto.randomUUID(),e);
   await assert.rejects(purchaseLabel(o.order_id,15000,e),{status:409});
-  await applyPayment({...payment(o.order_id),transaction_amount:1000},e);
+  await applyPayment({...payment(o.order_id),transaction_amount:850,shipping_amount:150},e);
   await assert.rejects(purchaseLabel(o.order_id,1,e),{status:409});
   const result=await Promise.allSettled([purchaseLabel(o.order_id,15000,e),purchaseLabel(o.order_id,15000,e)]);
   assert.ok(result.some(r=>r.status==='fulfilled'));assert.equal(purchases,1);
@@ -154,7 +154,7 @@ test('label needs approved payment and matching price, concurrent requests buy o
 test('uncertain label response locks retries to prevent a second charge',async()=>{
  const {rates,purchaseLabel}=await import('../src/shipping.mjs');const e=await shippingEnv(),b=shippingBody();let purchases=0;
  await mock(async url=>{if(url.includes('mercadopago'))return preference();if(url.includes('generate')){purchases++;throw Error('timeout')}return rateResponse()},async()=>{
- const v=validate(b,e);b.shipping_quote_id=(await rates(v.items,v.customer,e)).quotes[0].id;const o=await checkout(b,crypto.randomUUID(),e);await applyPayment({...payment(o.order_id),transaction_amount:1000},e);
+ const v=validate(b,e);b.shipping_quote_id=(await rates(v.items,v.customer,e)).quotes[0].id;const o=await checkout(b,crypto.randomUUID(),e);await applyPayment({...payment(o.order_id),transaction_amount:850,shipping_amount:150},e);
  await assert.rejects(purchaseLabel(o.order_id,15000,e),{status:503});await assert.rejects(purchaseLabel(o.order_id,15000,e),{status:409});assert.equal(purchases,1);
  });
 });
@@ -162,3 +162,5 @@ test('uncertain label response locks retries to prevent a second charge',async()
 test('Envia token accepts harmless copy formatting but rejects hidden placeholders',async()=>{const {enviaToken}=await import('../src/shipping.mjs');assert.equal(enviaToken('  Bearer abc.def.xyz  '),'abc.def.xyz');assert.equal(enviaToken('"abc.def.xyz"'),'abc.def.xyz');assert.throws(()=>enviaToken('********'),{status:409});assert.throws(()=>enviaToken('abc def'),{status:409});});
 
 test('test preference lets the buyer sign in without prefilled payer email',async()=>{const e=env();stock(e);await mock(async(url,opts)=>{assert.equal(Object.hasOwn(JSON.parse(opts.body),'payer'),false);return preference()},async()=>{await checkout(body(),crypto.randomUUID(),e)});});
+
+test('sandbox account may report live_mode true; real account must not approve test order',async()=>{const e=env();stock(e);let order;await mock(async()=>preference(),async()=>{order=await checkout(body(),crypto.randomUUID(),e)});await mock(async()=>Response.json({id:123,tags:['test_user']}),async()=>{await applyPayment({...payment(order.order_id),live_mode:true},e)});assert.equal(e.DB.sql.prepare('SELECT state FROM orders').get().state,'approved');await mock(async()=>Response.json({id:123,tags:[]}),async()=>{await assert.rejects(applyPayment({...payment(order.order_id),live_mode:true},e),{status:409})});});

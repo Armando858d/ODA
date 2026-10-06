@@ -10,6 +10,13 @@ export async function authenticate(request,e){
  if(d)throw new APIError(401,'La clave del panel no es correcta.');
 }
 export async function admin(path,method,body,e,mp){
+ if(path==='/api/admin/payment-diagnostic'&&method==='POST'){
+  if(!/^4RT-[a-f0-9]{32}$/.test(body?.order_id||''))throw new APIError(400,'Referencia no válida.');
+  const order=await sql(e,'SELECT id,total_cents,shipping_cents,mode FROM orders WHERE id=?',body.order_id).first();
+  if(!order)throw new APIError(404,'Pedido no encontrado.');
+  const data=await mp(e,'GET','/v1/payments/search?'+new URLSearchParams({external_reference:order.id,sort:'date_created',criteria:'desc',limit:'30'}));
+  const account=await mp(e,'GET','/users/me');return {account_is_test:Array.isArray(account.tags)&&account.tags.includes('test_user'),account_matches:String(account.id)===e.MP_COLLECTOR_ID,order,payments:(data.results||[]).filter(p=>p.external_reference===order.id).map(p=>({id:p.id,status:p.status,transaction_amount:p.transaction_amount,shipping_amount:p.shipping_amount,total_paid_amount:p.transaction_details?.total_paid_amount,currency:p.currency_id,collector_matches:String(p.collector_id)===e.MP_COLLECTOR_ID,live_mode:p.live_mode}))};
+ }
  if(path==='/api/admin/status'&&method==='GET'){
   const inventory=await sql(e,'SELECT i.*,p.weight,p.length,p.width,p.height FROM inventory i LEFT JOIN package_profiles p ON p.product_id=i.product_id AND p.variant=i.variant').all();
   const origin=await sql(e,"SELECT value FROM store_settings WHERE key='origin'").first();

@@ -22,7 +22,7 @@
     "SHIPPING_PROVIDER": "envia",
     "ENVIA_MODE": "test",
     "ENVIA_CARRIERS": "fedex,dhl,estafeta",
-    "LABEL_PURCHASES_ENABLED": "false",
+    "LABEL_PURCHASES_ENABLED": "true",
     "MAX_LABEL_COST_MXN": "0"
   },
   "d1_databases": [
