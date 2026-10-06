@@ -160,3 +160,5 @@ test('uncertain label response locks retries to prevent a second charge',async()
 });
 
 test('Envia token accepts harmless copy formatting but rejects hidden placeholders',async()=>{const {enviaToken}=await import('../src/shipping.mjs');assert.equal(enviaToken('  Bearer abc.def.xyz  '),'abc.def.xyz');assert.equal(enviaToken('"abc.def.xyz"'),'abc.def.xyz');assert.throws(()=>enviaToken('********'),{status:409});assert.throws(()=>enviaToken('abc def'),{status:409});});
+
+test('test preference lets the buyer sign in without prefilled payer email',async()=>{const e=env();stock(e);await mock(async(url,opts)=>{assert.equal(Object.hasOwn(JSON.parse(opts.body),'payer'),false);return preference()},async()=>{await checkout(body(),crypto.randomUUID(),e)});});

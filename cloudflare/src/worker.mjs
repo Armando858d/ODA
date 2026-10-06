@@ -85,7 +85,7 @@ export async function checkout(body,key,env) {
   try{
     const response=await mp(env,'POST','/checkout/preferences',{
       items:items.map(i=>({id:i.id,title:i.title,quantity:i.quantity,unit_price:i.price_cents/100,currency_id:'MXN'})),
-      payer:{email:customer.email,name:customer.name},external_reference:id,
+      ...(env.MP_MODE==='live'?{payer:{email:customer.email,name:customer.name}}:{}),external_reference:id,
       back_urls:{success:callback,pending:callback,failure:callback},auto_return:'approved',
       notification_url:env.API_URL.replace(/\/$/,'')+'/api/webhooks/mercadopago',
       payment_methods:{installments:config(env).max_installments},expires:true,
