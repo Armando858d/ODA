@@ -183,3 +183,9 @@ test('public content and server checkout share current product prices',async()=>
 test('catalog rejects HTML, executable images, invalid dates and discounts',async()=>{
  const e=env(),c=await getContent(e);c.products[0].image='javascript:alert(1)';assert.throws(()=>validateContent(c));c.products[0].image='ven1.png';c.products[0].name='<script>';assert.throws(()=>validateContent(c));c.products[0].name='Pieza';c.promotions=[{id:'bad',title:'Oferta',active:true,percent:101}];assert.throws(()=>validateContent(c));c.promotions[0].percent=10;c.promotions[0].start='tomorrow';assert.throws(()=>validateContent(c));
 });
+
+test('canvas products persist with photos, variants and zero initial stock',async()=>{
+ const e=env(),c=await getContent(e);c.products.push({...c.products[0],id:'canvas-test',category:'lienzo',type:'fixed',price:450,variants:[{name:'40 × 60 cm',mod:0},{name:'60 × 80 cm',mod:200}],images:['angel1.png']});
+ await saveContent(e,c);const saved=(await getContent(e)).products.at(-1);assert.equal(saved.category,'lienzo');assert.equal(saved.price,450);assert.equal(saved.variants[1].mod,200);assert.deepEqual(saved.images,['angel1.png']);assert.equal(getStock(e,'canvas-test'),0);
+ const response=await worker.fetch(new Request('https://oda.example.com/api/content'),e);assert.equal((await response.json()).products.at(-1).category,'lienzo');
+});

@@ -119,3 +119,15 @@ body.studio-is-loading{overflow:hidden}
  footer .social-links .network{display:flex;align-items:center;justify-content:center;flex:0 0 48px;margin:0}
 }
 @media(prefers-reduced-motion:reduce){.nav-links,.nav-links a,.menu-toggle{transition:none!important}.menu-toggle[aria-expanded=true]{transform:none}}
+
+/* Personalizados y lienzos: dos entradas claras, táctiles y sin desbordamiento. */
+.home-paths .collection h3{font-size:clamp(24px,3.2vw,46px);overflow-wrap:anywhere}
+.home-paths .collection p{max-width:32ch;margin:12px 0 20px}
+.home-paths .canvas-entry>.canvas-preview{width:100%;min-height:300px;position:relative;inset:auto}
+.home-paths .canvas-entry>.canvas-preview .canvas-art{position:relative}
+.canvas-actions{display:flex;flex-wrap:wrap;gap:14px;margin:24px 0 40px}
+.canvas-available-title{scroll-margin-top:110px;font-size:clamp(26px,5vw,48px);margin-bottom:16px}
+.quote-canvas{min-height:380px;border-radius:24px;margin-bottom:30px}
+@media(max-width:600px){.home-paths{grid-template-columns:1fr}.canvas-actions{display:grid;grid-template-columns:1fr}.canvas-actions .btn{text-align:center;justify-content:center;white-space:normal}.quote-canvas{min-height:280px}.home-paths .collection h3{font-size:30px}.home-paths .canvas-entry>.canvas-preview{min-height:240px}}
+
+.home-paths .canvas-entry{display:flex;flex-direction:column;align-items:stretch;gap:24px}.home-paths .canvas-entry>.canvas-preview{flex:1;border-radius:16px}.home-paths .canvas-entry>.canvas-preview .canvas-art{inset:auto}

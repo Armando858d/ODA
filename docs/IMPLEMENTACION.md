@@ -141,3 +141,15 @@ La publicación de GitHub Pages se comprueba mediante el resultado de su workflo
 10. Publicación manual de la API actualizada y comprobación de `/api/content`.
 11. Separación de Existencias y paquetes en su propia página con buscador.
 12. Actualización del README y esta guía de implementación y mantenimiento.
+
+## Personalizados y lienzos — 7 de octubre de 2026
+
+La portada ofrece dos entradas principales: Personalizados y Venta de lienzos. Se mantienen el diseño, el carrusel automático y la franja inclinada. El catálogo anterior sigue accesible desde Personalizados y el pie de página.
+
+- `lienzos.html`: catálogo de productos publicados de categoría `lienzo` y precio fijo, con búsqueda, ordenación, favoritos, fotos y carrito compartido. Crear mi lienzo abre `crear-lienzo.html`; Lienzos disponibles lleva al catálogo de esa página.
+- `crear-lienzo.html`: formulario de cotización con medidas, concepto y detalles. Prepara un mensaje que el cliente revisa y envía por WhatsApp; no crea un pedido pagado ni genera imágenes.
+- Administrador: Piezas y Lienzos se muestran en pestañas separadas sobre el mismo catálogo. Lienzos admite fotos, precio base, variantes por tamaño/acabado, colecciones, visibilidad y cotización. Describe material, medidas y marco en la descripción.
+- Para publicar: Admin → Lienzos → Agregar lienzo → fotos y datos → Guardar. Para vender directamente elige Precio fijo. Después abre Existencias y paquetes: los productos nuevos empiezan con stock cero. Configura cantidades y embalaje antes de vender.
+- No se crearon obras, precios o stock ficticios. Lienzos disponibles significa obras publicadas a precio fijo; el servidor verifica existencias al comprar.
+- `cloudflare/src/content.mjs` incorpora `lienzo` a las categorías válidas; requiere despliegue independiente del Worker. Si se edita el bundle del panel, sustituir `["art-toy","figura","custom"]` por `["art-toy","figura","custom","lienzo"]` y pulsar Implementar. Hasta entonces el servidor rechazará guardar esa categoría. GitHub Pages no despliega este Worker.
+- Verificación: sintaxis JavaScript y suite del servidor, incluida persistencia de lienzos, fotos, variantes, stock inicial y respuesta pública. No se realizaron cobros ni cambios de inventario real.
