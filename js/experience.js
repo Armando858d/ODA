@@ -7,15 +7,13 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#navLinks').clas
 if(page==='index'){
  const slides=[{image:'ven1.png',label:'VENOM / CARÁCTER EN 3D',alt:'Esculturas de Venom con acabado blanco'},{image:'elefante1.png',label:'ART TOYS / DISEÑO CON PERSONALIDAD',alt:'Elefante Art Toy del estudio'},{image:'corazon1.png',label:'OBJETOS / FUERA DE LO COMÚN',alt:'Corazón anatómico impreso en 3D'},{image:'angel1.png',label:'CUSTOM / TU IDEA, OTRA DIMENSIÓN',alt:'Figura de ángel personalizada'}];
  const hero=$('.hero');hero.setAttribute('aria-roledescription','carrusel');hero.setAttribute('aria-label','Colecciones destacadas');hero.innerHTML=`<div class="hero-slides">${slides.map((s,i)=>`<div class="hero-slide ${i===0?'active':''}" aria-hidden="${i!==0}"><img src="assets/images/${s.image}" alt="${s.alt}" ${i===0?'fetchpriority="high"':'loading="lazy"'}></div>`).join('')}</div><div class="hero-content"><span class="eyebrow">ODA STUDIO / ARTE, CALLE & CULTURA 3D</span><h1>ROMPE<br>EL <em>MOLDE.</em></h1><p>Art toys, figuras y piezas que no pasan desapercibidas. Diseñadas para quienes tienen su propio estilo.</p><a class="btn lime" href="tienda.html">ENCUENTRA TU PRÓXIMA PIEZA ↗</a><span class="hero-tag">De la calle.<br>A tu espacio.</span></div><div class="hero-sticker">HECHO<br>CON ACTITUD<br>EN MÉXICO ↗</div><div class="hero-controls"><span class="slide-info" id="slideInfo"><b>01 / 04</b>${slides[0].label}</span><span class="auto-label"><i></i> LIVE GALLERY / ODA STUDIO</span></div>`;
- let current=0,timer,heroPaused=false;const reduce=matchMedia('(prefers-reduced-motion: reduce)');
- const update=(direction=1)=>{current=(current+direction+slides.length)%slides.length;hero.querySelectorAll('.hero-slide').forEach((e,i)=>{e.classList.toggle('active',i===current);e.setAttribute('aria-hidden',i!==current)});$('#slideInfo').innerHTML=`<b>0${current+1} / 04</b>${slides[current].label}`};
- // La galería continúa aunque el cursor o el foco estén sobre la portada.
- // Conserva la preferencia de accesibilidad del sistema y pausa pestañas ocultas.
- const start=()=>{clearInterval(timer);if(!heroPaused&&!reduce.matches&&!document.hidden)timer=setInterval(()=>update(1),5500)};
- hero.querySelector('.hero-controls').insertAdjacentHTML('beforeend','<div class="hero-gallery-controls" aria-label="Controles de la galería"><button type="button" class="hero-prev" aria-label="Foto anterior">←</button><button type="button" class="hero-next" aria-label="Foto siguiente">→</button><button type="button" class="hero-pause" aria-pressed="false">Pausar</button></div>');
- const pauseButton=hero.querySelector('.hero-pause');const syncPause=()=>{pauseButton.textContent=heroPaused?'Reanudar':'Pausar';pauseButton.setAttribute('aria-pressed',String(heroPaused))};
- hero.querySelector('.hero-prev').onclick=()=>{update(-1);start()};hero.querySelector('.hero-next').onclick=()=>{update(1);start()};pauseButton.onclick=()=>{heroPaused=!heroPaused;syncPause();start()};
- heroPaused=reduce.matches;syncPause();document.addEventListener('visibilitychange',start);reduce.addEventListener('change',()=>{heroPaused=reduce.matches;syncPause();start()});start();
+ let current=0,timer,heroVisible=true;
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+ const update=()=>{current=(current+1)%slides.length;hero.querySelectorAll('.hero-slide').forEach((slide,i)=>{slide.classList.toggle('active',i===current);slide.setAttribute('aria-hidden',String(i!==current))});$('#slideInfo').innerHTML=`<b>0${current+1} / 04</b>${slides[current].label}`};
+ const start=()=>{clearInterval(timer);if(!reduce.matches&&!document.hidden&&heroVisible)timer=setInterval(update,5500)};
+ document.addEventListener('visibilitychange',start);reduce.addEventListener('change',start);
+ if('IntersectionObserver' in window){new IntersectionObserver(entries=>{heroVisible=entries[0].isIntersecting;start()},{threshold:0.05}).observe(hero)}
+ start();
  $('.ticker').insertAdjacentHTML('afterend',`<div class="trust-strip"><div>${icon('bag')}<div><b>Pago seguro con Mercado Pago</b><p>Disponible al activar el pago en línea.</p></div></div><div>${icon('box')}<div><b>Acabados a tu elección</b><p>Revisa tu pieza y su precio antes de pagar.</p></div></div><div>${icon('spark')}<div><b>Atención directa del estudio</b><p>Aguascalientes, México · Hablemos de tu idea.</p></div></div></div>`);
  $('#main').insertAdjacentHTML('beforeend',trustContent());
 }
