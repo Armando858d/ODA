@@ -144,9 +144,9 @@ La publicación de GitHub Pages se comprueba mediante el resultado de su workflo
 
 ## Personalizados y lienzos — 7 de octubre de 2026
 
-La portada conserva la tienda, las piezas destacadas y las colecciones originales, junto con el carrusel automático y la franja inclinada. El apartado de lienzos tiene únicamente dos opciones: Crear mi lienzo y Lienzos disponibles. Tienda vuelve al menú principal.
+La portada conserva la tienda, las piezas destacadas y las colecciones originales, junto con el carrusel automático y la franja inclinada. Dentro de ¿Cuál es tu rollo? hay tres tarjetas: Art toys y coleccionables, Personalizados y Arte en lienzo. La última ofrece Crear mi lienzo y Ver lienzos disponibles. Tienda reúne todas las categorías; el menú ya no separa Lienzos. Tu spot. Tus reglas. incluye una pieza y un lienzo publicados cuando existen ambos, y completa cuatro destacados sin duplicados.
 
-- `lienzos.html`: catálogo de productos publicados de categoría `lienzo` y precio fijo, con búsqueda, ordenación, favoritos, fotos y carrito compartido. Crear mi lienzo abre `crear-lienzo.html`; Lienzos disponibles lleva al catálogo de esa página.
+- `tienda.html?categoria=lienzo`: filtro de lienzos en el catálogo compartido, con búsqueda, ordenación, favoritos, fotos y carrito. `lienzos.html` redirige a ese filtro para conservar enlaces anteriores. Crear mi lienzo abre `crear-lienzo.html`.
 - `crear-lienzo.html`: formulario de cotización con medidas, concepto y detalles. Prepara un mensaje que el cliente revisa y envía por WhatsApp; no crea un pedido pagado ni genera imágenes.
 - Administrador: Piezas y Lienzos se muestran en pestañas separadas sobre el mismo catálogo. Lienzos admite fotos, precio base, variantes por tamaño/acabado, colecciones, visibilidad y cotización. Describe material, medidas y marco en la descripción.
 - Para publicar: Admin → Lienzos → Agregar lienzo → fotos y datos → Guardar. Para vender directamente elige Precio fijo. Después abre Existencias y paquetes: los productos nuevos empiezan con stock cero. Configura cantidades y embalaje antes de vender.

@@ -17,6 +17,6 @@ if(page==='index'){
  const ticker=document.querySelector('.ticker');ticker.innerHTML='<div>'+Array(4).fill('<span>FUERA DEL MOLDE</span> ✳ <span>HECHO CON ACTITUD</span> ✳ <span>ODA STUDIO</span> ✳ ').join('')+'</div>';
  const heads=document.querySelectorAll('.skate-home .section-head');
  if(heads[0]){heads[0].querySelector('.eyebrow').textContent='ELIGE LO QUE VA CONTIGO / 01';heads[0].querySelector('h2').innerHTML='TU SPOT.<br><span>TUS REGLAS.</span>';}
- if(heads[1]){heads[1].querySelector('.eyebrow').textContent='DOS FORMAS DE HACERLO TUYO / 02';heads[1].querySelector('h2').textContent='¿CUÁL ES TU ROLLO?';}
+ if(heads[1]){heads[1].querySelector('.eyebrow').textContent='ENCUENTRA LO QUE VA CONTIGO / 02';heads[1].querySelector('h2').textContent='¿CUÁL ES TU ROLLO?';}
  const manifesto=document.querySelector('.manifesto');if(manifesto){manifesto.querySelector('.eyebrow').textContent='DEL ESTUDIO A LA CALLE';manifesto.querySelector('h2').innerHTML='CREA.<br><span>ROMPE.</span><br>REPITE.';}
 }

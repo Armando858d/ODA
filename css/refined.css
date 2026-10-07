@@ -120,9 +120,23 @@ body.studio-is-loading{overflow:hidden}
 }
 @media(prefers-reduced-motion:reduce){.nav-links,.nav-links a,.menu-toggle{transition:none!important}.menu-toggle[aria-expanded=true]{transform:none}}
 
-/* Lienzos conserva un apartado independiente con dos opciones. */
-.canvas-two-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* Acciones de personalización de lienzos. */
 .canvas-actions{display:flex;flex-wrap:wrap;gap:14px;margin:24px 0 40px}
 .canvas-available-title{scroll-margin-top:110px;font-size:clamp(26px,5vw,48px);margin-bottom:16px}
 .quote-canvas{min-height:380px;border-radius:24px;margin-bottom:30px}
-@media(max-width:600px){.canvas-two-options{grid-template-columns:1fr}.canvas-actions{display:grid;grid-template-columns:1fr}.canvas-actions .btn{text-align:center;justify-content:center;white-space:normal}.quote-canvas{min-height:280px}}
+@media(max-width:600px){.canvas-actions{display:grid;grid-template-columns:1fr}.canvas-actions .btn{text-align:center;justify-content:center;white-space:normal}.quote-canvas{min-height:280px}}
+
+/* Tres caminos del estudio dentro de ¿Cuál es tu rollo? */
+.rollo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.rollo-grid .collection{min-width:0;min-height:440px;padding:28px}
+.rollo-grid .collection h3{font-size:clamp(28px,3vw,43px);overflow-wrap:anywhere}
+.rollo-grid .rollo-canvas{background:#3689ff;color:#111510;isolation:isolate}
+.rollo-canvas .rollo-frame{position:absolute;top:24px;right:24px;width:145px;height:155px;border:9px solid #f6f2e8;background:#171916;color:#c9fb38;display:grid;place-items:center;box-shadow:8px 10px 0 #17191630;transform:rotate(9deg);z-index:0}
+.rollo-frame span{font-family:Impact,'Arial Narrow',sans-serif;font-size:30px;line-height:.95;letter-spacing:-.03em}
+.rollo-canvas .rollo-copy{padding-top:155px;width:100%}
+.rollo-copy p{font-size:13px;line-height:1.6;margin:15px 0;max-width:32ch}
+.rollo-actions{display:flex;flex-direction:column;align-items:stretch;gap:8px}
+.rollo-actions .btn{gap:8px;padding-inline:12px;white-space:normal;text-align:center}
+.rollo-actions .text-link{margin-top:0;min-height:44px;align-items:center;justify-content:center;text-align:center;font-size:11px;gap:8px}
+@media(max-width:1000px){.rollo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rollo-grid .rollo-canvas{grid-column:1/-1;min-height:350px}.rollo-canvas .rollo-copy{padding-top:0;max-width:65%}.rollo-canvas .rollo-frame{top:45px;right:7%}}
+@media(max-width:600px){.rollo-grid{grid-template-columns:1fr}.rollo-grid .collection{min-height:370px;padding:24px}.rollo-grid .collection h3{font-size:36px}.rollo-grid .rollo-canvas{min-height:440px}.rollo-canvas .rollo-copy{max-width:none;padding-top:155px}.rollo-canvas .rollo-frame{top:22px;right:26px}}
