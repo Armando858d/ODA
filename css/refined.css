@@ -98,3 +98,24 @@ body.studio-is-loading{overflow:hidden}
  .studio-loading--overlay .studio-loading__track{top:calc(50% + 124px)}
 }
 @media(prefers-reduced-motion:reduce){.studio-loading--overlay,.studio-loading--overlay *,.hero-slide,.ticker>div{animation:none!important;transition:none!important}}
+
+/* A slight skate angle across the entire viewport. */
+.ticker{transform:rotate(-1deg) scaleX(1.015);transform-origin:center;margin:28px 0;overflow:hidden}
+.menu-emoji{display:none}
+@media(max-width:900px){
+ .nav-links{display:flex;visibility:hidden;opacity:0;pointer-events:none;transform:translateY(-10px) scale(.97);transition:opacity .24s ease,transform .3s ease,visibility .3s;align-items:stretch;text-align:center;padding:20px 16px;gap:8px;background:#172012f7;border-color:#51643e}
+ .nav-links.open{visibility:visible;opacity:1;pointer-events:auto;transform:translateY(0) scale(1);animation:none}
+ .nav-links a{display:flex;align-items:center;justify-content:center;gap:12px;font-size:23px;line-height:1.2;border-radius:16px;padding:14px 18px;min-height:52px;transition:background .2s ease,transform .2s ease}
+ .nav-links a:after{display:none}.nav-links a:active{transform:scale(.97)}
+ .menu-emoji{display:inline-grid;place-items:center;font-family:system-ui,sans-serif;font-size:23px;line-height:1;width:30px;flex-shrink:0}
+ .menu-toggle{transition:background .2s ease,transform .3s ease}.menu-toggle[aria-expanded=true]{background:#c9fb3822;transform:rotate(90deg)}
+}
+@media(max-width:700px){
+ .ticker{transform:rotate(-1deg) scaleX(1.015);margin:24px 0}
+ footer .studio-socials{align-items:center;text-align:center;width:100%;gap:22px}
+ footer .studio-socials>div{width:100%}
+ footer .studio-socials .eyebrow{margin-bottom:10px}
+ footer .social-links{width:100%;justify-content:center;align-items:center;margin-inline:auto;gap:14px}
+ footer .social-links .network{display:flex;align-items:center;justify-content:center;flex:0 0 48px;margin:0}
+}
+@media(prefers-reduced-motion:reduce){.nav-links,.nav-links a,.menu-toggle{transition:none!important}.menu-toggle[aria-expanded=true]{transform:none}}

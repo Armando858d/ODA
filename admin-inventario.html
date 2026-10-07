@@ -1,0 +1,8 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>ARTBAN</title><link rel="icon" href="assets/images/artban-logo.png"><link rel="stylesheet" href="css/admin.css?v=20261007-8"><script src="js/admin-inventario.js?v=20261007-8" defer></script></head><body><main>
+<header><a href="admin.html">← Administración</a><span>ARTBAN / Inventario</span><button id="logout" hidden>Cerrar sesión</button></header>
+<h1>Existencias y paquetes.</h1><p>Actualiza unidades, peso y medidas en un espacio dedicado.</p>
+<form id="login"><label>Clave privada del panel<input id="key" type="password" autocomplete="current-password" required minlength="32"></label><button>Entrar a inventario</button><p>La clave se conserva solo en memoria. Esta página requiere su propio acceso.</p></form>
+<p id="message" role="status" aria-live="polite"></p>
+<div id="panel" hidden><nav class="dashboard-nav" aria-label="Administración"><a href="admin.html">🎨 Catálogo y pedidos</a><a href="admin-inventario.html" aria-current="page">📦 Existencias y paquetes</a></nav>
+<section><div class="content-toolbar"><label class="inventory-search">Buscar pieza o acabado<input id="inventorySearch" type="search" placeholder="Nombre de la pieza…"></label><button id="refresh">Actualizar inventario</button></div><p id="inventoryCount" role="status"></p><p>Medidas del paquete cerrado: peso en kg y dimensiones en cm. Cada unidad se envía en una caja independiente. Las piezas nuevas empiezan con cero existencias.</p><div id="inventory"></div></section></div>
+</main></body></html>

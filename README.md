@@ -1,49 +1,26 @@
-# 4RTB4N STUDIO - Diseño y Fabricación Digital ⚡
+# ARTBAN / 4RTB4N — ODA Studio
 
-Sitio web oficial y herramientas internas para 4RTB4N STUDIO, una agencia de impresión 3D premium en Aguascalientes.
+Tienda de piezas 3D y arte del estudio en Aguascalientes. Frontend HTML/CSS/JavaScript en GitHub Pages; API en Cloudflare Workers con D1.
 
-## 🚀 Características
+- Tienda: https://armando858d.github.io/ODA/
+- Administración de catálogo, ofertas, pedidos y conexiones: https://armando858d.github.io/ODA/admin.html
+- Existencias y paquetes: https://armando858d.github.io/ODA/admin-inventario.html
+- API pública de catálogo: https://oda-pagos.oda-pagos-cloudflare.workers.dev/api/content
 
-### 🌐 Sitio Web (Landing Page)
-- Diseño **Cyber/Future** con animaciones GSAP.
-- Loader interactivo (Impresora 3D CSS).
-- Galería de proyectos tipo "Netflix/Nike" fullscreen.
-- Optimizado para móviles y escritorio (Totalmente Responsivo).
+## Documentación
 
-### 🧮 Calculadora de Cotizaciones (Interna)
-- **Acceso Seguro**: Protección por contraseña (Hash Base64).
-- **Cálculo Preciso**: Material, tiempo, depreciación, mano de obra y riesgo.
-- **Modo Oscuro**: Interfaz diseñada para uso prolongado.
-- **Cotizaciones PDF**: Generación de documentos formales con logo y folio.
-- **Integración WhatsApp**: Envío directo de resumen de cotización.
+[Implementación, cambios, administración y despliegue](docs/IMPLEMENTACION.md) documenta el trabajo realizado, la estructura de archivos, los flujos y las limitaciones. [Configuración del servidor](cloudflare/README.md) contiene las instrucciones de Workers y D1.
 
-## 🛠️ Tecnologías
-- **Frontend**: HTML5, CSS3 (Variables, Grid, Flexbox), Vanilla JS.
-- **Librerías**: 
-  - [GSAP](https://greensock.com/gsap/) (Animaciones).
-  - [jsPDF](https://github.com/parallax/jsPDF) (Generación de PDFs).
-  - [FontAwesome](https://fontawesome.com) (Iconos).
-- **Seguridad**: Autenticación cliente-servidor (simulada) para herramientas internas.
+## Desarrollo
 
-## 📂 Estructura del Proyecto
+El frontend no requiere compilación. Sirve esta carpeta con un servidor estático para trabajar localmente; la API restringe las operaciones administrativas al origen configurado en `SITE_URL`.
 
-```
-/4RTB4N
-├── assets/          # Imágenes y videos (optimizados)
-├── css/             # Estilos modulares
-├── js/              # Lógica de negocio y animación
-├── index.html       # Landing page pública
-├── proyectos.html   # Galería de trabajos
-└── calculadora.html # Herramienta de cotización (Protegida)
+```sh
+cd cloudflare
+npm install
+npm test
 ```
 
+La publicación del frontend ocurre en GitHub Pages al actualizar `main`. La API se despliega por separado; un cambio de GitHub Pages no actualiza automáticamente el Worker.
 
-## 🔒 Acceso a Calculadora
-> [!WARNING]
-> **Nota de Seguridad**: La autenticación actual es básica (lado del cliente) y solo para propósitos demostrativos o de uso interno de baja seguridad. No almacenar datos sensibles.
-
-La herramienta de calculadora require una clave de acceso (uso interno).
-
-
----
-© 2024-2026 4RTB4N STUDIO. Todos los derechos reservados.
+No guardar claves en el repositorio. La clave del administrador se introduce en el panel y solo permanece en memoria durante esa página. La configuración de pagos real debe comprobarse en el servidor: la presencia de botones o logotipos no demuestra que los cobros estén habilitados.

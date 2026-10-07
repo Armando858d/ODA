@@ -1,3 +1,5 @@
+> Guía actual de la tienda y el administrador: [Implementación](../docs/IMPLEMENTACION.md).
+
 # ODA · Cloudflare Workers + D1
 
 Backend de Checkout Pro adaptado al plan gratuito de Workers/D1, sujeto a las cuotas de Cloudflare. La tienda continúa en GitHub Pages. No requiere Render ni un disco contratado.
@@ -59,9 +61,9 @@ pnpm run deploy
 
 No ejecutar migraciones de pruebas ni rellenar inventario ficticio en la base remota. Las migraciones iniciales solo crean tablas e inventario a cero; el registro de migraciones evita repetirlas.
 
-`src/catalog.mjs` es la autoridad de precios del checkout; mantenerlo alineado con `js/catalog.js` de la tienda. Las promociones y lienzos permanecen por cotización: no se aplican descuentos ni regalos automáticamente al checkout.
+El catálogo editable en D1 es la autoridad de precios del checkout y de las promociones. `src/catalog.mjs` conserva el catálogo base para validación de respaldo. Los lienzos personalizados siguen por cotización; no hay regalos automáticos.
 
-Cada pedido reserva stock mediante una transacción D1 y triggers. Una misma clave de intento no crea dos preferencias. Si Mercado Pago no responde, el pedido conserva la reserva y queda para revisión; no liberar unidades sin conciliar primero con el proveedor. No hay panel administrativo, liberación automática de reservas ni integración con paquetería.
+Cada pedido reserva stock mediante una transacción D1 y triggers. Una misma clave de intento no crea dos preferencias. Si Mercado Pago no responde, el pedido conserva la reserva y queda para revisión; no liberar unidades sin conciliar primero con el proveedor. Hay panel administrativo e integración con Envia.com. No hay liberación automática de reservas; ver ../docs/IMPLEMENTACION.md para el flujo actual.
 
 El estado se verifica contra la API de Mercado Pago: monto, moneda, vendedor, modo y referencia. La consulta exige un token firmado y no devuelve nombre, correo o domicilio. El código no guarda datos de tarjeta. Los logs de observabilidad están desactivados para evitar registrar enlaces con tokens; no registrar cuerpos ni encabezados sensibles al depurar.
 
