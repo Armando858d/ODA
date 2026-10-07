@@ -144,7 +144,7 @@ La publicación de GitHub Pages se comprueba mediante el resultado de su workflo
 
 ## Personalizados y lienzos — 7 de octubre de 2026
 
-La portada ofrece dos entradas principales: Personalizados y Venta de lienzos. Se mantienen el diseño, el carrusel automático y la franja inclinada. El catálogo anterior sigue accesible desde Personalizados y el pie de página.
+La portada conserva la tienda, las piezas destacadas y las colecciones originales, junto con el carrusel automático y la franja inclinada. El apartado de lienzos tiene únicamente dos opciones: Crear mi lienzo y Lienzos disponibles. Tienda vuelve al menú principal.
 
 - `lienzos.html`: catálogo de productos publicados de categoría `lienzo` y precio fijo, con búsqueda, ordenación, favoritos, fotos y carrito compartido. Crear mi lienzo abre `crear-lienzo.html`; Lienzos disponibles lleva al catálogo de esa página.
 - `crear-lienzo.html`: formulario de cotización con medidas, concepto y detalles. Prepara un mensaje que el cliente revisa y envía por WhatsApp; no crea un pedido pagado ni genera imágenes.

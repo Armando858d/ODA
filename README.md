@@ -25,4 +25,4 @@ La publicación del frontend ocurre en GitHub Pages al actualizar `main`. La API
 
 No guardar claves en el repositorio. La clave del administrador se introduce en el panel y solo permanece en memoria durante esa página. La configuración de pagos real debe comprobarse en el servidor: la presencia de botones o logotipos no demuestra que los cobros estén habilitados.
 
-La portada se organiza en **Personalizados** y **Venta de lienzos**. El administrador incluye pestañas separadas para Piezas y Lienzos; consulta [la guía de implementación](docs/IMPLEMENTACION.md) para publicar obras y actualizar el Worker.
+La portada conserva la tienda, las piezas destacadas y las colecciones. Solo el apartado de lienzos se organiza en **Crear mi lienzo** y **Lienzos disponibles**. El administrador incluye pestañas separadas para Piezas y Lienzos; consulta [la guía de implementación](docs/IMPLEMENTACION.md) para publicar obras y actualizar el Worker.
