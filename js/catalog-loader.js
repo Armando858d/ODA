@@ -22,6 +22,12 @@
     CATALOG.splice(0, CATALOG.length, ...c.products);
     window.ODA_CONTENT = c;
   } catch { window.ODA_CATALOG_OFFLINE = true; }
+  // Traduce el texto original del catálogo; conserva los datos comerciales.
+  const spanishCatalogCopy = {"Elefante Art Toy": "Elefante de diseño", "Snoopy Figure": "Figura de Snoopy", "Figura decorativa con diseño cute. Perfecta para regalo.": "Figura decorativa con diseño tierno. Perfecta para regalo.", "Art Toy minimalista con acabado premium. Edición de estudio.": "Figura de diseño minimalista con acabado de alta calidad. Edición de estudio.", "Art Toy custom de coleccion. Pieza anatómica detallada.": "Figura de colección personalizada. Pieza anatómica detallada.", "Coleccionable custom con nivel de detalle artesanal.": "Coleccionable personalizado con nivel de detalle artesanal.", "CUSTOM": "PERSONALIZADO", "PREMIUM": "ALTA CALIDAD", "CUTE": "TIERNO", "ART TOY": "FIGURA DE DISEÑO"};
+  for (const product of CATALOG) {
+    for (const key of ['name', 'description']) product[key] = spanishCatalogCopy[product[key]] || product[key];
+    product.tags = (product.tags || []).map(tag => spanishCatalogCopy[tag] || tag);
+  }
   try {
     for (const src of scripts) {
       await new Promise((resolve, reject) => {

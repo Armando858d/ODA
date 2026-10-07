@@ -153,3 +153,9 @@ La portada conserva la tienda, las piezas destacadas y las colecciones originale
 - No se crearon obras, precios o stock ficticios. Lienzos disponibles significa obras publicadas a precio fijo; el servidor verifica existencias al comprar.
 - `cloudflare/src/content.mjs` incorpora `lienzo` a las categorías válidas; requiere despliegue independiente del Worker. Si se edita el bundle del panel, sustituir `["art-toy","figura","custom"]` por `["art-toy","figura","custom","lienzo"]` y pulsar Implementar. Hasta entonces el servidor rechazará guardar esa categoría. GitHub Pages no despliega este Worker.
 - Verificación: sintaxis JavaScript y suite del servidor, incluida persistencia de lienzos, fotos, variantes, stock inicial y respuesta pública. No se realizaron cobros ni cambios de inventario real.
+
+## Menú y textos en español
+
+El menú principal ofrece Inicio, Tienda, Personalizados, El estudio y Envíos, sin una entrada independiente para Lienzos ni emojis. Se ajustaron el contraste, el foco de teclado, la selección y el cierre del menú móvil. Se conservan la animación y el cierre con Escape o al elegir un enlace.
+
+Se tradujeron los lemas, las categorías, la galería, las etiquetas y la cotización. “Tu spot. Tus reglas.” ahora dice “Tu espacio. Tus reglas.”. ODA STUDIO, ARTBAN y los nombres de personajes se conservan como nombres propios. El texto original en inglés de algunas piezas se traduce al mostrar el catálogo; no se cambian identificadores, precios, fotos ni existencias del servidor.

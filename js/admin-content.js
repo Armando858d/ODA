@@ -26,9 +26,9 @@ window.createContentManager=function(api,say,reloadInventory){
  values.getImages=()=>images;
  }
  if(productSection()){
- field('category','Categoría','select',selected==='canvases'?'lienzo':x.category||'art-toy',selected==='canvases'?[['lienzo','Lienzos']]:[['art-toy','Art toys'],['figura','Figuras'],['custom','Personalizados']]);field('type','Forma de venta','select',x.type||'fixed',[['fixed','Precio fijo'],['custom','Por cotización']]);const price=field('price','Precio base (MXN)','number',x.price??0);price.min=1;price.max=1000000;price.step='.01';
+ field('category','Categoría','select',selected==='canvases'?'lienzo':x.category||'art-toy',selected==='canvases'?[['lienzo','Lienzos']]:[['art-toy','Figuras de diseño'],['figura','Figuras'],['custom','Personalizados']]);field('type','Forma de venta','select',x.type||'fixed',[['fixed','Precio fijo'],['custom','Por cotización']]);const price=field('price','Precio base (MXN)','number',x.price??0);price.min=1;price.max=1000000;price.step='.01';
  field('collection','Colección','select',x.collection||'',[['','Sin colección'],...data.collections.map(c=>[c.id,c.name])]);field('featured','Destacar en catálogo','checkbox',x.featured);
- const variants=field('variants',selected==='canvases'?'Tamaños y acabados: uno por línea, nombre | precio adicional':'Acabados: uno por línea, nombre | precio adicional','textarea',(x.variants||[{name:'Estándar',mod:0}]).map(v=>v.name+' | '+v.mod).join('\n'));grid.append(make('p','Conserva el orden de los acabados existentes: las existencias se identifican por su posición. Las piezas nuevas empiezan con stock 0; configúralo en Existencias.'));
+ const variants=field('variants',selected==='canvases'?'Tamaños y acabados: uno por línea, nombre | precio adicional':'Acabados: uno por línea, nombre | precio adicional','textarea',(x.variants||[{name:'Estándar',mod:0}]).map(v=>v.name+' | '+v.mod).join('\n'));grid.append(make('p','Conserva el orden de los acabados existentes: las existencias se identifican por su posición. Las piezas nuevas empiezan con existencias en cero; configúralo en Existencias.'));
  const update=()=>{price.disabled=values.type.value==='custom';price.required=!price.disabled;variants.required=!price.disabled};values.type.onchange=update;update();
  }
  if(selected==='promotions'){
