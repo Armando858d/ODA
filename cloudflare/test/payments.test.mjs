@@ -164,3 +164,22 @@ test('Envia token accepts harmless copy formatting but rejects hidden placeholde
 test('test preference lets the buyer sign in without prefilled payer email',async()=>{const e=env();stock(e);await mock(async(url,opts)=>{assert.equal(Object.hasOwn(JSON.parse(opts.body),'payer'),false);return preference()},async()=>{await checkout(body(),crypto.randomUUID(),e)});});
 
 test('sandbox account may report live_mode true; real account must not approve test order',async()=>{const e=env();stock(e);let order;await mock(async()=>preference(),async()=>{order=await checkout(body(),crypto.randomUUID(),e)});await mock(async()=>Response.json({id:123,tags:['test_user']}),async()=>{await applyPayment({...payment(order.order_id),live_mode:true},e)});assert.equal(e.DB.sql.prepare('SELECT state FROM orders').get().state,'approved');await mock(async()=>Response.json({id:123,tags:[]}),async()=>{await assert.rejects(applyPayment({...payment(order.order_id),live_mode:true},e),{status:409})});});
+
+// CMS: edits must persist and payment validation must use server-side prices.
+import {getContent,saveContent,pricedProducts,activePromotions,validateContent} from '../src/content.mjs';
+test('catalog edits persist, initialize stock and reject stale writes',async()=>{
+ const e=env(),c=await getContent(e);c.products.push({...c.products[0],id:'new-piece',name:'Nueva pieza',price:123});
+ const saved=await saveContent(e,c);assert.equal(saved.revision,1);assert.equal((await getContent(e)).products.at(-1).price,123);
+ assert.equal(getStock(e,'new-piece'),0);await assert.rejects(()=>saveContent(e,c),/Otra sesión/);
+});
+test('scheduled collection offers use strongest discount and expire precisely',()=>{
+ const c={products:[{id:'p',price:100,variants:[{name:'Pintado',mod:50}],collection:'limited'},{id:'q',price:100,variants:[]}],promotions:[{active:true,title:'Global',percent:10},{active:true,title:'Especial',percent:20,collection:'limited',start:'2026-10-01T00:00:00Z',end:'2026-10-08T00:00:00Z'}]};
+ const at=Date.parse('2026-10-07T00:00:00Z');assert.equal(activePromotions(c,at).length,2);const rows=pricedProducts(c,at);assert.equal(rows[0].price,80);assert.equal(rows[0].variants[0].mod,40);assert.equal(rows[1].price,90);assert.equal(pricedProducts(c,Date.parse('2026-10-08T00:00:00Z'))[0].price,90);
+});
+test('public content and server checkout share current product prices',async()=>{
+ const e=env(),c=await getContent(e);c.products[0].price=200;c.promotions=[{id:'offer',title:'Semana especial',active:true,percent:25,collection:'',start:'',end:''}];await saveContent(e,c);
+ const response=await worker.fetch(new Request('https://oda.example.com/api/content'),e);assert.equal(response.status,200);const d=await response.json();assert.equal(d.products[0].price,150);assert.equal(validate(body(),{...e,catalog:d.products}).total,15000);
+});
+test('catalog rejects HTML, executable images, invalid dates and discounts',async()=>{
+ const e=env(),c=await getContent(e);c.products[0].image='javascript:alert(1)';assert.throws(()=>validateContent(c));c.products[0].image='ven1.png';c.products[0].name='<script>';assert.throws(()=>validateContent(c));c.products[0].name='Pieza';c.promotions=[{id:'bad',title:'Oferta',active:true,percent:101}];assert.throws(()=>validateContent(c));c.promotions[0].percent=10;c.promotions[0].start='tomorrow';assert.throws(()=>validateContent(c));
+});

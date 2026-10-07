@@ -1,3 +1,4 @@
+import {getContent,pricedProducts,activePromotions} from './content.mjs';
 import CATALOG from './catalog.mjs';
 
 import {APIError} from './errors.mjs';
@@ -43,7 +44,7 @@ export function validate(body,env) {
   }else if(!(c.method==='pickup'&&cfg.pickup_enabled))fail(409,'La modalidad de entrega no está habilitada.');
   const seen=new Set();const items=body.items.map(i=>{
     if(!i||typeof i.id!=='string'||!Number.isInteger(i.variant)||!Number.isInteger(i.quantity))fail(400,'Producto o cantidad no válidos.');
-    const p=CATALOG.find(p=>p.id===i.id),v=p?.variants[i.variant],key=i.id+':'+i.variant;
+    const p=(env.catalog||CATALOG).find(p=>p.id===i.id),v=p?.variants[i.variant],key=i.id+':'+i.variant;
     if(!v||i.quantity<1||i.quantity>20||seen.has(key))fail(400,'Revisa las cantidades y los acabados.');seen.add(key);
     return {id:i.id,variant:i.variant,quantity:i.quantity,title:p.name+' / '+v.name,price_cents:Math.round((p.price+v.mod)*100)};
   }).sort((a,b)=>a.id.localeCompare(b.id)||a.variant-b.variant);
@@ -139,11 +140,11 @@ export async function orderStatus(id,token,env) {
   }
   row=await one(env,'SELECT * FROM orders WHERE id=?',id);return {order_id:id,status:row.state,total:row.total_cents/100,mode:row.mode};
 }
-async function readBody(request) {
+async function readBody(request,max=16000) {
   if(!request.headers.get('content-type')?.toLowerCase().startsWith('application/json'))fail(400,'Se requiere JSON.');
-  if(Number(request.headers.get('content-length'))>16000)fail(413,'Solicitud demasiado grande.');
+  if(Number(request.headers.get('content-length'))>max)fail(413,'Solicitud demasiado grande.');
   const reader=request.body?.getReader();if(!reader)fail(400,'Solicitud vacía.');let length=0,chunks=[];
-  while(true){const {value,done}=await reader.read();if(done)break;length+=value.length;if(length>16000){await reader.cancel();fail(413,'Solicitud demasiado grande.');}chunks.push(value);}
+  while(true){const {value,done}=await reader.read();if(done)break;length+=value.length;if(length>max){await reader.cancel();fail(413,'Solicitud demasiado grande.');}chunks.push(value);}
   const bytes=new Uint8Array(length);let offset=0;for(const c of chunks){bytes.set(c,offset);offset+=c.length;}
   try{return JSON.parse(new TextDecoder().decode(bytes))}catch{fail(400,'JSON no válido.');}
 }
@@ -162,14 +163,16 @@ export default {
     try{
       let result;
       if(request.method==='OPTIONS'){if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');return new Response(null,{status:204,headers});}
-      if(path==='/api/config'&&request.method==='GET')result=config(env);
+      if(path==='/api/content'&&request.method==='GET'){const c=await getContent(env);result={products:pricedProducts(c),collections:c.collections.filter(x=>x.active),promotions:activePromotions(c)};}
+      else if(path==='/api/config'&&request.method==='GET')result=config(env);
       else if(path==='/api/health'&&request.method==='GET'){if(!env.DB)fail(503,'Base de datos pendiente.');await one(env,'SELECT id FROM orders LIMIT 1');result={ok:true,payments_enabled:config(env).enabled};}
       else if(path.startsWith('/api/')){
         limit(request,path);
+        if(['/api/checkout','/api/shipping/quotes','/api/admin/test-checkout'].includes(path))env={...env,catalog:pricedProducts(await getContent(env)).filter(p=>p.type==='fixed')};
         if(path.startsWith('/api/admin/')){
           if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');
           await authenticate(request,env);
-          const body=request.method==='POST'?await readBody(request):null;
+          const body=request.method==='POST'?await readBody(request,path==='/api/admin/content'?2000000:16000):null;
           const match=path.match(/^\/api\/admin\/orders\/(4RT-[a-f0-9]{32})\/(rate|label|payment)$/);
           if(match&&request.method==='POST'){
             const payment=await orderStatus(match[1],await hmac(env.STATUS_SIGNING_SECRET,match[1]),env);

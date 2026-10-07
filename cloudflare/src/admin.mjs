@@ -1,3 +1,4 @@
+import {getContent,saveContent} from './content.mjs';
 import {APIError} from './errors.mjs';
 import {address,origin,packagesFor,envia,enviaToken} from './shipping.mjs';
 import CATALOG from './catalog.mjs';
@@ -10,6 +11,8 @@ export async function authenticate(request,e){
  if(d)throw new APIError(401,'La clave del panel no es correcta.');
 }
 export async function admin(path,method,body,e,mp){
+ if(path==='/api/admin/content'){if(method==='GET')return getContent(e);if(method==='POST')return saveContent(e,body);}
+ const CATALOG=(await getContent(e)).products;
  if(path==='/api/admin/shipping-diagnostic'&&method==='POST'){
   if(!/^4RT-[a-f0-9]{32}$/.test(body?.order_id||''))throw new APIError(400,'Invalid order');
   const row=await sql(e,'SELECT o.created_at,o.mode,s.state,s.updated_at,s.label_data FROM orders o JOIN order_shipping s ON s.order_id=o.id WHERE o.id=?',body.order_id).first();if(!row)throw new APIError(404,'Missing order');
