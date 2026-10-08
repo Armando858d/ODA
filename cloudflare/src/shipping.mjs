@@ -103,8 +103,8 @@ export async function rates(items,customer,e){
   const offers=await skyOffers(await origin(e),destination(customer),await packagesFor(items,e),e);
   const fingerprint=await quoteFingerprint(items,customer),expires=stamp()+600;
   const rows=offers.map(r=>({...r,id:crypto.randomUUID()}));
-  if(rows.length)await e.DB.batch(rows.map(r=>sql(e,'INSERT INTO shipping_quotes(id,fingerprint,payload,carrier,service,description,total_cents,estimate,mode,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?)',r.id,fingerprint,JSON.stringify(r.payload),r.carrier,r.service,r.description,r.total_cents,r.estimate,'live',expires)));
-  return {quotes:rows.map(r=>({id:r.id,provider:'skydropx',mode:'live',payable:e.MP_MODE==='live',carrier:r.carrier,service:r.service,description:r.description,total:r.total_cents/100,estimate:r.estimate,drop_off:r.drop_off,expires_at:expires}))};
+  if(rows.length)await e.DB.batch(rows.map(r=>sql(e,'INSERT INTO shipping_quotes(id,fingerprint,payload,carrier,service,description,total_cents,estimate,mode,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?)',r.id,fingerprint,JSON.stringify(r.payload),r.carrier,r.service,r.description,r.total_cents,r.estimate,e.SKYDROPX_MODE,expires)));
+  return {quotes:rows.map(r=>({id:r.id,provider:'skydropx',mode:e.SKYDROPX_MODE,payable:e.MP_MODE===e.SKYDROPX_MODE,carrier:r.carrier,service:r.service,description:r.description,total:r.total_cents/100,estimate:r.estimate,drop_off:r.drop_off,expires_at:expires}))};
  });
  const results=await Promise.allSettled(tasks);
  const available=results.flatMap(r=>r.status==='fulfilled'?r.value.quotes:[]).sort((a,b)=>Number(b.payable)-Number(a.payable)||a.total-b.total);

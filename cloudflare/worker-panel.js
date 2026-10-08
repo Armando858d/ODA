@@ -110,15 +110,30 @@ var shipping_states_default = [{ "name": "Aguascalientes", "code": "AG" }, { "na
 var fail = (s, m) => {
   throw new APIError(s, m);
 };
-var skyConfigured = (e) => !!(e.SKYDROPX_CLIENT_ID && e.SKYDROPX_CLIENT_SECRET && e.SKYDROPX_MODE === "live");
-var host = "https://api-pro.skydropx.com";
+function skyConnection(e) {
+  if (e.SKYDROPX_MODE === "live") return { host: "https://api-pro.skydropx.com", id: e.SKYDROPX_CLIENT_ID, secret: e.SKYDROPX_CLIENT_SECRET };
+  if (e.SKYDROPX_MODE !== "test") return null;
+  let u;
+  try {
+    u = new URL(e.SKYDROPX_TEST_API_URL);
+  } catch {
+    return null;
+  }
+  if (u.protocol !== "https:" || u.port || u.username || u.password || u.pathname !== "/" || u.search || u.hash || !u.hostname.endsWith(".skydropx.com") || !/(^|[-.])(sb|sandbox)([-.]|$)/.test(u.hostname)) return null;
+  return { host: u.origin, id: e.SKYDROPX_TEST_CLIENT_ID, secret: e.SKYDROPX_TEST_CLIENT_SECRET };
+}
+var skyConfigured = (e) => {
+  const c = skyConnection(e);
+  return !!(c?.id && c?.secret);
+};
 var authCache = null;
 async function token(e) {
-  if (!skyConfigured(e)) fail(503, "Skydropx necesita las dos claves y SKYDROPX_MODE=live.");
-  const key = e.SKYDROPX_CLIENT_ID + "\0" + e.SKYDROPX_CLIENT_SECRET;
+  if (!skyConfigured(e)) fail(503, "Configura las claves del ambiente seleccionado y, para pruebas, la URL API indicada por Skydropx Sandbox.");
+  const { host, id, secret } = skyConnection(e);
+  const key = host + "\0" + id + "\0" + secret;
   if (authCache?.key === key && authCache.until > Date.now()) return authCache.token;
-  const r = await fetch(host + "/api/v1/oauth/token", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ grant_type: "client_credentials", client_id: e.SKYDROPX_CLIENT_ID, client_secret: e.SKYDROPX_CLIENT_SECRET }), signal: AbortSignal.timeout(7e3) });
-  if (!r.ok) fail(502, "Skydropx no acept\xF3 las credenciales de producci\xF3n (HTTP " + r.status + ").");
+  const r = await fetch(host + "/api/v1/oauth/token", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ grant_type: "client_credentials", client_id: id, client_secret: secret }), signal: AbortSignal.timeout(7e3) });
+  if (!r.ok) fail(502, "Skydropx no acept\xF3 las credenciales del ambiente seleccionado (HTTP " + r.status + ").");
   const d = await r.json();
   if (typeof d.access_token !== "string" || !d.access_token || !Number.isFinite(Number(d.expires_in)) || Number(d.expires_in) <= 60) fail(502, "Skydropx devolvi\xF3 una autorizaci\xF3n incompleta.");
   authCache = { key, token: d.access_token, until: Date.now() + (Math.min(Number(d.expires_in), 7200) - 60) * 1e3 };
@@ -127,7 +142,7 @@ async function token(e) {
 async function sky(e, path, body, capture) {
   try {
     const access = await token(e);
-    const r = await fetch(host + "/api/v1/" + path, { method: body === void 0 ? "GET" : "POST", headers: { Authorization: "Bearer " + access, "Content-Type": "application/json" }, body: body === void 0 ? void 0 : JSON.stringify(body), signal: AbortSignal.timeout(7e3) });
+    const r = await fetch(skyConnection(e).host + "/api/v1/" + path, { method: body === void 0 ? "GET" : "POST", headers: { Authorization: "Bearer " + access, "Content-Type": "application/json" }, body: body === void 0 ? void 0 : JSON.stringify(body), signal: AbortSignal.timeout(7e3) });
     let d;
     try {
       d = await r.json();
@@ -145,7 +160,7 @@ async function sky(e, path, body, capture) {
 }
 async function skyCheck(e) {
   await token(e);
-  return { connected: true, mode: "live", note: "Autorizaci\xF3n aceptada. No se compr\xF3 ninguna gu\xEDa; falta comprobar una cotizaci\xF3n." };
+  return { connected: true, mode: e.SKYDROPX_MODE, note: "Autorizaci\xF3n aceptada. No se compr\xF3 ninguna gu\xEDa; falta comprobar una cotizaci\xF3n." };
 }
 var address = (a) => ({ country_code: "MX", postal_code: a.postalCode, area_level1: shipping_states_default.find((s) => s.code === a.state)?.name || a.state, area_level2: a.city, area_level3: a.district });
 function skyRate(r) {
@@ -381,8 +396,8 @@ async function rates(items, customer, e) {
     const offers = await skyOffers(await origin(e), destination(customer), await packagesFor(items, e), e);
     const fingerprint = await quoteFingerprint(items, customer), expires = stamp() + 600;
     const rows = offers.map((r) => ({ ...r, id: crypto.randomUUID() }));
-    if (rows.length) await e.DB.batch(rows.map((r) => sql(e, "INSERT INTO shipping_quotes(id,fingerprint,payload,carrier,service,description,total_cents,estimate,mode,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?)", r.id, fingerprint, JSON.stringify(r.payload), r.carrier, r.service, r.description, r.total_cents, r.estimate, "live", expires)));
-    return { quotes: rows.map((r) => ({ id: r.id, provider: "skydropx", mode: "live", payable: e.MP_MODE === "live", carrier: r.carrier, service: r.service, description: r.description, total: r.total_cents / 100, estimate: r.estimate, drop_off: r.drop_off, expires_at: expires })) };
+    if (rows.length) await e.DB.batch(rows.map((r) => sql(e, "INSERT INTO shipping_quotes(id,fingerprint,payload,carrier,service,description,total_cents,estimate,mode,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?)", r.id, fingerprint, JSON.stringify(r.payload), r.carrier, r.service, r.description, r.total_cents, r.estimate, e.SKYDROPX_MODE, expires)));
+    return { quotes: rows.map((r) => ({ id: r.id, provider: "skydropx", mode: e.SKYDROPX_MODE, payable: e.MP_MODE === e.SKYDROPX_MODE, carrier: r.carrier, service: r.service, description: r.description, total: r.total_cents / 100, estimate: r.estimate, drop_off: r.drop_off, expires_at: expires })) };
   });
   const results = await Promise.allSettled(tasks);
   const available = results.flatMap((r) => r.status === "fulfilled" ? r.value.quotes : []).sort((a, b) => Number(b.payable) - Number(a.payable) || a.total - b.total);
@@ -450,17 +465,6 @@ async function admin(path, method, body, e, mp2) {
   }
   const CATALOG = (await getContent(e)).products;
   if (path === "/api/admin/skydropx-test" && method === "POST") return skyCheck(e);
-  if (path === "/api/admin/shipping-diagnostic" && method === "POST") {
-    if (!/^4RT-[a-f0-9]{32}$/.test(body?.order_id || "")) throw new APIError(400, "Invalid order");
-    const row = await sql2(e, "SELECT o.created_at,o.mode,s.state,s.updated_at,s.label_data FROM orders o JOIN order_shipping s ON s.order_id=o.id WHERE o.id=?", body.order_id).first();
-    if (!row) throw new APIError(404, "Missing order");
-    if (row.mode !== e.ENVIA_MODE) throw new APIError(409, "Mode mismatch");
-    const date = new Date(row.created_at * 1e3), month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const r = await fetch((e.ENVIA_MODE === "test" ? "https://queries.test.envia.com" : "https://queries.envia.com") + "/guide/" + month + "/" + date.getUTCFullYear(), { headers: { Authorization: "Bearer " + enviaToken(e.ENVIA_TOKEN) }, signal: AbortSignal.timeout(15e3) });
-    if (!r.ok) throw new APIError(502, "Envia query HTTP " + r.status);
-    const d = await r.json();
-    return { state: row.state, updated_at: row.updated_at, response_keys: Object.keys(d), shipments: Array.isArray(d.data) ? d.data.map((x) => ({ keys: Object.keys(x), id: x.id, shipment_id: x.shipment_id, tracking_number: x.tracking_number, carrier: x.carrier, order_reference: x.order_reference, label: x.label, label_url: x.label_url, total_price: x.total_price, created_at: x.created_at })) : [] };
-  }
   if (path === "/api/admin/payment-diagnostic" && method === "POST") {
     if (!/^4RT-[a-f0-9]{32}$/.test(body?.order_id || "")) throw new APIError(400, "Referencia no v\xE1lida.");
     const order = await sql2(e, "SELECT id,total_cents,shipping_cents,mode FROM orders WHERE id=?", body.order_id).first();
@@ -472,17 +476,10 @@ async function admin(path, method, body, e, mp2) {
   if (path === "/api/admin/status" && method === "GET") {
     const inventory = await sql2(e, "SELECT i.*,p.weight,p.length,p.width,p.height FROM inventory i LEFT JOIN package_profiles p ON p.product_id=i.product_id AND p.variant=i.variant").all();
     const origin2 = await sql2(e, "SELECT value FROM store_settings WHERE key='origin'").first();
-    return { mode: e.MP_MODE, payments_enabled: e.PAYMENTS_ENABLED === "true", envia_connected: !!e.ENVIA_TOKEN, skydropx_configured: skyConfigured(e), skydropx_mode: e.SKYDROPX_MODE || "pendiente", origin: origin2 ? JSON.parse(origin2.value) : null, inventory: inventory.results.map((i) => {
+    return { mode: e.MP_MODE, payments_enabled: e.PAYMENTS_ENABLED === "true", skydropx_configured: skyConfigured(e), skydropx_mode: e.SKYDROPX_MODE || "pendiente", origin: origin2 ? JSON.parse(origin2.value) : null, inventory: inventory.results.map((i) => {
       const p = CATALOG.find((p2) => p2.id === i.product_id);
       return { ...i, title: (p?.name || i.product_id) + " / " + (p?.variants[i.variant]?.name || i.variant) };
     }) };
-  }
-  if (path === "/api/admin/envia-test" && method === "POST") {
-    if (e.ENVIA_MODE !== "test") throw new APIError(409, "Esta comprobaci?n es solo para sandbox.");
-    const from = await origin(e);
-    const packages = await packagesFor([{ id: "corazon-007", variant: 0, quantity: 1, title: "Coraz?n anat?mico", price_cents: 55e3 }], e);
-    const data = await envia(e, "/ship/rate/", { origin: from, destination: from, packages, shipment: { type: 1, carrier: "fedex" }, settings: { currency: "MXN", printFormat: "PDF", printSize: "PAPER_4X6" } });
-    return { connected: true, services: data.length, note: "Consulta de prueba con origen y destino en el estudio; no se compr? ninguna gu?a." };
   }
   if (path === "/api/admin/orders" && method === "GET") {
     const r = await sql2(e, "SELECT id,state,total_cents,shipping_cents,created_at,mode,items,customer FROM orders ORDER BY created_at DESC LIMIT 50").all();
@@ -738,6 +735,7 @@ function limit(request, path) {
 }
 var worker_default = {
   async fetch(request, env) {
+    env = { ...env, SHIPPING_PROVIDER: "skydropx", ENVIA_TOKEN: void 0 };
     const u = new URL(request.url), path = u.pathname, origin2 = request.headers.get("Origin") || "";
     let siteOrigin = "";
     try {
@@ -772,7 +770,7 @@ var worker_default = {
             const payment = await orderStatus(match[1], await hmac(env.STATUS_SIGNING_SECRET, match[1]), env);
             result = match[2] === "payment" ? payment : match[2] === "rate" ? await labelRate(match[1], env) : await purchaseLabel(match[1], body.expected_cents, env);
           } else if (path === "/api/admin/test-checkout" && request.method === "POST") {
-            if (env.MP_MODE !== "test" || env.ENVIA_MODE !== "test") fail3(409, "Disponible solo en modo de prueba.");
+            if (env.MP_MODE !== "test") fail3(409, "Disponible solo en modo de prueba.");
             result = await checkout(body, request.headers.get("Idempotency-Key"), { ...env, PAYMENTS_ENABLED: "true", PICKUP_CONFIRMED: "true" });
           } else result = await admin(path, request.method, body, env, mp);
         } else if (path === "/api/shipping/quotes" && request.method === "POST") {

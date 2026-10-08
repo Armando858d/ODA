@@ -1,7 +1,7 @@
 import {skyCheck,skyConfigured} from './skydropx.mjs';
 import {getContent,saveContent} from './content.mjs';
 import {APIError} from './errors.mjs';
-import {address,origin,packagesFor,envia,enviaToken} from './shipping.mjs';
+import {address} from './shipping.mjs';
 import CATALOG from './catalog.mjs';
 const sql=(e,s,...a)=>e.DB.prepare(s).bind(...a);
 export async function authenticate(request,e){
@@ -15,16 +15,6 @@ export async function admin(path,method,body,e,mp){
  if(path==='/api/admin/content'){if(method==='GET')return getContent(e);if(method==='POST')return saveContent(e,body);}
  const CATALOG=(await getContent(e)).products;
  if(path==='/api/admin/skydropx-test'&&method==='POST')return skyCheck(e);
- if(path==='/api/admin/shipping-diagnostic'&&method==='POST'){
-  if(!/^4RT-[a-f0-9]{32}$/.test(body?.order_id||''))throw new APIError(400,'Invalid order');
-  const row=await sql(e,'SELECT o.created_at,o.mode,s.state,s.updated_at,s.label_data FROM orders o JOIN order_shipping s ON s.order_id=o.id WHERE o.id=?',body.order_id).first();if(!row)throw new APIError(404,'Missing order');
-  if(row.mode!==e.ENVIA_MODE)throw new APIError(409,'Mode mismatch');
-  const date=new Date(row.created_at*1000),month=String(date.getUTCMonth()+1).padStart(2,'0');
-  const r=await fetch((e.ENVIA_MODE==='test'?'https://queries.test.envia.com':'https://queries.envia.com')+'/guide/'+month+'/'+date.getUTCFullYear(),{headers:{Authorization:'Bearer '+enviaToken(e.ENVIA_TOKEN)},signal:AbortSignal.timeout(15000)});
-  if(!r.ok)throw new APIError(502,'Envia query HTTP '+r.status);const d=await r.json();
-  return {state:row.state,updated_at:row.updated_at,response_keys:Object.keys(d),shipments:Array.isArray(d.data)?d.data.map(x=>({keys:Object.keys(x),id:x.id,shipment_id:x.shipment_id,tracking_number:x.tracking_number,carrier:x.carrier,order_reference:x.order_reference,label:x.label,label_url:x.label_url,total_price:x.total_price,created_at:x.created_at})):[]};
- }
-
  if(path==='/api/admin/payment-diagnostic'&&method==='POST'){
   if(!/^4RT-[a-f0-9]{32}$/.test(body?.order_id||''))throw new APIError(400,'Referencia no válida.');
   const order=await sql(e,'SELECT id,total_cents,shipping_cents,mode FROM orders WHERE id=?',body.order_id).first();
@@ -35,13 +25,7 @@ export async function admin(path,method,body,e,mp){
  if(path==='/api/admin/status'&&method==='GET'){
   const inventory=await sql(e,'SELECT i.*,p.weight,p.length,p.width,p.height FROM inventory i LEFT JOIN package_profiles p ON p.product_id=i.product_id AND p.variant=i.variant').all();
   const origin=await sql(e,"SELECT value FROM store_settings WHERE key='origin'").first();
-  return {mode:e.MP_MODE,payments_enabled:e.PAYMENTS_ENABLED==='true',envia_connected:!!e.ENVIA_TOKEN,skydropx_configured:skyConfigured(e),skydropx_mode:e.SKYDROPX_MODE||'pendiente',origin:origin?JSON.parse(origin.value):null,inventory:inventory.results.map(i=>{const p=CATALOG.find(p=>p.id===i.product_id);return {...i,title:(p?.name||i.product_id)+' / '+(p?.variants[i.variant]?.name||i.variant)}})};
- }
- if(path==='/api/admin/envia-test'&&method==='POST'){
-  if(e.ENVIA_MODE!=='test')throw new APIError(409,'Esta comprobaci?n es solo para sandbox.');
-  const from=await origin(e);const packages=await packagesFor([{id:'corazon-007',variant:0,quantity:1,title:'Coraz?n anat?mico',price_cents:55000}],e);
-  const data=await envia(e,'/ship/rate/',{origin:from,destination:from,packages,shipment:{type:1,carrier:'fedex'},settings:{currency:'MXN',printFormat:'PDF',printSize:'PAPER_4X6'}});
-  return {connected:true,services:data.length,note:'Consulta de prueba con origen y destino en el estudio; no se compr? ninguna gu?a.'};
+  return {mode:e.MP_MODE,payments_enabled:e.PAYMENTS_ENABLED==='true',skydropx_configured:skyConfigured(e),skydropx_mode:e.SKYDROPX_MODE||'pendiente',origin:origin?JSON.parse(origin.value):null,inventory:inventory.results.map(i=>{const p=CATALOG.find(p=>p.id===i.product_id);return {...i,title:(p?.name||i.product_id)+' / '+(p?.variants[i.variant]?.name||i.variant)}})};
  }
  if(path==='/api/admin/orders'&&method==='GET'){
   const r=await sql(e,'SELECT id,state,total_cents,shipping_cents,created_at,mode,items,customer FROM orders ORDER BY created_at DESC LIMIT 50').all();return {orders:r.results.map(o=>({...o,items:JSON.parse(o.items),customer:JSON.parse(o.customer)}))};

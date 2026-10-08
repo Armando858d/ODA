@@ -219,3 +219,18 @@ test('Skydropx label timeout retains lock and does not fall through to Envia',as
  const {rates,purchaseLabel}=await import('../src/shipping.mjs');const e=await dualEnv();e.MP_MODE='live';e.SKYDROPX_LABEL_PURCHASES_ENABLED='true';e.SKYDROPX_PACKAGE_CODES=JSON.stringify({'venom-001':{consignment_note:'12345678',package_type:'4G'}});let purchases=0;
  await mock(async(url,o)=>{if(url.includes('mercadopago'))return Response.json({id:'pref',init_point:'https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=test'});if(url.endsWith('/shipments')){purchases++;throw Error('lost response')}return skyFetch(url,o);},async()=>{const b=shippingBody(),v=validate(b,e);b.shipping_quote_id=(await rates(v.items,v.customer,e)).quotes.find(q=>q.provider==='skydropx').id;const order=await checkout(b,crypto.randomUUID(),e);e.DB.sql.prepare("UPDATE orders SET state='approved' WHERE id=?").run(order.order_id);await assert.rejects(purchaseLabel(order.order_id,12050,e),{status:503});await assert.rejects(purchaseLabel(order.order_id,12050,e),{status:409});assert.equal(purchases,1);});
 });
+
+test('HTTP config retires Envia even when old Cloudflare variables remain',async()=>{
+ const e=await dualEnv();const r=await worker.fetch(new Request('https://oda.example.com/api/config'),e);const d=await r.json();assert.deepEqual(d.shipping_providers,['skydropx']);assert.equal(d.shipping_provider,'skydropx');
+});
+test('Skydropx sandbox fails closed without separate credentials and confirmed host',async()=>{
+ const {skyConfigured,skyCheck}=await import('../src/skydropx.mjs');const e=await dualEnv();e.SKYDROPX_MODE='test';assert.equal(skyConfigured(e),false);
+ e.SKYDROPX_TEST_CLIENT_ID='mock-sandbox';e.SKYDROPX_TEST_CLIENT_SECRET='mock-secret';
+ for(const u of ['https://api-pro.skydropx.com','https://sandbox.example.com','https://sb-pro.skydropx.com.evil.test','http://sb-pro.skydropx.com','https://sb-pro.skydropx.com/api/v1']){e.SKYDROPX_TEST_API_URL=u;assert.equal(skyConfigured(e),false)}
+ e.SKYDROPX_TEST_API_URL='https://sb-pro.skydropx.com';
+ await mock(async(url,init)=>{assert.equal(url,'https://sb-pro.skydropx.com/api/v1/oauth/token');assert.equal(init.body.get('client_id'),'mock-sandbox');return Response.json({access_token:'mock-token',expires_in:7200})},async()=>{assert.equal((await skyCheck(e)).mode,'test')});
+});
+test('sandbox quotes carry test mode and can be used only with test payments',async()=>{
+ const {rates,resolveQuote}=await import('../src/shipping.mjs');const e=await dualEnv();Object.assign(e,{SHIPPING_PROVIDER:'skydropx',SKYDROPX_MODE:'test',SKYDROPX_TEST_API_URL:'https://sb-pro.skydropx.com',SKYDROPX_TEST_CLIENT_ID:crypto.randomUUID(),SKYDROPX_TEST_CLIENT_SECRET:'mock'});const v=validate(shippingBody(),e);
+ await mock(async url=>{assert(String(url).startsWith('https://sb-pro.skydropx.com/'));return String(url).endsWith('/oauth/token')?Response.json({access_token:'mock-token',expires_in:7200}):Response.json({id:'sandbox-quote',is_completed:true,rates:[{id:'rate1',success:true,status:'approved',currency_code:'MXN',total:120.5,provider_name:'fedex',provider_service_code:'standard',shipment_creation_type:'single'}]})},async()=>{const r=await rates(v.items,v.customer,e);assert.equal(r.quotes[0].mode,'test');assert.equal(r.quotes[0].payable,true);await resolveQuote(r.quotes[0].id,v.items,v.customer,e);e.MP_MODE='live';await assert.rejects(resolveQuote(r.quotes[0].id,v.items,v.customer,e),{status:409})});
+});

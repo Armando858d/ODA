@@ -1,24 +1,31 @@
 import {APIError} from './errors.mjs';
 import STATES from './shipping-states.mjs';
 const fail=(s,m)=>{throw new APIError(s,m)};
-// This account is production. No sandbox hostname or credential is inferred.
-export const skyConfigured=e=>!!(e.SKYDROPX_CLIENT_ID&&e.SKYDROPX_CLIENT_SECRET&&e.SKYDROPX_MODE==='live');
-const host='https://api-pro.skydropx.com';
+// Sandbox uses separate secrets and an explicitly confirmed API origin.
+export function skyConnection(e){
+ if(e.SKYDROPX_MODE==='live')return {host:'https://api-pro.skydropx.com',id:e.SKYDROPX_CLIENT_ID,secret:e.SKYDROPX_CLIENT_SECRET};
+ if(e.SKYDROPX_MODE!=='test')return null;
+ let u;try{u=new URL(e.SKYDROPX_TEST_API_URL)}catch{return null}
+ if(u.protocol!=='https:'||u.port||u.username||u.password||u.pathname!=='/'||u.search||u.hash||!u.hostname.endsWith('.skydropx.com')||!/(^|[-.])(sb|sandbox)([-.]|$)/.test(u.hostname))return null;
+ return {host:u.origin,id:e.SKYDROPX_TEST_CLIENT_ID,secret:e.SKYDROPX_TEST_CLIENT_SECRET};
+}
+export const skyConfigured=e=>{const c=skyConnection(e);return !!(c?.id&&c?.secret)};
 let authCache=null;
 async function token(e){
- if(!skyConfigured(e))fail(503,'Skydropx necesita las dos claves y SKYDROPX_MODE=live.');
- const key=e.SKYDROPX_CLIENT_ID+'\0'+e.SKYDROPX_CLIENT_SECRET;
+ if(!skyConfigured(e))fail(503,'Configura las claves del ambiente seleccionado y, para pruebas, la URL API indicada por Skydropx Sandbox.');
+ const {host,id,secret}=skyConnection(e);
+ const key=host+'\0'+id+'\0'+secret;
  if(authCache?.key===key&&authCache.until>Date.now())return authCache.token;
- const r=await fetch(host+'/api/v1/oauth/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'client_credentials',client_id:e.SKYDROPX_CLIENT_ID,client_secret:e.SKYDROPX_CLIENT_SECRET}),signal:AbortSignal.timeout(7000)});
- if(!r.ok)fail(502,'Skydropx no aceptó las credenciales de producción (HTTP '+r.status+').');
+ const r=await fetch(host+'/api/v1/oauth/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'client_credentials',client_id:id,client_secret:secret}),signal:AbortSignal.timeout(7000)});
+ if(!r.ok)fail(502,'Skydropx no aceptó las credenciales del ambiente seleccionado (HTTP '+r.status+').');
  const d=await r.json();if(typeof d.access_token!=='string'||!d.access_token||!Number.isFinite(Number(d.expires_in))||Number(d.expires_in)<=60)fail(502,'Skydropx devolvió una autorización incompleta.');
  authCache={key,token:d.access_token,until:Date.now()+(Math.min(Number(d.expires_in),7200)-60)*1000};return d.access_token;
 }
 export async function sky(e,path,body,capture){
- try{const access=await token(e);const r=await fetch(host+'/api/v1/'+path,{method:body===undefined?'GET':'POST',headers:{Authorization:'Bearer '+access,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(7000)});let d;try{d=await r.json()}catch{fail(502,'Skydropx devolvió una respuesta no válida.')}if(capture)await capture(d);if(r.status===401)authCache=null;if(!r.ok)fail(502,'Skydropx HTTP '+r.status+'. Revisa la conexión o la solicitud en tu cuenta.');return d;
+ try{const access=await token(e);const r=await fetch(skyConnection(e).host+'/api/v1/'+path,{method:body===undefined?'GET':'POST',headers:{Authorization:'Bearer '+access,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(7000)});let d;try{d=await r.json()}catch{fail(502,'Skydropx devolvió una respuesta no válida.')}if(capture)await capture(d);if(r.status===401)authCache=null;if(!r.ok)fail(502,'Skydropx HTTP '+r.status+'. Revisa la conexión o la solicitud en tu cuenta.');return d;
  }catch(err){if(err instanceof APIError)throw err;fail(503,'Skydropx no respondió a tiempo. No se repite automáticamente una compra de guía.');}
 }
-export async function skyCheck(e){await token(e);return {connected:true,mode:'live',note:'Autorización aceptada. No se compró ninguna guía; falta comprobar una cotización.'};}
+export async function skyCheck(e){await token(e);return {connected:true,mode:e.SKYDROPX_MODE,note:'Autorización aceptada. No se compró ninguna guía; falta comprobar una cotización.'};}
 const address=a=>({country_code:'MX',postal_code:a.postalCode,area_level1:STATES.find(s=>s.code===a.state)?.name||a.state,area_level2:a.city,area_level3:a.district});
 export function skyRate(r){
  const cents=Math.round(Number(r.total)*100);

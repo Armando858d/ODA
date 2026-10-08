@@ -19,12 +19,10 @@
     "SHIPPING_LOCAL": "50",
     "SHIPPING_CENTRO": "150",
     "SHIPPING_NACIONAL": "220",
-    "SHIPPING_PROVIDER": "both",
-    "SKYDROPX_MODE": "live",
+    "SHIPPING_PROVIDER": "skydropx",
+    "SKYDROPX_MODE": "test",
     "SKYDROPX_LABEL_PURCHASES_ENABLED": "false",
-    "ENVIA_MODE": "test",
-    "ENVIA_CARRIERS": "fedex,dhl,estafeta",
-    "LABEL_PURCHASES_ENABLED": "true",
+    "LABEL_PURCHASES_ENABLED": "false",
     "MAX_LABEL_COST_MXN": "0"
   },
   "d1_databases": [

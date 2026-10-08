@@ -157,6 +157,8 @@ function limit(request,path){
 }
 export default {
   async fetch(request,env){
+    // Retired provider cannot be reactivated by stale dashboard variables.
+    env={...env,SHIPPING_PROVIDER:"skydropx",ENVIA_TOKEN:undefined};
     const u=new URL(request.url),path=u.pathname,origin=request.headers.get('Origin')||'';let siteOrigin='';try{siteOrigin=new URL(env.SITE_URL).origin}catch{}
     const headers={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Vary':'Origin'};
     if(origin&&origin===siteOrigin)Object.assign(headers,{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'Content-Type, Idempotency-Key, Authorization','Access-Control-Allow-Methods':'GET, POST, OPTIONS'});
@@ -178,7 +180,7 @@ export default {
             const payment=await orderStatus(match[1],await hmac(env.STATUS_SIGNING_SECRET,match[1]),env);
             result=match[2]==='payment'?payment:match[2]==='rate'?await labelRate(match[1],env):await purchaseLabel(match[1],body.expected_cents,env);
           }else if(path==='/api/admin/test-checkout'&&request.method==='POST'){
-            if(env.MP_MODE!=='test'||env.ENVIA_MODE!=='test')fail(409,'Disponible solo en modo de prueba.');
+            if(env.MP_MODE!=='test')fail(409,'Disponible solo en modo de prueba.');
             result=await checkout(body,request.headers.get('Idempotency-Key'),{...env,PAYMENTS_ENABLED:'true',PICKUP_CONFIRMED:'true'});
           }else result=await admin(path,request.method,body,env,mp);
         }else if(path==='/api/shipping/quotes'&&request.method==='POST'){
