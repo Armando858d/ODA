@@ -7,3 +7,7 @@ Skydropx test usa SKYDROPX_TEST_CLIENT_ID, SKYDROPX_TEST_CLIENT_SECRET y SKYDROP
 MP_MODE=test se conserva. El pedido de prueba privado de Mercado Pago ya no depende de ENVIA_MODE. No se activaron cobros públicos ni compras de guías. Falta confirmar si el usuario se refería a Mercado Pago o a ventas de Mercado Libre; no se implementa una integración de marketplace sin aclararlo.
 
 Actualizar worker.js desde actualizar-cloudflare.html. Configurar SHIPPING_PROVIDER=skydropx, SKYDROPX_MODE=test, LABEL_PURCHASES_ENABLED=false y SKYDROPX_LABEL_PURCHASES_ENABLED=false. Obtener claves y host desde https://sb-pro.skydropx.com/merchant_stores/applications. Comprobar OAuth, cotización y pago de prueba; no declarar listo para producción hasta validar externamente.
+
+## Diagnóstico del cotizador
+
+El servidor Sandbox confirmado en captura del usuario es https://sb-pro.skydropx.com. OAuth aceptado por el proveedor, pendiente cotización y pago. El agregador ocultaba errores de origen, paquetes y API tras un mensaje genérico: ahora conserva los errores controlados APIError sin publicar respuestas crudas ni secretos. Los fallos internos desconocidos no se exponen. Si la consulta finaliza sin tarifas utilizables, muestra un mensaje separado.

@@ -108,7 +108,11 @@ export async function rates(items,customer,e){
  });
  const results=await Promise.allSettled(tasks);
  const available=results.flatMap(r=>r.status==='fulfilled'?r.value.quotes:[]).sort((a,b)=>Number(b.payable)-Number(a.payable)||a.total-b.total);
- if(!available.length)fail(409,'No se obtuvieron tarifas. Revisa origen, medidas y conexiones de envío en el administrador.');
+ if(!available.length){
+  const rejected=results.find(r=>r.status==='rejected'&&r.reason instanceof APIError);
+  if(rejected)throw rejected.reason;
+  fail(409,'Skydropx terminó la consulta sin tarifas utilizables. Revisa cobertura, origen y paquetes en Skydropx Sandbox.');
+ }
  return {quotes:available,mode:e.MP_MODE,partial:results.some(r=>r.status==='rejected'||r.value?.partial),unavailable_providers:providers.filter((_,i)=>results[i].status==='rejected')};
 }
 async function checkSkyLabel(row,orderId,e){

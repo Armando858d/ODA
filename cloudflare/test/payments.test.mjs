@@ -234,3 +234,8 @@ test('sandbox quotes carry test mode and can be used only with test payments',as
  const {rates,resolveQuote}=await import('../src/shipping.mjs');const e=await dualEnv();Object.assign(e,{SHIPPING_PROVIDER:'skydropx',SKYDROPX_MODE:'test',SKYDROPX_TEST_API_URL:'https://sb-pro.skydropx.com',SKYDROPX_TEST_CLIENT_ID:crypto.randomUUID(),SKYDROPX_TEST_CLIENT_SECRET:'mock'});const v=validate(shippingBody(),e);
  await mock(async url=>{assert(String(url).startsWith('https://sb-pro.skydropx.com/'));return String(url).endsWith('/oauth/token')?Response.json({access_token:'mock-token',expires_in:7200}):Response.json({id:'sandbox-quote',is_completed:true,rates:[{id:'rate1',success:true,status:'approved',currency_code:'MXN',total:120.5,provider_name:'fedex',provider_service_code:'standard',shipment_creation_type:'single'}]})},async()=>{const r=await rates(v.items,v.customer,e);assert.equal(r.quotes[0].mode,'test');assert.equal(r.quotes[0].payable,true);await resolveQuote(r.quotes[0].id,v.items,v.customer,e);e.MP_MODE='live';await assert.rejects(resolveQuote(r.quotes[0].id,v.items,v.customer,e),{status:409})});
 });
+
+test('single-provider quotation preserves actionable origin errors without external calls',async()=>{
+ const {rates}=await import('../src/shipping.mjs');const e=await dualEnv();e.SHIPPING_PROVIDER='skydropx';e.DB.sql.prepare("DELETE FROM store_settings WHERE key='origin'").run();const v=validate(shippingBody(),e);
+ await mock(()=>{throw Error('Must not contact provider without origin')},async()=>{await assert.rejects(rates(v.items,v.customer,e),err=>err.status===409&&/origen/i.test(err.message))});
+});
