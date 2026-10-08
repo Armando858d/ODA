@@ -189,3 +189,33 @@ test('canvas products persist with photos, variants and zero initial stock',asyn
  await saveContent(e,c);const saved=(await getContent(e)).products.at(-1);assert.equal(saved.category,'lienzo');assert.equal(saved.price,450);assert.equal(saved.variants[1].mod,200);assert.deepEqual(saved.images,['angel1.png']);assert.equal(getStock(e,'canvas-test'),0);
  const response=await worker.fetch(new Request('https://oda.example.com/api/content'),e);assert.equal((await response.json()).products.at(-1).category,'lienzo');
 });
+
+const skyRateFixture=()=>({id:'sky-rate',success:true,status:'approved',currency_code:'MXN',total:'120.50',provider_name:'fedex',provider_service_code:'ground',provider_display_name:'FedEx',provider_service_name:'Terrestre',days:3,shipment_creation_type:'single',pickup:true});
+async function dualEnv(){const e=await shippingEnv();Object.assign(e,{SHIPPING_PROVIDER:'both',SKYDROPX_CLIENT_ID:crypto.randomUUID(),SKYDROPX_CLIENT_SECRET:'mock-only',SKYDROPX_MODE:'live'});return e;}
+const skyFetch=async(url,opts)=>{if(url.includes('oauth/token'))return Response.json({access_token:'mock-access',expires_in:7200});if(url.includes('quotations'))return Response.json({id:'sky-quote',is_completed:true,rates:[skyRateFixture()]});return rateResponse();};
+test('dual-provider quotes retain provider, exact cents and distinguish live from test',async()=>{
+ const {rates,resolveQuote}=await import('../src/shipping.mjs');const e=await dualEnv(),b=shippingBody(),v=validate(b,e);
+ await mock(skyFetch,async()=>{const r=await rates(v.items,v.customer,e);assert.equal(r.quotes.length,2);const q=r.quotes.find(q=>q.provider==='skydropx');assert.equal(q.total,120.5);assert.equal(q.payable,false);assert.equal(r.quotes[0].provider,'envia');await assert.rejects(resolveQuote(q.id,v.items,v.customer,e),{status:409});});
+});
+test('one provider failure preserves rates from the other provider',async()=>{
+ const {rates}=await import('../src/shipping.mjs');const e=await dualEnv(),v=validate(shippingBody(),e);
+ await mock(async(url,opts)=>url.includes('skydropx')?Response.json({error:'unavailable'},{status:503}):rateResponse(),async()=>{const r=await rates(v.items,v.customer,e);assert.equal(r.partial,true);assert.deepEqual(r.unavailable_providers,['skydropx']);assert.equal(r.quotes[0].provider,'envia');});
+ await mock(async(url,opts)=>url.includes('skydropx')?skyFetch(url,opts):Response.json({error:'down'},{status:503}),async()=>{const r=await rates(v.items,v.customer,e);assert.equal(r.quotes[0].provider,'skydropx');assert.equal(r.partial,true);});
+});
+test('Skydropx request uses real package measurements and ignores incomplete unsafe rates',async()=>{
+ const {skyRate,skyOffers}=await import('../src/skydropx.mjs');const e=await dualEnv();
+ for(const patch of [{success:false},{status:'pending'},{currency_code:'USD'},{total:-1},{total:'bad'},{requires_origin_verification:true},{shipment_creation_type:'multishipment'}])assert.equal(skyRate({...skyRateFixture(),...patch}),null);
+ await mock(async(url,o)=>{if(url.includes('oauth'))return skyFetch(url,o);const b=JSON.parse(o.body);assert.equal(b.quotation.address_from.area_level1,'Aguascalientes');assert.equal(b.quotation.parcels[0].length,11);assert.equal(b.quotation.parcels[0].weight,0.5);assert.equal(b.quotation.parcels[0].package_protected,false);return Response.json({id:'quote',is_completed:true,rates:[skyRateFixture()]});},async()=>{await skyOffers({state:'AG',postalCode:'20263',city:'Aguascalientes',district:'Centro'},{state:'AG'},[{dimensions:{length:10.1,width:10,height:10},weight:0.5,declaredValue:850}],e);});
+});
+test('Skydropx label purchase requires explicit switch, approved live payment and never duplicates',async()=>{
+ const {rates,purchaseLabel,labelRate}=await import('../src/shipping.mjs');const e=await dualEnv();e.MP_MODE='live';e.SKYDROPX_PACKAGE_CODES=JSON.stringify({'venom-001':{consignment_note:'12345678',package_type:'4G'}});let purchases=0;
+ await mock(async(url,o)=>{
+  if(url.includes('mercadopago'))return Response.json({id:'pref',init_point:'https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=test'});
+  if(url.endsWith('/shipments')){purchases++;assert.equal(JSON.parse(o.body).shipment.unique_shipment,true);return Response.json({data:{id:'shipment',attributes:{payment_status:'paid',total:'120.50',carrier_name:'fedex'},relationships:{packages:{data:[{id:'pkg'}]}}},included:[{id:'pkg',attributes:{tracking_number:'TEST',label_url:'https://labels.example/sky.pdf'}}]});}
+  return skyFetch(url,o);
+ },async()=>{const b=shippingBody(),v=validate(b,e);const quotes=await rates(v.items,v.customer,e);b.shipping_quote_id=quotes.quotes.find(q=>q.provider==='skydropx').id;const o=await checkout(b,crypto.randomUUID(),e);await assert.rejects(purchaseLabel(o.order_id,12050,e),{status:409});e.DB.sql.prepare("UPDATE orders SET state='approved' WHERE id=?").run(o.order_id);await assert.rejects(purchaseLabel(o.order_id,12050,e),{status:409});e.SKYDROPX_LABEL_PURCHASES_ENABLED='true';await assert.rejects(purchaseLabel(o.order_id,1,e),{status:409});assert.equal((await labelRate(o.order_id,e)).provider,'skydropx');const result=await Promise.allSettled([purchaseLabel(o.order_id,12050,e),purchaseLabel(o.order_id,12050,e)]);assert(result.some(r=>r.status==='fulfilled'));assert.equal(purchases,1);await purchaseLabel(o.order_id,12050,e);assert.equal(purchases,1);});
+});
+test('Skydropx label timeout retains lock and does not fall through to Envia',async()=>{
+ const {rates,purchaseLabel}=await import('../src/shipping.mjs');const e=await dualEnv();e.MP_MODE='live';e.SKYDROPX_LABEL_PURCHASES_ENABLED='true';e.SKYDROPX_PACKAGE_CODES=JSON.stringify({'venom-001':{consignment_note:'12345678',package_type:'4G'}});let purchases=0;
+ await mock(async(url,o)=>{if(url.includes('mercadopago'))return Response.json({id:'pref',init_point:'https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=test'});if(url.endsWith('/shipments')){purchases++;throw Error('lost response')}return skyFetch(url,o);},async()=>{const b=shippingBody(),v=validate(b,e);b.shipping_quote_id=(await rates(v.items,v.customer,e)).quotes.find(q=>q.provider==='skydropx').id;const order=await checkout(b,crypto.randomUUID(),e);e.DB.sql.prepare("UPDATE orders SET state='approved' WHERE id=?").run(order.order_id);await assert.rejects(purchaseLabel(order.order_id,12050,e),{status:503});await assert.rejects(purchaseLabel(order.order_id,12050,e),{status:409});assert.equal(purchases,1);});
+});

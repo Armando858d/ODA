@@ -1,10 +1,13 @@
+import {skyConfigured,skyOffers,skyRefresh,sky,skyShipment,skyLabels} from './skydropx.mjs';
 import {APIError} from './errors.mjs';
 const fail=(status,message)=>{throw new APIError(status,message)};
 const sql=(e,s,...a)=>e.DB.prepare(s).bind(...a);
 const first=(e,s,...a)=>sql(e,s,...a).first();
 const stamp=()=>Math.floor(Date.now()/1000);
 const sha=async value=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(n=>n.toString(16).padStart(2,'0')).join('');
-export const shippingConfigured=e=>!!(e.ENVIA_TOKEN&&e.SHIPPING_PROVIDER==='envia'&&['test','live'].includes(e.ENVIA_MODE));
+export const enviaConfigured=e=>!!(e.ENVIA_TOKEN&&['envia','both'].includes(e.SHIPPING_PROVIDER)&&['test','live'].includes(e.ENVIA_MODE));
+export const shippingProviders=e=>[...(enviaConfigured(e)?['envia']:[]),...(['skydropx','both'].includes(e.SHIPPING_PROVIDER)&&skyConfigured(e)?['skydropx']:[])];
+export const shippingConfigured=e=>shippingProviders(e).length>0;
 const base=e=>e.ENVIA_MODE==='live'?'https://api.envia.com':'https://api-test.envia.com';
 export function enviaToken(value){
  let token=String(value||'').trim().replace(/^Bearer\s+/i,'').trim();
@@ -13,7 +16,7 @@ export function enviaToken(value){
  return token;
 }
 export async function envia(e,path,payload,capture){
- if(!shippingConfigured(e))fail(503,'El cotizador está en configuración. Solicita tu envío por WhatsApp.');
+ if(!enviaConfigured(e))fail(503,'El cotizador está en configuración. Solicita tu envío por WhatsApp.');
  try{const r=await fetch(base(e)+path,{method:'POST',headers:{Authorization:'Bearer '+enviaToken(e.ENVIA_TOKEN),'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(15000)});const raw=await r.text();let parsed;try{parsed=JSON.parse(raw)}catch{parsed={message:raw.slice(0,1000)}}if(capture)await capture({http_status:r.status,response:parsed});if(!r.ok)fail(502,'Envia.com HTTP '+r.status+'. Verifica el token del ambiente '+e.ENVIA_MODE+'.');const data=parsed;if(!Array.isArray(data.data)||data.meta==='error')fail(502,'La respuesta de la paquetería no es válida.');return data.data}catch(e){if(e instanceof APIError)throw e;fail(503,'La paquetería no respondió. Consulta el estado antes de repetir una compra de guía.');}
 }
 function txt(v,max=150){return typeof v==='string'&&v.trim().length<=max?v.trim():'';}
@@ -36,9 +39,8 @@ function normalizeRate(r,carrier){
  if(r.currency!=='MXN'||!Number.isSafeInteger(cents)||cents<=0||cents>10000000||r.carrier!==carrier||typeof r.service!=='string'||!r.service||![0,2].includes(Number(r.dropOff)))return null;
  return {carrier,service:r.service,description:String(r.carrierDescription||carrier)+' · '+String(r.serviceDescription||r.service),total_cents:cents,estimate:String(r.deliveryEstimate||'Consultar plazo'),dropOff:Number(r.dropOff)};
 }
-export async function rates(items,customer,e){
+async function enviaRates(items,customer,e){
  if(!shippingConfigured(e))fail(503,'La cotización por paquetería está en configuración.');
- if(e.ENVIA_MODE!==e.MP_MODE)fail(409,'El modo de Envia.com debe coincidir con el de Mercado Pago.');
  const payload={origin:await origin(e),destination:destination(customer),packages:await packagesFor(items,e),settings:{currency:'MXN',printFormat:'PDF',printSize:'PAPER_4X6'}};
  const carriers=String(e.ENVIA_CARRIERS||'fedex,dhl,estafeta').split(',').map(x=>x.trim()).filter(x=>/^[a-z0-9_-]+$/.test(x)).slice(0,4);
  if(!carriers.length)fail(409,'Falta configurar las paqueterías a consultar.');
@@ -55,14 +57,15 @@ export async function rates(items,customer,e){
 export async function resolveQuote(id,items,customer,e){
  if(typeof id!=='string'||!/^[a-f0-9-]{36}$/.test(id))fail(409,'Primero cotiza y selecciona una opción de envío.');
  const row=await first(e,'SELECT * FROM shipping_quotes WHERE id=?',id);
- if(!row||row.expires_at<=stamp()||row.mode!==e.MP_MODE||row.mode!==e.ENVIA_MODE||row.fingerprint!==await quoteFingerprint(items,customer))fail(409,'La cotización venció o cambió tu pedido/dirección. Vuelve a cotizar.');return row;
+ if(!row||row.expires_at<=stamp()||row.mode!==e.MP_MODE||!shippingProviders(e).includes(JSON.parse(row.payload).provider||'envia')||row.mode!==providerMode(row,e)||row.fingerprint!==await quoteFingerprint(items,customer))fail(409,'La cotización venció o cambió tu pedido/dirección. Vuelve a cotizar.');return row;
 }
 export async function purchaseLabel(orderId,expectedCents,e){
  if(e.LABEL_PURCHASES_ENABLED!=='true')fail(409,'La compra de guías aún está desactivada.');
  const row=await first(e,`SELECT o.*,s.state shipping_state,s.label_data,q.payload,q.mode shipping_mode FROM orders o JOIN order_shipping s ON s.order_id=o.id JOIN shipping_quotes q ON q.id=s.quote_id WHERE o.id=?`,orderId);
  if(!row||row.state!=='approved')fail(409,'Solo se generan guías para pedidos con pago aprobado.');
- if(row.shipping_mode!==e.ENVIA_MODE||row.mode!==e.MP_MODE)fail(409,'El modo del pedido no coincide con las cuentas activas.');
+ if(row.shipping_mode!==providerMode(row,e)||row.mode!==e.MP_MODE)fail(409,'El modo del pedido no coincide con las cuentas activas.');
  if(row.shipping_state==='ready')return JSON.parse(row.label_data);
+ if(JSON.parse(row.payload).provider==='skydropx')return buySkyLabel(row,orderId,expectedCents,e);
  if(row.shipping_state!=='not_started')fail(409,'Esta guía ya se está generando o necesita revisión en Envia.com. No repitas la compra.');
  const payload=JSON.parse(row.payload),current=await envia(e,'/ship/rate/',payload);
  const matched=current.map(r=>normalizeRate(r,payload.shipment.carrier)).find(r=>r?.service===payload.shipment.service);
@@ -83,10 +86,55 @@ export async function purchaseLabel(orderId,expectedCents,e){
 export async function labelRate(orderId,e){
  const row=await first(e,`SELECT o.state,o.shipping_cents,s.state shipping_state,s.label_data,q.payload,q.mode FROM orders o JOIN order_shipping s ON s.order_id=o.id JOIN shipping_quotes q ON q.id=s.quote_id WHERE o.id=?`,orderId);
  if(!row||row.state!=='approved')fail(409,'El pedido no tiene envío pagado y aprobado.');
- if(row.mode!==e.ENVIA_MODE)fail(409,'El modo de la cuenta no coincide con el envío.');
+ if(row.mode!==providerMode(row,e))fail(409,'El modo de la cuenta no coincide con el envío.');
  if(row.shipping_state==='ready')return {state:'ready',...JSON.parse(row.label_data)};
+ if(JSON.parse(row.payload).provider==='skydropx')return checkSkyLabel(row,orderId,e);
  if(row.shipping_state==='needs_review'&&row.label_data){let detail;try{detail=JSON.parse(row.label_data)}catch{}if(detail?.provider_response?.response?.error?.message==='SERVICE_QUOTE_ONLY')fail(409,'Envia.com permite cotizar este servicio, pero no generar su PDF. Elige otra paqueteria para una nueva prueba; esta guia no se creo.');}
  if(row.shipping_state!=='not_started')fail(409,'La guía requiere revisión manual en Envia.com.');
  const p=JSON.parse(row.payload),data=await envia(e,'/ship/rate/',p);const r=data.map(x=>normalizeRate(x,p.shipment.carrier)).find(x=>x?.service===p.shipment.service);if(!r)fail(409,'No hay tarifa disponible para ese servicio.');
  return {state:'not_started',description:r.description,total:r.total_cents/100,total_cents:r.total_cents,paid_shipping:row.shipping_cents/100,estimate:r.estimate};
+}
+
+function providerMode(row,e){return JSON.parse(row.payload).provider==='skydropx'?e.SKYDROPX_MODE:e.ENVIA_MODE;}
+export async function rates(items,customer,e){
+ const providers=shippingProviders(e);if(!providers.length)fail(503,'No hay proveedores de envío configurados.');
+ const tasks=providers.map(async provider=>{
+  if(provider==='envia'){const r=await enviaRates(items,customer,e);return {...r,quotes:r.quotes.map(q=>({...q,provider,mode:e.ENVIA_MODE,payable:e.ENVIA_MODE===e.MP_MODE}))};}
+  const offers=await skyOffers(await origin(e),destination(customer),await packagesFor(items,e),e);
+  const fingerprint=await quoteFingerprint(items,customer),expires=stamp()+600;
+  const rows=offers.map(r=>({...r,id:crypto.randomUUID()}));
+  if(rows.length)await e.DB.batch(rows.map(r=>sql(e,'INSERT INTO shipping_quotes(id,fingerprint,payload,carrier,service,description,total_cents,estimate,mode,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?)',r.id,fingerprint,JSON.stringify(r.payload),r.carrier,r.service,r.description,r.total_cents,r.estimate,'live',expires)));
+  return {quotes:rows.map(r=>({id:r.id,provider:'skydropx',mode:'live',payable:e.MP_MODE==='live',carrier:r.carrier,service:r.service,description:r.description,total:r.total_cents/100,estimate:r.estimate,drop_off:r.drop_off,expires_at:expires}))};
+ });
+ const results=await Promise.allSettled(tasks);
+ const available=results.flatMap(r=>r.status==='fulfilled'?r.value.quotes:[]).sort((a,b)=>Number(b.payable)-Number(a.payable)||a.total-b.total);
+ if(!available.length)fail(409,'No se obtuvieron tarifas. Revisa origen, medidas y conexiones de envío en el administrador.');
+ return {quotes:available,mode:e.MP_MODE,partial:results.some(r=>r.status==='rejected'||r.value?.partial),unavailable_providers:providers.filter((_,i)=>results[i].status==='rejected')};
+}
+async function checkSkyLabel(row,orderId,e){
+ const payload=JSON.parse(row.payload);
+ if(row.shipping_state==='needs_review'&&row.label_data){
+  const saved=JSON.parse(row.label_data),id=saved.provider_response?.data?.id;
+  if(id&&/^[-a-zA-Z0-9]+$/.test(id)){
+   const d=await sky(e,'shipments/'+encodeURIComponent(id));const parsed=skyLabels(d,payload);
+   if(parsed){const result={provider:'skydropx',labels:parsed.labels,cost_warning:parsed.total_cents>row.shipping_cents};await sql(e,"UPDATE order_shipping SET state='ready',label_data=?,amount_cents=?,updated_at=? WHERE order_id=? AND state='needs_review'",JSON.stringify(result),parsed.total_cents,stamp(),orderId).run();return {state:'ready',...result};}
+  }
+  fail(409,'Skydropx todavía no confirma la guía. Revisa tu cuenta; no vuelvas a comprarla.');
+ }
+ if(row.shipping_state!=='not_started')fail(409,'La guía requiere revisión en Skydropx.');
+ const r=await skyRefresh(payload,e);return {provider:'skydropx',state:'not_started',description:r.description,total:r.total_cents/100,total_cents:r.total_cents,paid_shipping:row.shipping_cents/100,estimate:r.estimate};
+}
+async function buySkyLabel(row,orderId,expectedCents,e){
+ if(e.SKYDROPX_LABEL_PURCHASES_ENABLED!=='true'||e.MP_MODE!=='live'||row.mode!=='live')fail(409,'La compra de guías de Skydropx está desactivada. Primero completa la verificación de producción.');
+ if(row.shipping_state!=='not_started')fail(409,'La guía ya se procesa o requiere revisión en Skydropx. No repitas la compra.');
+ const payload=JSON.parse(row.payload),current=await skyRefresh(payload,e);
+ const maximum=Number(e.MAX_LABEL_COST_MXN)>0?Math.round(Number(e.MAX_LABEL_COST_MXN)*100):row.shipping_cents;
+ if(!Number.isSafeInteger(expectedCents)||expectedCents!==current.total_cents||expectedCents>row.shipping_cents||expectedCents>maximum)fail(409,'La tarifa cambió o supera el importe autorizado.');
+ const body=skyShipment(payload,JSON.parse(row.items),e),attempt=crypto.randomUUID();
+ const claim=await sql(e,"UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved')",attempt,stamp(),orderId,orderId).run();if(claim.meta.changes!==1)fail(409,'Esta guía ya se está procesando.');
+ try{
+  const d=await sky(e,'shipments',body,async data=>{await sql(e,'UPDATE order_shipping SET label_data=? WHERE order_id=? AND attempt_id=?',JSON.stringify({provider_response:data}),orderId,attempt).run()});
+  const parsed=skyLabels(d,payload);if(!parsed)fail(503,'Skydropx todavía está preparando la guía.');
+  const result={provider:'skydropx',labels:parsed.labels,cost_warning:parsed.total_cents>expectedCents};await sql(e,"UPDATE order_shipping SET state='ready',label_data=?,amount_cents=?,updated_at=? WHERE order_id=? AND attempt_id=?",JSON.stringify(result),parsed.total_cents,stamp(),orderId,attempt).run();return result;
+ }catch(err){await sql(e,"UPDATE order_shipping SET state='needs_review',updated_at=? WHERE order_id=? AND attempt_id=?",stamp(),orderId,attempt).run();fail(503,'La guía no está confirmada. Consulta su estado en Skydropx antes de repetir; podría haberse cobrado.');}
 }

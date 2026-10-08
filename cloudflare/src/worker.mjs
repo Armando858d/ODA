@@ -4,7 +4,7 @@ import CATALOG from './catalog.mjs';
 import {APIError} from './errors.mjs';
 export {APIError} from './errors.mjs';
 import {authenticate,admin} from './admin.mjs';
-import {shippingConfigured,rates,resolveQuote,labelRate,purchaseLabel} from './shipping.mjs';
+import {shippingProviders,shippingConfigured,rates,resolveQuote,labelRate,purchaseLabel} from './shipping.mjs';
 const fail = (status, message) => { throw new APIError(status, message); };
 const encoder = new TextEncoder();
 const hex = bytes => [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('');
@@ -26,7 +26,7 @@ export function config(env) {
   let urls=false;try{urls=new URL(env.SITE_URL).protocol==='https:'&&new URL(env.API_URL).protocol==='https:'}catch{}
   const shipping=shippingConfigured(env)||env.SHIPPING_RATES_CONFIRMED==='true',pickup=env.PICKUP_CONFIRMED==='true';
   return {enabled:!!(env.DB&&env.PAYMENTS_ENABLED==='true'&&env.MP_ACCESS_TOKEN&&env.MP_WEBHOOK_SECRET&&env.STATUS_SIGNING_SECRET?.length>=32&&/^\d+$/.test(env.MP_COLLECTOR_ID||'')&&['test','live'].includes(env.MP_MODE)&&urls&&validRates&&(shipping||pickup)),
-    mode:env.MP_MODE||'test',max_installments:Math.max(1,Math.min(12,parseInt(env.MP_MAX_INSTALLMENTS,10)||12)),shipping_provider:shippingConfigured(env)?'envia':'manual',shipping_enabled:shipping,pickup_enabled:pickup,shipping_rates:rates};
+    mode:env.MP_MODE||'test',max_installments:Math.max(1,Math.min(12,parseInt(env.MP_MAX_INSTALLMENTS,10)||12)),shipping_provider:shippingProviders(env).length>1?'both':shippingProviders(env)[0]||'manual',shipping_providers:shippingProviders(env),shipping_enabled:shipping,pickup_enabled:pickup,shipping_rates:rates};
 }
 function field(obj,key,max,required=true) {
   const value=obj[key]??'';if(typeof value!=='string'||value.trim().length>max||(required&&!value.trim()))fail(400,'Revisa el campo '+key+'.');return value.trim();
