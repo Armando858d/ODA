@@ -1,6 +1,6 @@
 'use strict';
 window.createContentManager=function(api,say,reloadInventory){
- const root=document.getElementById('contentManager');let data=null,editing=false;
+ const root=document.getElementById('contentManager');let data=null,editing=false,generation=0;
  const make=(tag,txt,cls)=>{const n=document.createElement(tag);if(txt!==undefined)n.textContent=txt;if(cls)n.className=cls;return n};
  const sections=[['products','Piezas'],['canvases','Lienzos'],['collections','Colecciones'],['promotions','Promociones']];let selected='products';
  const toolbar=make('div',undefined,'content-toolbar'),tabs=make('div',undefined,'admin-tabs'),search=make('input');search.type='search';search.placeholder='Buscar por nombre…';search.setAttribute('aria-label','Buscar en el catálogo');
@@ -8,7 +8,7 @@ window.createContentManager=function(api,say,reloadInventory){
  for(const [key,title]of sections){const b=make('button',title);b.onclick=()=>{selected=key;render()};b.dataset.section=key;tabs.append(b)}
  const productSection=()=>selected==='products'||selected==='canvases';const storageKey=()=>productSection()?'products':selected;
  search.oninput=()=>render();add.onclick=()=>edit(null);
- async function load(){data=await api('content');render();}
+ async function load(){const current=generation;const result=await api('content');if(current!==generation)return;data=result;render();}
  function render(){if(!data)return;tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.section===selected));add.textContent='+ Agregar '+({products:'pieza',canvases:'lienzo',collections:'colección',promotions:'promoción'}[selected]);list.replaceChildren();
  const rows=data[storageKey()].filter(x=>(!productSection()||(selected==='canvases'?x.category==='lienzo':x.category!=='lienzo'))).filter(x=>(x.name||x.title).toLocaleLowerCase().includes(search.value.toLocaleLowerCase()));
  if(!rows.length)list.append(make('p','Aquí empieza tu próxima colección. Agrega tu primer elemento.','empty-admin'));
@@ -39,5 +39,5 @@ window.createContentManager=function(api,say,reloadInventory){
  const next=structuredClone(data);const index=next[storageKey()].findIndex(a=>a.id===item.id);if(index<0)next[storageKey()].push(item);else next[storageKey()][index]=item;data=await api('content',next);editor.close();render();say('Cambios publicados. La tienda los mostrará al recargar.');reloadInventory().catch(()=>say('Catálogo guardado. Actualiza existencias para ver las piezas nuevas.'));}catch(e){status.textContent=e.message}finally{submit.disabled=false}};
  editor.showModal();name.focus();
  }
- return {load,clear(){data=null;list.replaceChildren();editor.close();}};
+ return {load,clear(){generation++;data=null;list.replaceChildren();editor.close();}};
 };

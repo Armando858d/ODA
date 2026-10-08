@@ -3,7 +3,7 @@
  const $=id=>document.getElementById(id),base='https://oda-pagos.oda-pagos-cloudflare.workers.dev';let token='',generation=0;
  const say=s=>{$('message').textContent=s};
  const el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n};
- async function api(path,body){const r=await fetch(base+'/api/admin/'+path,{method:body===undefined?'GET':'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'});const d=await r.json();if(!r.ok)throw Error(d.error||'No se pudo completar la operación.');return d;}
+ async function api(path,body){const r=await fetch(base+'/api/admin/'+path,{method:body===undefined?'GET':'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),cache:'no-store',signal:AbortSignal.timeout(20000)});let d;try{d=await r.json()}catch{throw Error('El servidor no respondió correctamente. Vuelve a intentar.')}if(!r.ok)throw Error(d.error||'No se pudo completar la operación.');return d;}
  function filter(){const query=$('inventorySearch').value.toLocaleLowerCase().trim();let count=0;const rows=$('inventory').querySelectorAll('.item');rows.forEach(row=>{row.hidden=!row.querySelector('h3').textContent.toLocaleLowerCase().includes(query);if(!row.hidden)count++});$('inventoryCount').textContent=count+' de '+rows.length+' acabados';}
  async function load(){const g=generation;const s=await api('status');if(g!==generation)return;
  $('inventory').replaceChildren();for(const item of s.inventory){const f=el('form');f.className='item';f.append(el('h3',item.title));const grid=el('div');grid.className='grid';
