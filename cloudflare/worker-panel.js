@@ -1,18 +1,25 @@
-// cloudflare/src/errors.mjs
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// src/errors.mjs
 var APIError = class extends Error {
+  static {
+    __name(this, "APIError");
+  }
   constructor(status, message) {
     super(message);
     this.status = status;
   }
 };
 
-// cloudflare/src/shop-settings.mjs
+// src/shop-settings.mjs
 var shopFields = ["businessName", "contactEmail", "contactPhone", "businessAddress", "production", "shipping", "changes", "cancellations", "damages", "privacy"];
 async function getShop(e) {
   const row = await e.DB.prepare("SELECT value FROM store_settings WHERE key='shop'").bind().first();
   const data = row ? JSON.parse(row.value) : {};
   return { configured: shopFields.every((k) => typeof data[k] === "string" && data[k].trim().length > 0), ...Object.fromEntries(shopFields.map((k) => [k, data[k] || ""])) };
 }
+__name(getShop, "getShop");
 async function saveShop(e, body) {
   const data = {};
   for (const k of shopFields) {
@@ -23,14 +30,15 @@ async function saveShop(e, body) {
   await e.DB.prepare("INSERT INTO store_settings(key,value) VALUES('shop',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(JSON.stringify(data)).run();
   return { saved: true };
 }
+__name(saveShop, "saveShop");
 
-// cloudflare/src/shipping-states.mjs
+// src/shipping-states.mjs
 var shipping_states_default = [{ "name": "Aguascalientes", "code": "AG" }, { "name": "Baja California", "code": "BC" }, { "name": "Baja California Sur", "code": "BS" }, { "name": "Campeche", "code": "CM" }, { "name": "Chiapas", "code": "CS" }, { "name": "Chihuahua", "code": "CH" }, { "name": "Ciudad de M\xE9xico", "code": "CX" }, { "name": "Coahuila", "code": "CO" }, { "name": "Colima", "code": "CL" }, { "name": "Durango", "code": "DG" }, { "name": "Guanajuato", "code": "GT" }, { "name": "Guerrero", "code": "GR" }, { "name": "Hidalgo", "code": "HG" }, { "name": "Jalisco", "code": "JA" }, { "name": "M\xE9xico", "code": "EM" }, { "name": "Michoac\xE1n", "code": "MI" }, { "name": "Morelos", "code": "MO" }, { "name": "Nayarit", "code": "NA" }, { "name": "Nuevo Le\xF3n", "code": "NL" }, { "name": "Oaxaca", "code": "OA" }, { "name": "Puebla", "code": "PU" }, { "name": "Quer\xE9taro", "code": "QT" }, { "name": "Quintana Roo", "code": "QR" }, { "name": "San Luis Potos\xED", "code": "SL" }, { "name": "Sinaloa", "code": "SI" }, { "name": "Sonora", "code": "SO" }, { "name": "Tabasco", "code": "TB" }, { "name": "Tamaulipas", "code": "TM" }, { "name": "Tlaxcala", "code": "TL" }, { "name": "Veracruz", "code": "VE" }, { "name": "Yucat\xE1n", "code": "YU" }, { "name": "Zacatecas", "code": "ZA" }];
 
-// cloudflare/src/skydropx.mjs
-var fail = (s, m) => {
+// src/skydropx.mjs
+var fail = /* @__PURE__ */ __name((s, m) => {
   throw new APIError(s, m);
-};
+}, "fail");
 function skyConnection(e) {
   if (e.SKYDROPX_MODE === "live") return { host: "https://api-pro.skydropx.com", id: e.SKYDROPX_CLIENT_ID, secret: e.SKYDROPX_CLIENT_SECRET };
   if (e.SKYDROPX_MODE !== "test") return null;
@@ -43,10 +51,11 @@ function skyConnection(e) {
   if (u.protocol !== "https:" || u.port || u.username || u.password || u.pathname !== "/" || u.search || u.hash || !u.hostname.endsWith(".skydropx.com") || !/(^|[-.])(sb|sandbox)([-.]|$)/.test(u.hostname)) return null;
   return { host: u.origin, id: e.SKYDROPX_TEST_CLIENT_ID, secret: e.SKYDROPX_TEST_CLIENT_SECRET };
 }
-var skyConfigured = (e) => {
+__name(skyConnection, "skyConnection");
+var skyConfigured = /* @__PURE__ */ __name((e) => {
   const c = skyConnection(e);
   return !!(c?.id && c?.secret);
-};
+}, "skyConfigured");
 var authCache = null;
 async function token(e) {
   if (!skyConfigured(e)) fail(503, "Configura las claves del ambiente seleccionado y, para pruebas, la URL API indicada por Skydropx Sandbox.");
@@ -60,6 +69,7 @@ async function token(e) {
   authCache = { key, token: d.access_token, until: Date.now() + (Math.min(Number(d.expires_in), 7200) - 60) * 1e3 };
   return d.access_token;
 }
+__name(token, "token");
 async function sky(e, path, body, capture) {
   try {
     const access = await token(e);
@@ -79,16 +89,19 @@ async function sky(e, path, body, capture) {
     fail(503, "Skydropx no respondi\xF3 a tiempo. No se repite autom\xE1ticamente una compra de gu\xEDa.");
   }
 }
+__name(sky, "sky");
 async function skyCheck(e) {
   await token(e);
   return { connected: true, mode: e.SKYDROPX_MODE, note: "Autorizaci\xF3n aceptada. No se compr\xF3 ninguna gu\xEDa; falta comprobar una cotizaci\xF3n." };
 }
-var address = (a) => ({ country_code: "MX", postal_code: a.postalCode, area_level1: shipping_states_default.find((s) => s.code === a.state)?.name || a.state, area_level2: a.city, area_level3: a.district });
+__name(skyCheck, "skyCheck");
+var address = /* @__PURE__ */ __name((a) => ({ country_code: "MX", postal_code: a.postalCode, area_level1: shipping_states_default.find((s) => s.code === a.state)?.name || a.state, area_level2: a.city, area_level3: a.district }), "address");
 function skyRate(r) {
   const cents = Math.round(Number(r.total) * 100);
   if (r.success !== true || !["approved", "coverage_checked", "price_found_internal", "price_found_external"].includes(r.status) || r.currency_code !== "MXN" || !Number.isSafeInteger(cents) || cents <= 0 || cents > 1e7 || !r.id || !r.provider_name || !r.provider_service_code || r.requires_origin_verification || !["single", "multipackage"].includes(r.shipment_creation_type)) return null;
   return { rate_id: String(r.id), carrier: String(r.provider_name), service: String(r.provider_service_code), description: String(r.provider_display_name || r.provider_name) + " \xB7 " + String(r.provider_service_name || r.provider_service_code), total_cents: cents, estimate: Number.isInteger(r.days) && r.days > 0 ? r.days + " d\xEDas estimados" : "Consultar plazo", drop_off: r.pickup !== true };
 }
+__name(skyRate, "skyRate");
 async function skyOffers(from, to, packages, e) {
   const quotation = { address_from: address(from), address_to: address(to), parcels: packages.map((p) => ({ length: Math.ceil(p.dimensions.length), width: Math.ceil(p.dimensions.width), height: Math.ceil(p.dimensions.height), weight: p.weight, package_protected: false, declared_value: p.declaredValue })) };
   const initial = await sky(e, "quotations", { quotation });
@@ -105,6 +118,7 @@ async function skyOffers(from, to, packages, e) {
   const seen = /* @__PURE__ */ new Set();
   return result.rates.map(skyRate).filter((r) => r && !seen.has(r.rate_id) && seen.add(r.rate_id)).map((r) => ({ ...r, payload: { provider: "skydropx", quotation_id: id, rate_id: r.rate_id, origin: from, destination: to, packages, quotation } }));
 }
+__name(skyOffers, "skyOffers");
 async function skyRefresh(payload, e) {
   const d = await sky(e, "quotations/" + encodeURIComponent(payload.quotation_id));
   if (d.is_completed !== true) fail(409, "La tarifa de Skydropx no est\xE1 confirmada.");
@@ -112,6 +126,7 @@ async function skyRefresh(payload, e) {
   if (!r) fail(409, "La tarifa de Skydropx venci\xF3 o ya no est\xE1 disponible.");
   return r;
 }
+__name(skyRefresh, "skyRefresh");
 function skyShipment(payload, items, e) {
   let codes;
   try {
@@ -125,9 +140,10 @@ function skyShipment(payload, items, e) {
     if (!c || !/^\d{8}$/.test(c.consignment_note) || !c.package_type || !/^[A-Za-z0-9]{1,8}$/.test(c.package_type)) fail(409, "Configura Carta Porte y tipo de empaque para " + item.title + " antes de comprar la gu\xEDa.");
     for (let i = 0; i < item.quantity; i++) packages.push({ package_number: String(packages.length + 1), package_protected: false, declared_value: item.price_cents / 100, consignment_note: c.consignment_note, package_type: c.package_type });
   }
-  const full = (a) => ({ ...address(a), street1: a.street + " " + a.number, name: a.name.slice(0, 30), company: a.name.slice(0, 60), phone: a.phone, email: a.email, reference: (a.reference || "").slice(0, 30) });
+  const full = /* @__PURE__ */ __name((a) => ({ ...address(a), street1: a.street + " " + a.number, name: a.name.slice(0, 30), company: a.name.slice(0, 60), phone: a.phone, email: a.email, reference: (a.reference || "").slice(0, 30) }), "full");
   return { shipment: { rate_id: payload.rate_id, unique_shipment: true, printing_format: "thermal", address_from: full(payload.origin), address_to: full(payload.destination), packages } };
 }
+__name(skyShipment, "skyShipment");
 function skyLabels(d, payload) {
   const shipment = d.data, a = shipment?.attributes;
   const total = Number(a?.total);
@@ -148,25 +164,27 @@ function skyLabels(d, payload) {
   if (labels.some((x) => !x)) return null;
   return { labels, total_cents: Math.round(total * 100) };
 }
+__name(skyLabels, "skyLabels");
 
-// cloudflare/src/shipping.mjs
-var fail2 = (status, message) => {
+// src/shipping.mjs
+var fail2 = /* @__PURE__ */ __name((status, message) => {
   throw new APIError(status, message);
-};
-var sql = (e, s, ...a) => e.DB.prepare(s).bind(...a);
-var first = (e, s, ...a) => sql(e, s, ...a).first();
-var stamp = () => Math.floor(Date.now() / 1e3);
-var sha = async (value) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)))].map((n) => n.toString(16).padStart(2, "0")).join("");
-var enviaConfigured = (e) => !!(e.ENVIA_TOKEN && ["envia", "both"].includes(e.SHIPPING_PROVIDER) && ["test", "live"].includes(e.ENVIA_MODE));
-var shippingProviders = (e) => [...enviaConfigured(e) ? ["envia"] : [], ...["skydropx", "both"].includes(e.SHIPPING_PROVIDER) && skyConfigured(e) ? ["skydropx"] : []];
-var shippingConfigured = (e) => shippingProviders(e).length > 0;
-var base = (e) => e.ENVIA_MODE === "live" ? "https://api.envia.com" : "https://api-test.envia.com";
+}, "fail");
+var sql = /* @__PURE__ */ __name((e, s, ...a) => e.DB.prepare(s).bind(...a), "sql");
+var first = /* @__PURE__ */ __name((e, s, ...a) => sql(e, s, ...a).first(), "first");
+var stamp = /* @__PURE__ */ __name(() => Math.floor(Date.now() / 1e3), "stamp");
+var sha = /* @__PURE__ */ __name(async (value) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)))].map((n) => n.toString(16).padStart(2, "0")).join(""), "sha");
+var enviaConfigured = /* @__PURE__ */ __name((e) => !!(e.ENVIA_TOKEN && ["envia", "both"].includes(e.SHIPPING_PROVIDER) && ["test", "live"].includes(e.ENVIA_MODE)), "enviaConfigured");
+var shippingProviders = /* @__PURE__ */ __name((e) => [...enviaConfigured(e) ? ["envia"] : [], ...["skydropx", "both"].includes(e.SHIPPING_PROVIDER) && skyConfigured(e) ? ["skydropx"] : []], "shippingProviders");
+var shippingConfigured = /* @__PURE__ */ __name((e) => shippingProviders(e).length > 0, "shippingConfigured");
+var base = /* @__PURE__ */ __name((e) => e.ENVIA_MODE === "live" ? "https://api.envia.com" : "https://api-test.envia.com", "base");
 function enviaToken(value) {
   let token2 = String(value || "").trim().replace(/^Bearer\s+/i, "").trim();
   if (token2.startsWith('"') && token2.endsWith('"') || token2.startsWith("'") && token2.endsWith("'")) token2 = token2.slice(1, -1).trim();
   if (!token2 || /[\s*\u2022\u25cf]/u.test(token2)) fail2(409, "El token guardado contiene espacios internos o caracteres de ocultamiento. Copia el valor completo con el boton del portapapeles de Envia.com.");
   return token2;
 }
+__name(enviaToken, "enviaToken");
 async function envia(e, path, payload, capture) {
   if (!enviaConfigured(e)) fail2(503, "El cotizador est\xE1 en configuraci\xF3n. Solicita tu env\xEDo por WhatsApp.");
   try {
@@ -188,21 +206,25 @@ async function envia(e, path, payload, capture) {
     fail2(503, "La paqueter\xEDa no respondi\xF3. Consulta el estado antes de repetir una compra de gu\xEDa.");
   }
 }
+__name(envia, "envia");
 function txt(v, max = 150) {
   return typeof v === "string" && v.trim().length <= max ? v.trim() : "";
 }
+__name(txt, "txt");
 function address2(a) {
   if (!a || typeof a !== "object") fail2(400, "Falta la direcci\xF3n completa.");
   const v = { name: txt(a.name, 100), email: txt(a.email, 180), phone: txt(a.phone, 20).replace(/[\s()-]/g, ""), street: txt(a.street), number: txt(a.number, 20), district: txt(a.district, 100), city: txt(a.city, 80), state: txt(a.state, 3).toUpperCase(), country: "MX", postalCode: txt(a.postalCode, 5), reference: txt(a.reference, 150) };
   if (!v.name || !v.street || !v.number || !v.district || !v.city || !/^\d{5}$/.test(v.postalCode) || !/^\+?\d{10,13}$/.test(v.phone) || !/^[A-Z]{2,3}$/.test(v.state) || !/^\S+@\S+\.\S+$/.test(v.email)) fail2(400, "Revisa direcci\xF3n, n\xFAmero, colonia, tel\xE9fono y c\xF3digo de estado.");
   return v;
 }
-var destination = (c) => address2({ name: c.name, email: c.email, phone: c.phone, street: c.street, number: c.number, district: c.colony, city: c.city, state: c.state_code, postalCode: c.zip, reference: c.notes });
+__name(address2, "address");
+var destination = /* @__PURE__ */ __name((c) => address2({ name: c.name, email: c.email, phone: c.phone, street: c.street, number: c.number, district: c.colony, city: c.city, state: c.state_code, postalCode: c.zip, reference: c.notes }), "destination");
 async function origin(e) {
   const row = await first(e, "SELECT value FROM store_settings WHERE key='origin'");
   if (!row) fail2(409, "Falta configurar la direcci\xF3n de origen del estudio.");
   return address2(JSON.parse(row.value));
 }
+__name(origin, "origin");
 async function packagesFor(items, e) {
   if (items.reduce((n, i) => n + i.quantity, 0) > 5) fail2(409, "Para m\xE1s de cinco cajas, solicita una cotizaci\xF3n al estudio.");
   const packages = [];
@@ -213,12 +235,14 @@ async function packagesFor(items, e) {
   }
   return packages;
 }
-var quoteFingerprint = (items, customer) => sha(JSON.stringify([items, destination(customer)]));
+__name(packagesFor, "packagesFor");
+var quoteFingerprint = /* @__PURE__ */ __name((items, customer) => sha(JSON.stringify([items, destination(customer)])), "quoteFingerprint");
 function normalizeRate(r, carrier) {
   const cents = Math.round(Number(r.totalPrice) * 100);
   if (r.currency !== "MXN" || !Number.isSafeInteger(cents) || cents <= 0 || cents > 1e7 || r.carrier !== carrier || typeof r.service !== "string" || !r.service || ![0, 2].includes(Number(r.dropOff))) return null;
   return { carrier, service: r.service, description: String(r.carrierDescription || carrier) + " \xB7 " + String(r.serviceDescription || r.service), total_cents: cents, estimate: String(r.deliveryEstimate || "Consultar plazo"), dropOff: Number(r.dropOff) };
 }
+__name(normalizeRate, "normalizeRate");
 async function enviaRates(items, customer, e) {
   if (!shippingConfigured(e)) fail2(503, "La cotizaci\xF3n por paqueter\xEDa est\xE1 en configuraci\xF3n.");
   const payload = { origin: await origin(e), destination: destination(customer), packages: await packagesFor(items, e), settings: { currency: "MXN", printFormat: "PDF", printSize: "PAPER_4X6" } };
@@ -239,12 +263,14 @@ async function enviaRates(items, customer, e) {
   await e.DB.batch(list.map((r) => sql(e, "INSERT INTO shipping_quotes(id,fingerprint,payload,carrier,service,description,total_cents,estimate,mode,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?)", r.id, fingerprint, JSON.stringify({ ...payload, shipment: { type: 1, carrier: r.carrier, service: r.service } }), r.carrier, r.service, r.description, r.total_cents, r.estimate, e.ENVIA_MODE, expires)));
   return { quotes: list.map((r) => ({ id: r.id, carrier: r.carrier, service: r.service, description: r.description, total: r.total_cents / 100, estimate: r.estimate, drop_off: r.dropOff === 2, expires_at: expires })), mode: e.ENVIA_MODE, partial: groups.some((g) => g.status === "rejected") };
 }
+__name(enviaRates, "enviaRates");
 async function resolveQuote(id, items, customer, e) {
   if (typeof id !== "string" || !/^[a-f0-9-]{36}$/.test(id)) fail2(409, "Primero cotiza y selecciona una opci\xF3n de env\xEDo.");
   const row = await first(e, "SELECT * FROM shipping_quotes WHERE id=?", id);
   if (!row || row.expires_at <= stamp() || row.mode !== e.MP_MODE || !shippingProviders(e).includes(JSON.parse(row.payload).provider || "envia") || row.mode !== providerMode(row, e) || row.fingerprint !== await quoteFingerprint(items, customer)) fail2(409, "La cotizaci\xF3n venci\xF3 o cambi\xF3 tu pedido/direcci\xF3n. Vuelve a cotizar.");
   return row;
 }
+__name(resolveQuote, "resolveQuote");
 async function purchaseLabel(orderId, expectedCents, e) {
   if (e.LABEL_PURCHASES_ENABLED !== "true") fail2(409, "La compra de gu\xEDas a\xFAn est\xE1 desactivada.");
   const row = await first(e, `SELECT o.*,s.state shipping_state,s.label_data,q.payload,q.mode shipping_mode FROM orders o JOIN order_shipping s ON s.order_id=o.id JOIN shipping_quotes q ON q.id=s.quote_id WHERE o.id=?`, orderId);
@@ -284,6 +310,7 @@ async function purchaseLabel(orderId, expectedCents, e) {
     fail2(503, "No se confirm\xF3 la compra de gu\xEDa. Revisa Envia.com con la referencia " + orderId + " antes de repetir; podr\xEDa haberse cobrado.");
   }
 }
+__name(purchaseLabel, "purchaseLabel");
 async function labelRate(orderId, e) {
   const row = await first(e, `SELECT o.state,o.shipping_cents,s.state shipping_state,s.label_data,q.payload,q.mode FROM orders o JOIN order_shipping s ON s.order_id=o.id JOIN shipping_quotes q ON q.id=s.quote_id WHERE o.id=?`, orderId);
   if (!row || row.state !== "approved") fail2(409, "El pedido no tiene env\xEDo pagado y aprobado.");
@@ -304,9 +331,11 @@ async function labelRate(orderId, e) {
   if (!r) fail2(409, "No hay tarifa disponible para ese servicio.");
   return { state: "not_started", description: r.description, total: r.total_cents / 100, total_cents: r.total_cents, paid_shipping: row.shipping_cents / 100, estimate: r.estimate };
 }
+__name(labelRate, "labelRate");
 function providerMode(row, e) {
   return JSON.parse(row.payload).provider === "skydropx" ? e.SKYDROPX_MODE : e.ENVIA_MODE;
 }
+__name(providerMode, "providerMode");
 async function rates(items, customer, e) {
   const providers = shippingProviders(e);
   if (!providers.length) fail2(503, "No hay proveedores de env\xEDo configurados.");
@@ -330,6 +359,7 @@ async function rates(items, customer, e) {
   }
   return { quotes: available, mode: e.MP_MODE, partial: results.some((r) => r.status === "rejected" || r.value?.partial), unavailable_providers: providers.filter((_, i) => results[i].status === "rejected") };
 }
+__name(rates, "rates");
 async function checkSkyLabel(row, orderId, e) {
   const payload = JSON.parse(row.payload);
   if (row.shipping_state === "needs_review" && row.label_data) {
@@ -349,6 +379,7 @@ async function checkSkyLabel(row, orderId, e) {
   const r = await skyRefresh(payload, e);
   return { provider: "skydropx", state: "not_started", description: r.description, total: r.total_cents / 100, total_cents: r.total_cents, paid_shipping: row.shipping_cents / 100, estimate: r.estimate };
 }
+__name(checkSkyLabel, "checkSkyLabel");
 async function buySkyLabel(row, orderId, expectedCents, e) {
   if (e.SKYDROPX_LABEL_PURCHASES_ENABLED !== "true" || e.MP_MODE !== "live" || row.mode !== "live") fail2(409, "La compra de gu\xEDas de Skydropx est\xE1 desactivada. Primero completa la verificaci\xF3n de producci\xF3n.");
   if (row.shipping_state !== "not_started") fail2(409, "La gu\xEDa ya se procesa o requiere revisi\xF3n en Skydropx. No repitas la compra.");
@@ -372,13 +403,14 @@ async function buySkyLabel(row, orderId, expectedCents, e) {
     fail2(503, "La gu\xEDa no est\xE1 confirmada. Consulta su estado en Skydropx antes de repetir; podr\xEDa haberse cobrado.");
   }
 }
+__name(buySkyLabel, "buySkyLabel");
 
-// cloudflare/src/operations.mjs
-var sql2 = (e, s, ...a) => e.DB.prepare(s).bind(...a);
-var now = () => Math.floor(Date.now() / 1e3);
-var emailReady = (e) => e.EMAIL_ENABLED === "true" && !!e.RESEND_API_KEY && /^[^\r\n]+@[^\r\n]+\.[^\r\n]+$/.test(e.EMAIL_FROM || "");
-var issue = (e, id, kind, message) => sql2(e, "INSERT INTO operation_issues(order_id,kind,message,updated_at) VALUES(?,?,?,?) ON CONFLICT(order_id,kind) DO UPDATE SET message=excluded.message,updated_at=excluded.updated_at", id, kind, message, now()).run();
-var clear = (e, id, kind) => sql2(e, "DELETE FROM operation_issues WHERE order_id=? AND kind=?", id, kind).run();
+// src/operations.mjs
+var sql2 = /* @__PURE__ */ __name((e, s, ...a) => e.DB.prepare(s).bind(...a), "sql");
+var now = /* @__PURE__ */ __name(() => Math.floor(Date.now() / 1e3), "now");
+var emailReady = /* @__PURE__ */ __name((e) => e.EMAIL_ENABLED === "true" && !!e.RESEND_API_KEY && /^[^\r\n]+@[^\r\n]+\.[^\r\n]+$/.test(e.EMAIL_FROM || ""), "emailReady");
+var issue = /* @__PURE__ */ __name((e, id, kind, message) => sql2(e, "INSERT INTO operation_issues(order_id,kind,message,updated_at) VALUES(?,?,?,?) ON CONFLICT(order_id,kind) DO UPDATE SET message=excluded.message,updated_at=excluded.updated_at", id, kind, message, now()).run(), "issue");
+var clear = /* @__PURE__ */ __name((e, id, kind) => sql2(e, "DELETE FROM operation_issues WHERE order_id=? AND kind=?", id, kind).run(), "clear");
 async function publicFulfillment(e, id) {
   const row = await sql2(e, "SELECT state,label_data FROM order_shipping WHERE order_id=?", id).first();
   let labels = [];
@@ -391,6 +423,7 @@ async function publicFulfillment(e, id) {
   const notes = await sql2(e, "SELECT kind,state FROM notifications WHERE order_id=?", id).all();
   return { shipping: row ? { state: row.state, labels } : { state: "not_required", labels: [] }, notifications: Object.fromEntries(notes.results.map((n) => [n.kind, n.state])) };
 }
+__name(publicFulfillment, "publicFulfillment");
 async function recoverLateReservation(e, id) {
   const row = await sql2(e, "SELECT state,inventory_released FROM orders WHERE id=?", id).first();
   if (row?.state !== "approved" || !row.inventory_released) return;
@@ -402,6 +435,7 @@ async function recoverLateReservation(e, id) {
     await issue(e, id, "inventory", "Pago confirmado despu\xE9s de liberar la reserva. Reponer existencias y actualizar el pago antes de preparar o enviar.");
   }
 }
+__name(recoverLateReservation, "recoverLateReservation");
 async function releaseExpired(e, mp2, apply) {
   if (e.RESERVATION_RECOVERY_ENABLED !== "true" || !e.MP_ACCESS_TOKEN) return;
   const rows = await sql2(e, "SELECT * FROM orders WHERE inventory_released=0 AND state IN ('awaiting_payment','pending','in_process','rejected','cancelled') AND preference_id IS NOT NULL AND created_at<? ORDER BY ops_checked_at,created_at LIMIT 2", now() - 86400).all();
@@ -424,6 +458,7 @@ async function releaseExpired(e, mp2, apply) {
     }
   }
 }
+__name(releaseExpired, "releaseExpired");
 async function queueNotice(e, row, kind, link, labels = []) {
   if (!emailReady(e) || row.mode !== "live") return;
   const customer = JSON.parse(row.customer);
@@ -435,6 +470,7 @@ El movimiento del rastreo comienza cuando la paqueter\xEDa recibe el paquete.`;
   const payload = { from: e.EMAIL_FROM, to: [customer.email], subject: kind === "payment" ? "ARTBAN \xB7 Pago confirmado" : "ARTBAN \xB7 Tu gu\xEDa de rastreo", text: text2 };
   await sql2(e, "INSERT OR IGNORE INTO notifications(id,order_id,kind,payload,created_at) VALUES(?,?,?,?,?)", row.id + "-" + kind, row.id, kind, JSON.stringify(payload), now()).run();
 }
+__name(queueNotice, "queueNotice");
 async function sendNotices(e) {
   if (!emailReady(e)) return;
   const pending = await sql2(e, "SELECT * FROM notifications WHERE state IN ('queued','retry','sending') AND lease_until<=? ORDER BY created_at LIMIT 2", now()).all();
@@ -456,6 +492,7 @@ async function sendNotices(e) {
     }
   }
 }
+__name(sendNotices, "sendNotices");
 async function fulfill(e, sign) {
   const auto = e.AUTO_LABELS_ENABLED === "true" && e.MP_MODE === "live" && e.SKYDROPX_MODE === "live" && e.LABEL_PURCHASES_ENABLED === "true" && e.SKYDROPX_LABEL_PURCHASES_ENABLED === "true";
   const rows = await sql2(e, `SELECT * FROM orders WHERE state='approved' AND mode='live' AND inventory_released=0 AND fulfillment_hold=0 AND
@@ -486,13 +523,15 @@ async function fulfill(e, sign) {
     if (status.shipping.state === "ready") await queueNotice(e, row, "shipping", link, status.shipping.labels);
   }
 }
+__name(fulfill, "fulfill");
 async function runOperations(e, { mp: mp2, apply, sign }) {
   await releaseExpired(e, mp2, apply);
   await fulfill(e, sign);
   await sendNotices(e);
 }
+__name(runOperations, "runOperations");
 
-// cloudflare/src/catalog-seed.mjs
+// src/catalog-seed.mjs
 var catalog_seed_default = [
   { id: "venom-001", name: "Figura Venom", description: "Figura s\xF3lida con recubrimiento de exhibici\xF3n. Acabado profesional monocolor.", category: "art-toy", type: "fixed", price: 850, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 350 }], image: "ven1.png", tags: ["ACABADO PRO", "COLECCI\xD3NABLE"], weight: 180, featured: true },
   { id: "elefante-002", name: "Elefante Art Toy", description: "Pieza decorativa con dise\xF1o organico. Acabado liso tipo inyeccion.", category: "art-toy", type: "fixed", price: 650, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 300 }], image: "elefante1.png", tags: ["DECORATIVO", "PREMIUM"], weight: 220, featured: true },
@@ -510,15 +549,17 @@ var catalog_seed_default = [
   { id: "lampara-014", name: "L\xE1mpara de Regalo", description: "Pieza funcional con iluminaci\xF3n integrada. Dise\xF1o decorativo.", category: "custom", type: "custom", price: null, variants: [], image: "jan2.png", tags: ["FUNCIONAL", "ILUMINACI\xD3N"], weight: null, featured: false }
 ];
 
-// cloudflare/src/content.mjs
-var q = (e, s, ...v) => e.DB.prepare(s).bind(...v);
+// src/content.mjs
+var q = /* @__PURE__ */ __name((e, s, ...v) => e.DB.prepare(s).bind(...v), "q");
 async function getContent(e) {
   const r = await q(e, "SELECT value FROM store_settings WHERE key='content'").first();
   return r ? JSON.parse(r.value) : { revision: 0, products: catalog_seed_default, collections: [], promotions: [] };
 }
+__name(getContent, "getContent");
 function activePromotions(c, time = Date.now()) {
   return c.promotions.filter((x) => x.active && (!x.start || Date.parse(x.start) <= time) && (!x.end || Date.parse(x.end) > time));
 }
+__name(activePromotions, "activePromotions");
 function pricedProducts(c, time = Date.now()) {
   const offers = activePromotions(c, time);
   return c.products.filter((p) => p.active !== false).map((p) => {
@@ -527,25 +568,28 @@ function pricedProducts(c, time = Date.now()) {
     return { ...p, originalPrice: p.price, price: p.price === null ? null : Math.round(p.price * rate * 100) / 100, variants: p.variants.map((v) => ({ ...v, mod: Math.round(v.mod * rate * 100) / 100 })), promotion: promo?.title || "" };
   });
 }
-var bad = (m) => {
+__name(pricedProducts, "pricedProducts");
+var bad = /* @__PURE__ */ __name((m) => {
   throw new APIError(400, m);
-};
+}, "bad");
 function text(x, max = 200) {
   if (typeof x !== "string" || x.length > max || /[<>]/.test(x)) bad("Revisa los textos: no se admite HTML.");
   return x.trim();
 }
+__name(text, "text");
 function image(x) {
   if (typeof x !== "string" || x.length > 19e4 || !(/^[a-zA-Z0-9_.-]+$/.test(x) || /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(x) || /^https:\/\/[^\s"'<>]+$/.test(x))) bad("Imagen no v\xE1lida. Usa JPG, PNG, WebP o una URL HTTPS.");
   return x;
 }
+__name(image, "image");
 function validateContent(b) {
   if (!b || !Number.isInteger(b.revision) || !Array.isArray(b.products) || !Array.isArray(b.collections) || !Array.isArray(b.promotions) || b.products.length > 100 || b.collections.length > 40 || b.promotions.length > 40) bad("Contenido no v\xE1lido o demasiado grande.");
   const ids = /* @__PURE__ */ new Set();
-  const id = (x) => {
+  const id = /* @__PURE__ */ __name((x) => {
     if (typeof x !== "string" || !/^[-a-z0-9]{1,60}$/.test(x) || ids.has(x)) bad("Identificador repetido o no v\xE1lido.");
     ids.add(x);
     return x;
-  };
+  }, "id");
   const collections = b.collections.map((x) => ({ id: id(x.id), name: text(x.name, 80), description: text(x.description || "", 400), image: image(x.image), active: !!x.active }));
   const products = b.products.map((x) => {
     if (!["fixed", "custom"].includes(x.type) || !["art-toy", "figura", "custom", "lienzo"].includes(x.category) || !Array.isArray(x.variants) || x.variants.length > 8 || x.type === "fixed" && (!Number.isFinite(x.price) || x.price < 1 || x.price > 1e6 || !x.variants.length)) bad("Revisa el precio y los acabados.");
@@ -566,6 +610,7 @@ function validateContent(b) {
   if (JSON.stringify(result).length > 18e5) bad("El cat\xE1logo supera 1.8 MB. Reduce el n\xFAmero o tama\xF1o de las fotos.");
   return result;
 }
+__name(validateContent, "validateContent");
 async function saveContent(e, body) {
   const next = validateContent(body);
   await q(e, "INSERT OR IGNORE INTO store_settings(key,value) VALUES('content',?)", JSON.stringify({ revision: 0, products: catalog_seed_default, collections: [], promotions: [] })).run();
@@ -577,8 +622,9 @@ async function saveContent(e, body) {
   if (result[0].meta.changes !== 1) throw new APIError(409, "El cat\xE1logo cambi\xF3. Recarga el panel.");
   return next;
 }
+__name(saveContent, "saveContent");
 
-// cloudflare/src/catalog.mjs
+// src/catalog.mjs
 var catalog_default = [
   { "id": "venom-001", "name": "Figura Venom", "price": 850, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 350 }] },
   { "id": "elefante-002", "name": "Elefante Art Toy", "price": 650, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 300 }] },
@@ -589,17 +635,18 @@ var catalog_default = [
   { "id": "corazon-007", "name": "Coraz\xF3n Anat\xF3mico 3D", "price": 550, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 350 }] }
 ];
 
-// cloudflare/src/admin.mjs
-var sql3 = (e, s, ...a) => e.DB.prepare(s).bind(...a);
+// src/admin.mjs
+var sql3 = /* @__PURE__ */ __name((e, s, ...a) => e.DB.prepare(s).bind(...a), "sql");
 async function authenticate(request, e) {
   if (!e.ADMIN_TOKEN || e.ADMIN_TOKEN.length < 32) throw new APIError(503, "El acceso privado necesita ADMIN_TOKEN de al menos 32 caracteres.");
   const actual = request.headers.get("Authorization") || "";
-  const hash = async (s) => new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
+  const hash = /* @__PURE__ */ __name(async (s) => new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s))), "hash");
   const [a, b] = await Promise.all([hash(actual), hash("Bearer " + e.ADMIN_TOKEN)]);
   let d = 0;
   for (let i = 0; i < a.length; i++) d |= a[i] ^ b[i];
   if (d) throw new APIError(401, "La clave del panel no es correcta.");
 }
+__name(authenticate, "authenticate");
 async function admin(path, method, body, e, mp2) {
   if (path === "/api/admin/content") {
     if (method === "GET") return getContent(e);
@@ -638,7 +685,8 @@ async function admin(path, method, body, e, mp2) {
   }
   if (path === "/api/admin/mercadopago" && method === "POST") {
     const user = await mp2(e, "GET", "/users/me");
-    return { valid: true, collector_matches: String(user.id) === e.MP_COLLECTOR_ID, mode: e.MP_MODE, message: "Credencial consultada. Todav\xEDa hace falta completar una compra de prueba y verificar su notificaci\xF3n." };
+    const accountIsTest = Array.isArray(user.tags) ? user.tags.includes("test_user") : null;
+    return { valid: true, collector_matches: String(user.id) === e.MP_COLLECTOR_ID, account_is_test: accountIsTest, mode: e.MP_MODE, message: (accountIsTest === true ? "La credencial pertenece a una cuenta de prueba; reempl\xE1zala por la de producci\xF3n antes de vender. " : accountIsTest === false ? "La cuenta no est\xE1 marcada como usuario de prueba. " : "El proveedor no inform\xF3 el tipo de cuenta. ") + "Todav\xEDa hace falta comprobar el pago y su notificaci\xF3n antes de habilitar ventas." };
   }
   if (path === "/api/admin/origin" && method === "POST") {
     const a = address2(body);
@@ -658,27 +706,30 @@ async function admin(path, method, body, e, mp2) {
   }
   throw new APIError(404, "Ruta no encontrada.");
 }
+__name(admin, "admin");
 
-// cloudflare/src/worker.mjs
-var fail3 = (status, message) => {
+// src/worker.mjs
+var fail3 = /* @__PURE__ */ __name((status, message) => {
   throw new APIError(status, message);
-};
+}, "fail");
 var encoder = new TextEncoder();
-var hex = (bytes) => [...new Uint8Array(bytes)].map((x) => x.toString(16).padStart(2, "0")).join("");
-var now2 = () => Math.floor(Date.now() / 1e3);
-var digest = async (value) => hex(await crypto.subtle.digest("SHA-256", encoder.encode(value)));
+var hex = /* @__PURE__ */ __name((bytes) => [...new Uint8Array(bytes)].map((x) => x.toString(16).padStart(2, "0")).join(""), "hex");
+var now2 = /* @__PURE__ */ __name(() => Math.floor(Date.now() / 1e3), "now");
+var digest = /* @__PURE__ */ __name(async (value) => hex(await crypto.subtle.digest("SHA-256", encoder.encode(value))), "digest");
 async function hmac(secret, value) {
   const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   return hex(await crypto.subtle.sign("HMAC", key, encoder.encode(value)));
 }
+__name(hmac, "hmac");
 function equal(a, b) {
   if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) return false;
   let diff = 0;
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
 }
-var stmt = (env, sql4, ...args) => env.DB.prepare(sql4).bind(...args);
-var one = (env, sql4, ...args) => stmt(env, sql4, ...args).first();
+__name(equal, "equal");
+var stmt = /* @__PURE__ */ __name((env, sql4, ...args) => env.DB.prepare(sql4).bind(...args), "stmt");
+var one = /* @__PURE__ */ __name((env, sql4, ...args) => stmt(env, sql4, ...args).first(), "one");
 function config(env) {
   const rates2 = Object.fromEntries(["local", "centro", "nacional"].map((k) => [k, Number(env["SHIPPING_" + k.toUpperCase()] ?? { local: 50, centro: 150, nacional: 220 }[k])]));
   const validRates = Object.values(rates2).every((n) => Number.isSafeInteger(n) && n >= 0 && n <= 1e5);
@@ -699,11 +750,13 @@ function config(env) {
     shipping_rates: rates2
   };
 }
+__name(config, "config");
 function field(obj, key, max, required = true) {
   const value = obj[key] ?? "";
   if (typeof value !== "string" || value.trim().length > max || required && !value.trim()) fail3(400, "Revisa el campo " + key + ".");
   return value.trim();
 }
+__name(field, "field");
 function validate(body, env) {
   if (!body || !Array.isArray(body.items) || body.items.length < 1 || body.items.length > 14 || !body.customer || typeof body.customer !== "object") fail3(400, "El carrito o los datos de entrega no son v\xE1lidos.");
   const cfg = config(env), c = {};
@@ -730,6 +783,7 @@ function validate(body, env) {
   }).sort((a, b) => a.id.localeCompare(b.id) || a.variant - b.variant);
   return { items, customer: c, shipping, total: items.reduce((s, i) => s + i.quantity * i.price_cents, shipping) };
 }
+__name(validate, "validate");
 async function mp(env, method, path, payload) {
   try {
     const response = await fetch("https://api.mercadopago.com" + path, { method, headers: { Authorization: "Bearer " + env.MP_ACCESS_TOKEN, "Content-Type": "application/json" }, body: payload ? JSON.stringify(payload) : void 0, signal: AbortSignal.timeout(18e3) });
@@ -740,14 +794,17 @@ async function mp(env, method, path, payload) {
     fail3(503, "Mercado Pago no respondi\xF3. Consulta al estudio antes de repetir el pedido.");
   }
 }
+__name(mp, "mp");
 async function checkoutResult(row, env) {
   return { order_id: row.id, status_token: await hmac(env.STATUS_SIGNING_SECRET, row.id), checkout_url: row.checkout_url, total: row.total_cents / 100 };
 }
+__name(checkoutResult, "checkoutResult");
 async function existing(row, fingerprint, env) {
   if (row.fingerprint !== fingerprint) fail3(409, "Esta referencia pertenece a otra selecci\xF3n.");
   if (row.checkout_url && ["awaiting_payment", "pending", "in_process"].includes(row.state) && now2() - row.created_at < 1800) return checkoutResult(row, env);
   fail3(409, "El intento ya est\xE1 registrado. Consulta al estudio con referencia " + row.id + ".");
 }
+__name(existing, "existing");
 async function checkout(body, key, env) {
   if (!config(env).enabled) fail3(503, "El pago en l\xEDnea est\xE1 en activaci\xF3n.");
   if (!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(key || "")) fail3(400, "Falta una referencia v\xE1lida del intento.");
@@ -804,6 +861,7 @@ async function checkout(body, key, env) {
     fail3(503, "No se pudo confirmar el enlace. No repitas el pedido; consulta al estudio con referencia " + id + ".");
   }
 }
+__name(checkout, "checkout");
 async function signatureValid(signature, requestId, dataId, env) {
   try {
     const parts = Object.fromEntries(signature.split(",").map((s) => s.trim().split("="))), ts = Number(parts.ts), seconds = ts > 1e12 ? ts / 1e3 : ts;
@@ -813,6 +871,7 @@ async function signatureValid(signature, requestId, dataId, env) {
     return false;
   }
 }
+__name(signatureValid, "signatureValid");
 async function applyPayment(p, env) {
   if (typeof p.external_reference !== "string") return;
   const row = await one(env, "SELECT * FROM orders WHERE id=?", p.external_reference);
@@ -833,6 +892,7 @@ async function applyPayment(p, env) {
   ]);
   await recoverLateReservation(env, row.id);
 }
+__name(applyPayment, "applyPayment");
 async function orderStatus(id, token2, env) {
   if (!env.STATUS_SIGNING_SECRET || !equal(await hmac(env.STATUS_SIGNING_SECRET, id), token2)) fail3(404, "No se encontr\xF3 ese pedido.");
   let row = await one(env, "SELECT * FROM orders WHERE id=?", id);
@@ -847,6 +907,7 @@ async function orderStatus(id, token2, env) {
   row = await one(env, "SELECT * FROM orders WHERE id=?", id);
   return { order_id: id, status: row.state, total: row.total_cents / 100, mode: row.mode, fulfillment_hold: !!row.fulfillment_hold, ...await publicFulfillment(env, id) };
 }
+__name(orderStatus, "orderStatus");
 async function readBody(request, max = 16e3) {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) fail3(400, "Se requiere JSON.");
   if (Number(request.headers.get("content-length")) > max) fail3(413, "Solicitud demasiado grande.");
@@ -875,6 +936,7 @@ async function readBody(request, max = 16e3) {
     fail3(400, "JSON no v\xE1lido.");
   }
 }
+__name(readBody, "readBody");
 var limits = /* @__PURE__ */ new Map();
 function limit(request, path) {
   const ip = request.headers.get("CF-Connecting-IP") || "local", key = ip + ":" + (path.includes("/orders/") ? "orders" : path), minute = Math.floor(Date.now() / 6e4);
@@ -885,6 +947,7 @@ function limit(request, path) {
   limits.set(key, item);
   if (item.hits > (["/api/checkout", "/api/shipping/quotes"].includes(path) ? 15 : 120)) fail3(429, "Demasiadas solicitudes. Intenta en un minuto.");
 }
+__name(limit, "limit");
 var worker_default = {
   async scheduled(event, env, ctx) {
     ctx.waitUntil(runOperations({ ...env, SHIPPING_PROVIDER: "skydropx", ENVIA_TOKEN: void 0 }, { mp, apply: applyPayment, sign: hmac }));

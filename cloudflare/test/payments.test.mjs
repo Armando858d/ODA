@@ -3,6 +3,16 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
 import worker,{config,validate,checkout,applyPayment,orderStatus,hmac,signatureValid} from '../src/worker.mjs';
+import {admin} from '../src/admin.mjs';
+
+test('payment diagnostic distinguishes sandbox accounts without disclosing credentials',async()=>{
+ for(const [tags,expected] of [[['test_user'],true],[[],false],[undefined,null]]){
+  const result=await admin('/api/admin/mercadopago','POST',{},env(),async()=>({id:123,tags}));
+  assert.equal(result.account_is_test,expected);
+  assert.equal(result.collector_matches,true);
+  assert.equal(JSON.stringify(result).includes('test-only-not-a-real-token'),false);
+ }
+});
 
 // SQLite runs the actual migration/trigger SQL; this adapter follows D1's atomic batch contract.
 class D1 {

@@ -39,7 +39,8 @@ export async function admin(path,method,body,e,mp){
   const r=await sql(e,'SELECT id,state,total_cents,shipping_cents,created_at,mode,items,customer,inventory_released,fulfillment_hold FROM orders ORDER BY created_at DESC LIMIT 50').all();return {orders:r.results.map(o=>({...o,items:JSON.parse(o.items),customer:JSON.parse(o.customer)}))};
  }
  if(path==='/api/admin/mercadopago'&&method==='POST'){
-  const user=await mp(e,'GET','/users/me');return {valid:true,collector_matches:String(user.id)===e.MP_COLLECTOR_ID,mode:e.MP_MODE,message:'Credencial consultada. Todavía hace falta completar una compra de prueba y verificar su notificación.'};
+  const user=await mp(e,'GET','/users/me');const accountIsTest=Array.isArray(user.tags)?user.tags.includes('test_user'):null;
+  return {valid:true,collector_matches:String(user.id)===e.MP_COLLECTOR_ID,account_is_test:accountIsTest,mode:e.MP_MODE,message:(accountIsTest===true?'La credencial pertenece a una cuenta de prueba; reemplázala por la de producción antes de vender. ':accountIsTest===false?'La cuenta no está marcada como usuario de prueba. ':'El proveedor no informó el tipo de cuenta. ')+'Todavía hace falta comprobar el pago y su notificación antes de habilitar ventas.'};
  }
  if(path==='/api/admin/origin'&&method==='POST'){
   const a=address(body);await sql(e,"INSERT INTO store_settings(key,value) VALUES('origin',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",JSON.stringify(a)).run();return {saved:true};
