@@ -108,8 +108,8 @@ async function skyOffers(from, to, packages, e) {
   const id = initial.id || initial.quotation_id;
   if (typeof id !== "string" || !/^[-a-zA-Z0-9]+$/.test(id)) fail(502, "Falta la referencia de cotizaci\xF3n de Skydropx.");
   let result = initial;
-  const deadline = Date.now() + 1e4;
-  for (let n = 0; n < 5 && result.is_completed !== true && Date.now() < deadline; n++) {
+  const deadline = Date.now() + 2e4;
+  for (let n = 0; n < 20 && result.is_completed !== true && Date.now() < deadline; n++) {
     await new Promise((r) => setTimeout(r, 650));
     result = await sky(e, "quotations/" + encodeURIComponent(id));
   }

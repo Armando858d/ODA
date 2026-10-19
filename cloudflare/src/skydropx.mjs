@@ -35,8 +35,9 @@ export function skyRate(r){
 export async function skyOffers(from,to,packages,e){
  const quotation={address_from:address(from),address_to:address(to),parcels:packages.map(p=>({length:Math.ceil(p.dimensions.length),width:Math.ceil(p.dimensions.width),height:Math.ceil(p.dimensions.height),weight:p.weight,package_protected:false,declared_value:p.declaredValue}))};
  const initial=await sky(e,'quotations',{quotation});const id=initial.id||initial.quotation_id;if(typeof id!=='string'||!/^[-a-zA-Z0-9]+$/.test(id))fail(502,'Falta la referencia de cotización de Skydropx.');
- let result=initial;const deadline=Date.now()+10000;
- for(let n=0;n<5&&result.is_completed!==true&&Date.now()<deadline;n++){await new Promise(r=>setTimeout(r,650));result=await sky(e,'quotations/'+encodeURIComponent(id));}
+ // Allow slower sandbox/carrier quotes to complete within the storefront's 40s timeout.
+ let result=initial;const deadline=Date.now()+20000;
+ for(let n=0;n<20&&result.is_completed!==true&&Date.now()<deadline;n++){await new Promise(r=>setTimeout(r,650));result=await sky(e,'quotations/'+encodeURIComponent(id));}
  if(result.is_completed!==true)fail(503,'Skydropx sigue calculando sus tarifas. Vuelve a cotizar en unos momentos.');
  if(!Array.isArray(result.rates))fail(502,'Skydropx no devolvió una lista de tarifas.');
  const seen=new Set();return result.rates.map(skyRate).filter(r=>r&&!seen.has(r.rate_id)&&seen.add(r.rate_id)).map(r=>({...r,payload:{provider:'skydropx',quotation_id:id,rate_id:r.rate_id,origin:from,destination:to,packages,quotation}}));

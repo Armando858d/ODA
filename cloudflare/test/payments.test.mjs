@@ -203,6 +203,16 @@ test('canvas products persist with photos, variants and zero initial stock',asyn
 const skyRateFixture=()=>({id:'sky-rate',success:true,status:'approved',currency_code:'MXN',total:'120.50',provider_name:'fedex',provider_service_code:'ground',provider_display_name:'FedEx',provider_service_name:'Terrestre',days:3,shipment_creation_type:'single',pickup:true});
 async function dualEnv(){const e=await shippingEnv();Object.assign(e,{SHIPPING_PROVIDER:'both',SKYDROPX_CLIENT_ID:crypto.randomUUID(),SKYDROPX_CLIENT_SECRET:'mock-only',SKYDROPX_MODE:'live'});return e;}
 const skyFetch=async(url,opts)=>{if(url.includes('oauth/token'))return Response.json({access_token:'mock-access',expires_in:7200});if(url.includes('quotations'))return Response.json({id:'sky-quote',is_completed:true,rates:[skyRateFixture()]});return rateResponse();};
+test('Skydropx waits for delayed rates without creating duplicate quotations',async()=>{
+ const {skyOffers}=await import('../src/skydropx.mjs');const e=await dualEnv();let created=0,polls=0;
+ await mock(async(url,o)=>{
+  if(url.includes('oauth'))return skyFetch(url,o);
+  if(o.body){created++;return Response.json({id:'slow-quote',is_completed:false});}
+  polls++;assert.ok(url.endsWith('/quotations/slow-quote'));
+  return Response.json({id:'slow-quote',is_completed:polls>=6,rates:polls>=6?[skyRateFixture()]:[]});
+ },async()=>{const rates=await skyOffers({state:'AG'},{state:'AG'},[{dimensions:{length:10,width:10,height:10},weight:0.5,declaredValue:550}],e);assert.equal(rates[0].total_cents,12050);});
+ assert.equal(created,1);assert.equal(polls,6);
+});
 test('dual-provider quotes retain provider, exact cents and distinguish live from test',async()=>{
  const {rates,resolveQuote}=await import('../src/shipping.mjs');const e=await dualEnv(),b=shippingBody(),v=validate(b,e);
  await mock(skyFetch,async()=>{const r=await rates(v.items,v.customer,e);assert.equal(r.quotes.length,2);const q=r.quotes.find(q=>q.provider==='skydropx');assert.equal(q.total,120.5);assert.equal(q.payable,false);assert.equal(r.quotes[0].provider,'envia');await assert.rejects(resolveQuote(q.id,v.items,v.customer,e),{status:409});});
