@@ -8,6 +8,10 @@
 - Se conserva la URL de Sandbox de Skydropx en la configuración para que un despliegue no interrumpa las pruebas.
 - Precio inicial del detalle y precio «Desde» calculados con los adicionales de acabados; ordenamiento por el precio mínimo real.
 - Cobros, guías automáticas y correos permanecen desactivados durante la preparación del catálogo.
+- 49 pruebas automatizadas aprobadas. Publicación de GitHub Pages verificada.
+- La credencial actual de Mercado Pago es válida y coincide con el vendedor configurado, pero `/users/me` identifica la cuenta como `test_user`.
+- Skydropx aceptó la autorización de Sandbox. Aún no están guardados los secretos `SKYDROPX_CLIENT_ID` y `SKYDROPX_CLIENT_SECRET` de producción en este Worker.
+- El propietario indicó que cargará precios, inventario y paquetes en el administrador y que añadirá las credenciales reales al final. No se habilitaron ventas ni compras de guías.
 
 ## Trabajo del propietario antes de abrir ventas
 
