@@ -5,7 +5,7 @@
   loader.className = 'studio-loading studio-loading--overlay';
   loader.setAttribute('role', 'status');
   loader.setAttribute('aria-live', 'polite');
-  loader.innerHTML = '<div class="studio-loading__logo"><img src="assets/images/artban-logo.png" alt="" width="159" height="129" fetchpriority="high"></div><strong class="studio-loading__name">ARTBAN</strong><p>Preparando tu colección…</p><div class="studio-loading__track" aria-hidden="true"></div>';
+  loader.innerHTML = '<div class="studio-loading__logo"><img src="assets/images/artban-symbol.png" alt="" width="940" height="788" fetchpriority="high"></div><strong class="studio-loading__name">ARTBAN</strong><p>Preparando tu colección…</p><div class="studio-loading__track" aria-hidden="true"></div>';
   document.body.append(loader);
   document.body.classList.add('studio-is-loading');
   const surfaces = [main, document.querySelector('header'), document.querySelector('footer')].filter(Boolean);
@@ -53,7 +53,7 @@
     }
   } catch {
     if (main) {
-      main.innerHTML = '<section class="studio-loading"><div class="studio-loading__logo"><img src="assets/images/artban-logo.png" alt="Logo ARTBAN" width="159" height="129"></div><strong class="studio-loading__name">ARTBAN</strong><p>No pudimos cargar la colección. Intenta de nuevo.</p><button class="btn lime" id="reloadCollection">Volver a cargar ↻</button></section>';
+      main.innerHTML = '<section class="studio-loading"><div class="studio-loading__logo"><img src="assets/images/artban-symbol.png" alt="Logo ARTBAN" width="940" height="788"></div><strong class="studio-loading__name">ARTBAN</strong><p>No pudimos cargar la colección. Intenta de nuevo.</p><button class="btn lime" id="reloadCollection">Volver a cargar ↻</button></section>';
       document.getElementById('reloadCollection').onclick = () => location.reload();
     }
   } finally {
