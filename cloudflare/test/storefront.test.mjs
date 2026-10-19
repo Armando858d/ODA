@@ -3,6 +3,19 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 
+test('private checkout requires authentication and test mode; public checkout still requires live activation',()=>{
+ const source=fs.readFileSync(new URL('../../js/experience.js',import.meta.url),'utf8');
+ const gate=source.split('\n').find(line=>line.startsWith(' const customerPaymentsReady='));
+ const ready=(privateTest,testToken,mode,enabled,offline=false)=>vm.runInNewContext(gate+'\ncustomerPaymentsReady()',{privateTest,testToken,paymentConfig:{mode,enabled},window:{ODA_CATALOG_OFFLINE:offline}});
+ assert.equal(ready(true,'','test',false),false);
+ assert.equal(ready(true,'authenticated','test',false),true);
+ assert.equal(ready(true,'authenticated','live',true),false);
+ assert.equal(ready(false,'authenticated','test',true),false);
+ assert.equal(ready(false,'','live',false),false);
+ assert.equal(ready(false,'','live',true),true);
+ assert.equal(ready(true,'authenticated','test',false,true),false);
+});
+
 test('storefront displays actual first and minimum variant prices, matching cart totals',()=>{
  const source=fs.readFileSync(new URL('../../js/store.js',import.meta.url),'utf8');
  const product={id:'hello',type:'fixed',name:'Hello',category:'figura',description:'',price:180,variants:[{name:'Sin pintar',mod:140},{name:'Pintado',mod:180}],images:[]};
