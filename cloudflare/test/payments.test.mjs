@@ -6,7 +6,7 @@ import worker,{config,validate,checkout,applyPayment,orderStatus,hmac,signatureV
 
 // SQLite runs the actual migration/trigger SQL; this adapter follows D1's atomic batch contract.
 class D1 {
- constructor(){this.sql=new DatabaseSync(':memory:');this.sql.exec('PRAGMA foreign_keys=ON');for(const f of ['0001_orders.sql','0002_catalog.sql','0003_shipping.sql'])this.sql.exec(readFileSync(new URL('../migrations/'+f,import.meta.url),'utf8'));}
+ constructor(){this.sql=new DatabaseSync(':memory:');this.sql.exec('PRAGMA foreign_keys=ON');for(const f of ['0001_orders.sql','0002_catalog.sql','0003_shipping.sql','0004_operations.sql'])this.sql.exec(readFileSync(new URL('../migrations/'+f,import.meta.url),'utf8'));}
  prepare(sql){const db=this;return {bind(...args){return {sql,args,async first(){return db.sql.prepare(sql).get(...args)||null},async all(){return {results:db.sql.prepare(sql).all(...args)}},async run(){return {meta:db.sql.prepare(sql).run(...args)}}}}};}
  async batch(statements){this.sql.exec('BEGIN IMMEDIATE');try{const r=statements.map(s=>({meta:this.sql.prepare(s.sql).run(...s.args)}));this.sql.exec('COMMIT');return r}catch(e){this.sql.exec('ROLLBACK');throw e}}
 }
@@ -87,7 +87,7 @@ test('order status requires token and exposes no address or email',async()=>{
  const e=env();stock(e);await mock(async()=>preference(),async()=>{
  const r=await checkout(body(),crypto.randomUUID(),e);delete e.MP_ACCESS_TOKEN;
  await assert.rejects(orderStatus(r.order_id,'bad',e),{status:404});
- assert.deepEqual(Object.keys(await orderStatus(r.order_id,r.status_token,e)).sort(),['mode','order_id','status','total']);
+ assert.deepEqual(Object.keys(await orderStatus(r.order_id,r.status_token,e)).sort(),['fulfillment_hold','mode','notifications','order_id','shipping','status','total']);
  });
 });
 test('HTTP CORS, invalid bodies, signatures, config and private paths',async()=>{
@@ -238,4 +238,65 @@ test('sandbox quotes carry test mode and can be used only with test payments',as
 test('single-provider quotation preserves actionable origin errors without external calls',async()=>{
  const {rates}=await import('../src/shipping.mjs');const e=await dualEnv();e.SHIPPING_PROVIDER='skydropx';e.DB.sql.prepare("DELETE FROM store_settings WHERE key='origin'").run();const v=validate(shippingBody(),e);
  await mock(()=>{throw Error('Must not contact provider without origin')},async()=>{await assert.rejects(rates(v.items,v.customer,e),err=>err.status===409&&/origen/i.test(err.message))});
+});
+
+// Operación posterior al pago: reservas tardías, correo y rastreo.
+const operations=await import('../src/operations.mjs');
+const shopSettings=await import('../src/shop-settings.mjs');
+async function reserved(e){stock(e);return mock(async()=>preference(),()=>checkout(body(),crypto.randomUUID(),e));}
+function aged(e,id){e.DB.sql.prepare('UPDATE orders SET created_at=? WHERE id=?').run(Math.floor(Date.now()/1000)-90000,id);}
+function expirationProvider(id,results=[]){return async(_e,_method,path)=>path.startsWith('/checkout/preferences/')?{external_reference:id,expires:true,expiration_date_to:new Date(Date.now()-7200000).toISOString()}:{results,paging:{total:results.length}};}
+test('expired confirmed unpaid reservation releases once even with concurrent scans',async()=>{
+ const e=env();e.RESERVATION_RECOVERY_ENABLED='true';const r=await reserved(e);aged(e,r.order_id);assert.equal(getStock(e),2);
+ await Promise.all([operations.releaseExpired(e,expirationProvider(r.order_id),applyPayment),operations.releaseExpired(e,expirationProvider(r.order_id),applyPayment)]);
+ assert.equal(getStock(e),3);assert.equal(e.DB.sql.prepare('SELECT state FROM orders').get().state,'expired');
+});
+test('pending payment and incomplete provider pagination preserve reservation',async()=>{
+ const e=env();e.RESERVATION_RECOVERY_ENABLED='true';const r=await reserved(e);aged(e,r.order_id);
+ await operations.releaseExpired(e,expirationProvider(r.order_id,[payment(r.order_id,'pending')]),applyPayment);assert.equal(getStock(e),2);
+ e.DB.sql.exec("UPDATE orders SET state='awaiting_payment'");await operations.releaseExpired(e,async(_e,_m,p)=>p.startsWith('/checkout/preferences/')?{external_reference:r.order_id,expires:true,expiration_date_to:new Date(Date.now()-7200000).toISOString()}:{results:[],paging:{total:101}},applyPayment);assert.equal(getStock(e),2);
+});
+test('late approved payment reacquires stock exactly once',async()=>{
+ const e=env(),r=await reserved(e);e.DB.sql.exec("UPDATE orders SET inventory_released=1,state='expired'");assert.equal(getStock(e),3);
+ await applyPayment(payment(r.order_id),e);await applyPayment(payment(r.order_id),e);assert.equal(getStock(e),2);assert.equal(e.DB.sql.prepare('SELECT fulfillment_hold FROM orders').get().fulfillment_hold,0);
+});
+test('late approval with no stock is recorded but cannot buy a label',async()=>{
+ const e=env(),r=await reserved(e);e.DB.sql.exec("UPDATE orders SET inventory_released=1,state='expired'");stock(e,'venom-001',0);
+ await applyPayment(payment(r.order_id),e);const row=e.DB.sql.prepare('SELECT * FROM orders').get();assert.equal(row.state,'approved');assert.equal(row.fulfillment_hold,1);assert.equal(getStock(e),0);
+ stock(e,'venom-001',1);await operations.recoverLateReservation(e,r.order_id);assert.equal(getStock(e),0);assert.equal(e.DB.sql.prepare('SELECT fulfillment_hold FROM orders').get().fulfillment_hold,0);
+});
+function mailEnv(e){Object.assign(e,{EMAIL_ENABLED:'true',RESEND_API_KEY:'test-key',EMAIL_FROM:'ARTBAN <store@example.com>'});}
+test('notification outbox is immutable, deduplicated and safe under parallel sends',async()=>{
+ const e=env(),r=await reserved(e);mailEnv(e);e.DB.sql.exec("UPDATE orders SET mode='live'");const row=e.DB.sql.prepare('SELECT * FROM orders').get();
+ await operations.queueNotice(e,row,'payment','https://example.com/order');await operations.queueNotice(e,row,'payment','https://example.com/changed');let calls=0;
+ await mock(async(url,opts)=>{assert.equal(url,'https://api.resend.com/emails');assert.equal(opts.headers['Idempotency-Key'],r.order_id+'-payment');assert.ok(JSON.parse(opts.body).text.includes('https://example.com/order'));calls++;return Response.json({id:'email-test'})},async()=>{await Promise.all([operations.sendNotices(e),operations.sendNotices(e)]);await operations.sendNotices(e)});
+ assert.equal(calls,1);assert.equal(e.DB.sql.prepare('SELECT state FROM notifications').get().state,'sent');
+});
+test('uncertain email is not retried after provider idempotency window',async()=>{
+ const e=env();await reserved(e);mailEnv(e);e.DB.sql.exec("UPDATE orders SET mode='live'");await operations.queueNotice(e,e.DB.sql.prepare('SELECT * FROM orders').get(),'payment','https://example.com');
+ await mock(async()=>{throw Error('timeout')},()=>operations.sendNotices(e));e.DB.sql.prepare('UPDATE notifications SET first_attempt=?,lease_until=0').run(Math.floor(Date.now()/1000)-83000);
+ await mock(async()=>{assert.fail('Must not resend outside window')},()=>operations.sendNotices(e));assert.equal(e.DB.sql.prepare('SELECT state FROM notifications').get().state,'needs_review');
+});
+test('email disabled and test orders cannot enqueue customer messages',async()=>{
+ const e=env();await reserved(e);const row=e.DB.sql.prepare('SELECT * FROM orders').get();await operations.queueNotice(e,{...row,mode:'live'},'payment','https://example.com');mailEnv(e);await operations.queueNotice(e,row,'payment','https://example.com');assert.equal(e.DB.sql.prepare('SELECT COUNT(*) n FROM notifications').get().n,0);
+});
+test('customer tracking exposes neither label PDF nor recipient data',async()=>{
+ const e=env(),r=await reserved(e);e.DB.sql.prepare("INSERT INTO shipping_quotes(id,fingerprint,payload,carrier,service,description,total_cents,estimate,mode,expires_at) VALUES('q','f','{}','x','x','x',100,'x','test',9999999999)").run();
+ e.DB.sql.prepare("INSERT INTO order_shipping(order_id,quote_id,state,label_data) VALUES(?,'q','ready',?)").run(r.order_id,JSON.stringify({labels:[{carrier:'Transportista',tracking:'123456',label_url:'https://private-label.example.com'}]}));
+ const d=await operations.publicFulfillment(e,r.order_id);assert.deepEqual(d.shipping.labels,[{carrier:'Transportista',tracking:'123456'}]);assert.ok(!JSON.stringify(d).includes('private-label'));
+});
+test('shop data requires complete text and publishes validated fields only',async()=>{
+ const e=env();assert.equal((await shopSettings.getShop(e)).configured,false);await assert.rejects(shopSettings.saveShop(e,{}),{status:400});
+ const data=Object.fromEntries(shopSettings.shopFields.map(k=>[k,k==='contactEmail'?'contact@example.com':'Texto de prueba']));await shopSettings.saveShop(e,{...data,privateKey:'never expose'});const result=await shopSettings.getShop(e);assert.equal(result.configured,true);assert.equal(result.privateKey,undefined);await assert.rejects(shopSettings.saveShop(e,{...data,privacy:'<script>'}),{status:400});
+});
+test('fulfillment queues approved live orders only, without buying when disabled',async()=>{
+ const e=env();await reserved(e);mailEnv(e);e.DB.sql.exec("UPDATE orders SET mode='live',state='approved'");await mock(async()=>{assert.fail('No provider calls with automatic purchase disabled')},()=>operations.fulfill(e,hmac));assert.equal(e.DB.sql.prepare('SELECT COUNT(*) n FROM notifications').get().n,1);
+});
+test('automatic fulfillment buys one verified label and queues tracking once',async()=>{
+ const {rates}=await import('../src/shipping.mjs');const e=await dualEnv();Object.assign(e,{MP_MODE:'live',AUTO_LABELS_ENABLED:'true',SKYDROPX_LABEL_PURCHASES_ENABLED:'true',MAX_LABEL_COST_MXN:'150',SKYDROPX_PACKAGE_CODES:JSON.stringify({'venom-001':{consignment_note:'12345678',package_type:'4G'}})});mailEnv(e);let purchases=0;
+ await mock(async(url,o)=>{
+  if(url.includes('mercadopago'))return Response.json({id:'pref',init_point:'https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=test'});
+  if(url.endsWith('/shipments')){purchases++;return Response.json({data:{id:'shipment',attributes:{payment_status:'paid',total:'120.50',carrier_name:'fedex'},relationships:{packages:{data:[{id:'pkg'}]}}},included:[{id:'pkg',attributes:{tracking_number:'TEST',label_url:'https://labels.example/sky.pdf'}}]});}
+  return skyFetch(url,o);
+ },async()=>{const b=shippingBody(),v=validate(b,e),quotes=await rates(v.items,v.customer,e);b.shipping_quote_id=quotes.quotes.find(q=>q.provider==='skydropx').id;await checkout(b,crypto.randomUUID(),e);e.DB.sql.exec("UPDATE orders SET state='approved'");await operations.fulfill(e,hmac);await operations.fulfill(e,hmac);assert.equal(purchases,1);assert.equal(e.DB.sql.prepare('SELECT COUNT(*) n FROM notifications').get().n,2);});
 });

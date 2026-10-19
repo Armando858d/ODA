@@ -62,6 +62,7 @@ export async function resolveQuote(id,items,customer,e){
 export async function purchaseLabel(orderId,expectedCents,e){
  if(e.LABEL_PURCHASES_ENABLED!=='true')fail(409,'La compra de guías aún está desactivada.');
  const row=await first(e,`SELECT o.*,s.state shipping_state,s.label_data,q.payload,q.mode shipping_mode FROM orders o JOIN order_shipping s ON s.order_id=o.id JOIN shipping_quotes q ON q.id=s.quote_id WHERE o.id=?`,orderId);
+ if(row?.inventory_released||row?.fulfillment_hold)fail(409,'El inventario de este pedido requiere revisión antes de enviarlo.');
  if(!row||row.state!=='approved')fail(409,'Solo se generan guías para pedidos con pago aprobado.');
  if(row.shipping_mode!==providerMode(row,e)||row.mode!==e.MP_MODE)fail(409,'El modo del pedido no coincide con las cuentas activas.');
  if(row.shipping_state==='ready')return JSON.parse(row.label_data);
@@ -73,7 +74,7 @@ export async function purchaseLabel(orderId,expectedCents,e){
  const maximum=Number(e.MAX_LABEL_COST_MXN)>0?Math.round(Number(e.MAX_LABEL_COST_MXN)*100):row.shipping_cents;
  if(!Number.isSafeInteger(expectedCents)||expectedCents!==matched.total_cents||expectedCents>row.shipping_cents||!Number.isSafeInteger(maximum)||maximum<=0||expectedCents>maximum)fail(409,'La tarifa cambió o supera el importe autorizado. Revisa la cotización antes de comprar.');
  const attempt=crypto.randomUUID();
- const claim=await sql(e,"UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved')",attempt,stamp(),orderId,orderId).run();
+ const claim=await sql(e,"UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved' AND inventory_released=0 AND fulfillment_hold=0)",attempt,stamp(),orderId,orderId).run();
  if(claim.meta.changes!==1)fail(409,'La guía ya se está procesando o cambió el estado del pago.');
  try{
   const data=await envia(e,'/ship/generate/',{...payload,shipment:{...payload.shipment,orderReference:orderId}},async response=>{await sql(e,'UPDATE order_shipping SET label_data=? WHERE order_id=? AND attempt_id=?',JSON.stringify({provider_response:response}),orderId,attempt).run()});
@@ -135,7 +136,7 @@ async function buySkyLabel(row,orderId,expectedCents,e){
  const maximum=Number(e.MAX_LABEL_COST_MXN)>0?Math.round(Number(e.MAX_LABEL_COST_MXN)*100):row.shipping_cents;
  if(!Number.isSafeInteger(expectedCents)||expectedCents!==current.total_cents||expectedCents>row.shipping_cents||expectedCents>maximum)fail(409,'La tarifa cambió o supera el importe autorizado.');
  const body=skyShipment(payload,JSON.parse(row.items),e),attempt=crypto.randomUUID();
- const claim=await sql(e,"UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved')",attempt,stamp(),orderId,orderId).run();if(claim.meta.changes!==1)fail(409,'Esta guía ya se está procesando.');
+ const claim=await sql(e,"UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved' AND inventory_released=0 AND fulfillment_hold=0)",attempt,stamp(),orderId,orderId).run();if(claim.meta.changes!==1)fail(409,'Esta guía ya se está procesando.');
  try{
   const d=await sky(e,'shipments',body,async data=>{await sql(e,'UPDATE order_shipping SET label_data=? WHERE order_id=? AND attempt_id=?',JSON.stringify({provider_response:data}),orderId,attempt).run()});
   const parsed=skyLabels(d,payload);if(!parsed)fail(503,'Skydropx todavía está preparando la guía.');

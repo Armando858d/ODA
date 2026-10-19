@@ -1,21 +1,3 @@
-// cloudflare/src/catalog-seed.mjs
-var catalog_seed_default = [
-  { id: "venom-001", name: "Figura Venom", description: "Figura s\xF3lida con recubrimiento de exhibici\xF3n. Acabado profesional monocolor.", category: "art-toy", type: "fixed", price: 850, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 350 }], image: "ven1.png", tags: ["ACABADO PRO", "COLECCI\xD3NABLE"], weight: 180, featured: true },
-  { id: "elefante-002", name: "Elefante Art Toy", description: "Pieza decorativa con dise\xF1o organico. Acabado liso tipo inyeccion.", category: "art-toy", type: "fixed", price: 650, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 300 }], image: "elefante1.png", tags: ["DECORATIVO", "PREMIUM"], weight: 220, featured: true },
-  { id: "snoopy-003", name: "Snoopy Figure", description: "R\xE9plica artesanal de alta fidelidad con acabado de exhibici\xF3n.", category: "figura", type: "fixed", price: 450, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 300 }], image: "snoppy.png", tags: ["FIGURA", "DETALLADO"], weight: 150, featured: false },
-  { id: "hello-004", name: "Hello Kitty", description: "Figura decorativa con dise\xF1o cute. Perfecta para regalo.", category: "figura", type: "fixed", price: 400, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 300 }], image: "hello1.png", tags: ["REGALO", "CUTE"], weight: 120, featured: false },
-  { id: "gato-005", name: "Gato Sentado", description: "Art Toy minimalista con acabado premium. Edici\xF3n de estudio.", category: "art-toy", type: "fixed", price: 350, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 250 }], image: "cat-sit.png", tags: ["ART TOY", "MINIMALISTA"], weight: 130, featured: false },
-  { id: "conejo-006", name: "Conejo Decorativo", description: "Pieza decorativa con textura org\xE1nica y acabado brillante.", category: "art-toy", type: "fixed", price: 380, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 270 }], image: "conejo1.png", tags: ["DECORATIVO", "ORG\xC1NICO"], weight: 160, featured: false },
-  { id: "corazon-007", name: "Coraz\xF3n Anat\xF3mico 3D", description: "Art Toy custom de coleccion. Pieza anat\xF3mica detallada.", category: "art-toy", type: "fixed", price: 550, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 350 }], image: "corazon1.png", tags: ["COLECCI\xD3N", "ANAT\xD3MICO"], weight: 200, featured: true },
-  { id: "regalo-008", name: "Regalo Personalizado", description: "Pieza exclusiva dise\xF1ada a tu medida. Edici\xF3n \xFAnica irrepetible.", category: "custom", type: "custom", price: null, variants: [], image: "sen1.png", tags: ["EXCLUSIVO", "PERSONALIZADO"], weight: null, featured: false },
-  { id: "recuerdo-009", name: "Recuerdo Inolvidable", description: "Escultura personalizada con calidad de exhibici\xF3n profesional.", category: "custom", type: "custom", price: null, variants: [], image: "bebe1.png", tags: ["RECUERDO", "PREMIUM"], weight: null, featured: false },
-  { id: "muneca-010", name: "Mu\xF1eca Personalizada", description: "Coleccionable custom con nivel de detalle artesanal.", category: "custom", type: "custom", price: null, variants: [], image: "elena1.png", tags: ["CUSTOM", "DETALLADO"], weight: null, featured: false },
-  { id: "retrato-011", name: "Retrato 3D", description: "Pieza de exhibici\xF3n \xFAnica basada en fotograf\xEDa real.", category: "custom", type: "custom", price: null, variants: [], image: "mujer1.png", tags: ["RETRATO", "\xDANICO"], weight: null, featured: false },
-  { id: "centro-012", name: "Centro de Mesa XV A\xF1os", description: "Producci\xF3n a medida para eventos. Dise\xF1o exclusivo.", category: "custom", type: "custom", price: null, variants: [], image: "jan1.png", tags: ["EVENTO", "PRODUCCI\xD3N"], weight: null, featured: false },
-  { id: "angel-013", name: "\xC1ngel 3D", description: "Escultura art\xEDstica con alas detalladas. Pieza de exhibici\xF3n.", category: "custom", type: "custom", price: null, variants: [], image: "angel1.png", tags: ["ARTE", "EXHIBICION"], weight: null, featured: false },
-  { id: "lampara-014", name: "L\xE1mpara de Regalo", description: "Pieza funcional con iluminaci\xF3n integrada. Dise\xF1o decorativo.", category: "custom", type: "custom", price: null, variants: [], image: "jan2.png", tags: ["FUNCIONAL", "ILUMINACI\xD3N"], weight: null, featured: false }
-];
-
 // cloudflare/src/errors.mjs
 var APIError = class extends Error {
   constructor(status, message) {
@@ -24,84 +6,23 @@ var APIError = class extends Error {
   }
 };
 
-// cloudflare/src/content.mjs
-var q = (e, s, ...v) => e.DB.prepare(s).bind(...v);
-async function getContent(e) {
-  const r = await q(e, "SELECT value FROM store_settings WHERE key='content'").first();
-  return r ? JSON.parse(r.value) : { revision: 0, products: catalog_seed_default, collections: [], promotions: [] };
+// cloudflare/src/shop-settings.mjs
+var shopFields = ["businessName", "contactEmail", "contactPhone", "businessAddress", "production", "shipping", "changes", "cancellations", "damages", "privacy"];
+async function getShop(e) {
+  const row = await e.DB.prepare("SELECT value FROM store_settings WHERE key='shop'").bind().first();
+  const data = row ? JSON.parse(row.value) : {};
+  return { configured: shopFields.every((k) => typeof data[k] === "string" && data[k].trim().length > 0), ...Object.fromEntries(shopFields.map((k) => [k, data[k] || ""])) };
 }
-function activePromotions(c, time = Date.now()) {
-  return c.promotions.filter((x) => x.active && (!x.start || Date.parse(x.start) <= time) && (!x.end || Date.parse(x.end) > time));
+async function saveShop(e, body) {
+  const data = {};
+  for (const k of shopFields) {
+    if (typeof body?.[k] !== "string" || !body[k].trim() || body[k].length > (k === "privacy" ? 12e3 : 4e3) || /[<>]/.test(body[k])) throw new APIError(400, "Completa todos los datos comerciales con texto, sin HTML.");
+    data[k] = body[k].trim();
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.contactEmail)) throw new APIError(400, "Revisa el correo de atenci\xF3n.");
+  await e.DB.prepare("INSERT INTO store_settings(key,value) VALUES('shop',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(JSON.stringify(data)).run();
+  return { saved: true };
 }
-function pricedProducts(c, time = Date.now()) {
-  const offers = activePromotions(c, time);
-  return c.products.filter((p) => p.active !== false).map((p) => {
-    const promo = offers.filter((x) => !x.collection || p.collection === x.collection).sort((a, b) => b.percent - a.percent)[0];
-    const rate = 1 - (promo?.percent || 0) / 100;
-    return { ...p, originalPrice: p.price, price: p.price === null ? null : Math.round(p.price * rate * 100) / 100, variants: p.variants.map((v) => ({ ...v, mod: Math.round(v.mod * rate * 100) / 100 })), promotion: promo?.title || "" };
-  });
-}
-var bad = (m) => {
-  throw new APIError(400, m);
-};
-function text(x, max = 200) {
-  if (typeof x !== "string" || x.length > max || /[<>]/.test(x)) bad("Revisa los textos: no se admite HTML.");
-  return x.trim();
-}
-function image(x) {
-  if (typeof x !== "string" || x.length > 19e4 || !(/^[a-zA-Z0-9_.-]+$/.test(x) || /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(x) || /^https:\/\/[^\s"'<>]+$/.test(x))) bad("Imagen no v\xE1lida. Usa JPG, PNG, WebP o una URL HTTPS.");
-  return x;
-}
-function validateContent(b) {
-  if (!b || !Number.isInteger(b.revision) || !Array.isArray(b.products) || !Array.isArray(b.collections) || !Array.isArray(b.promotions) || b.products.length > 100 || b.collections.length > 40 || b.promotions.length > 40) bad("Contenido no v\xE1lido o demasiado grande.");
-  const ids = /* @__PURE__ */ new Set();
-  const id = (x) => {
-    if (typeof x !== "string" || !/^[-a-z0-9]{1,60}$/.test(x) || ids.has(x)) bad("Identificador repetido o no v\xE1lido.");
-    ids.add(x);
-    return x;
-  };
-  const collections = b.collections.map((x) => ({ id: id(x.id), name: text(x.name, 80), description: text(x.description || "", 400), image: image(x.image), active: !!x.active }));
-  const products = b.products.map((x) => {
-    if (!["fixed", "custom"].includes(x.type) || !["art-toy", "figura", "custom", "lienzo"].includes(x.category) || !Array.isArray(x.variants) || x.variants.length > 8 || x.type === "fixed" && (!Number.isFinite(x.price) || x.price < 1 || x.price > 1e6 || !x.variants.length)) bad("Revisa el precio y los acabados.");
-    if (x.collection && !collections.some((c) => c.id === x.collection)) bad("Colecci\xF3n no encontrada.");
-    return { id: id(x.id), name: text(x.name, 100), description: text(x.description || "", 1500), category: x.category, type: x.type, price: x.type === "custom" ? null : x.price, variants: x.variants.map((v) => {
-      if (!Number.isFinite(v.mod) || v.mod < 0 || v.mod > 1e6) bad("Precio adicional no v\xE1lido.");
-      return { name: text(v.name, 80), mod: v.mod };
-    }), image: image(x.image), images: (x.images || []).slice(0, 4).map(image), tags: [], featured: !!x.featured, active: x.active !== false, collection: x.collection || "" };
-  });
-  const promotions = b.promotions.map((x) => {
-    if (!Number.isFinite(x.percent) || x.percent < 1 || x.percent > 90) bad("El descuento debe estar entre 1 y 90%.");
-    if (x.collection && !collections.some((c) => c.id === x.collection)) bad("Colecci\xF3n de promoci\xF3n no encontrada.");
-    for (const k of ["start", "end"]) if (x[k] && !Number.isFinite(Date.parse(x[k]))) bad("Fecha no v\xE1lida.");
-    if (x.start && x.end && Date.parse(x.end) <= Date.parse(x.start)) bad("El fin debe ser posterior al inicio.");
-    return { id: id(x.id), title: text(x.title, 100), percent: x.percent, collection: x.collection || "", start: x.start || "", end: x.end || "", active: !!x.active };
-  });
-  const result = { revision: b.revision + 1, products, collections, promotions };
-  if (JSON.stringify(result).length > 18e5) bad("El cat\xE1logo supera 1.8 MB. Reduce el n\xFAmero o tama\xF1o de las fotos.");
-  return result;
-}
-async function saveContent(e, body) {
-  const next = validateContent(body);
-  await q(e, "INSERT OR IGNORE INTO store_settings(key,value) VALUES('content',?)", JSON.stringify({ revision: 0, products: catalog_seed_default, collections: [], promotions: [] })).run();
-  const old = await getContent(e);
-  if (old.revision !== body.revision) throw new APIError(409, "Otra sesi\xF3n modific\xF3 el cat\xE1logo. Recarga antes de guardar.");
-  const commands = [q(e, "UPDATE store_settings SET value=? WHERE key='content' AND value=?", JSON.stringify(next), JSON.stringify(old))];
-  for (const p of next.products) for (let i = 0; i < p.variants.length; i++) commands.push(q(e, "INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES(?,?,0)", p.id, i));
-  const result = await e.DB.batch(commands);
-  if (result[0].meta.changes !== 1) throw new APIError(409, "El cat\xE1logo cambi\xF3. Recarga el panel.");
-  return next;
-}
-
-// cloudflare/src/catalog.mjs
-var catalog_default = [
-  { "id": "venom-001", "name": "Figura Venom", "price": 850, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 350 }] },
-  { "id": "elefante-002", "name": "Elefante Art Toy", "price": 650, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 300 }] },
-  { "id": "snoopy-003", "name": "Snoopy Figure", "price": 450, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 300 }] },
-  { "id": "hello-004", "name": "Hello Kitty", "price": 400, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 300 }] },
-  { "id": "gato-005", "name": "Gato Sentado", "price": 350, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 250 }] },
-  { "id": "conejo-006", "name": "Conejo Decorativo", "price": 380, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 270 }] },
-  { "id": "corazon-007", "name": "Coraz\xF3n Anat\xF3mico 3D", "price": 550, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 350 }] }
-];
 
 // cloudflare/src/shipping-states.mjs
 var shipping_states_default = [{ "name": "Aguascalientes", "code": "AG" }, { "name": "Baja California", "code": "BC" }, { "name": "Baja California Sur", "code": "BS" }, { "name": "Campeche", "code": "CM" }, { "name": "Chiapas", "code": "CS" }, { "name": "Chihuahua", "code": "CH" }, { "name": "Ciudad de M\xE9xico", "code": "CX" }, { "name": "Coahuila", "code": "CO" }, { "name": "Colima", "code": "CL" }, { "name": "Durango", "code": "DG" }, { "name": "Guanajuato", "code": "GT" }, { "name": "Guerrero", "code": "GR" }, { "name": "Hidalgo", "code": "HG" }, { "name": "Jalisco", "code": "JA" }, { "name": "M\xE9xico", "code": "EM" }, { "name": "Michoac\xE1n", "code": "MI" }, { "name": "Morelos", "code": "MO" }, { "name": "Nayarit", "code": "NA" }, { "name": "Nuevo Le\xF3n", "code": "NL" }, { "name": "Oaxaca", "code": "OA" }, { "name": "Puebla", "code": "PU" }, { "name": "Quer\xE9taro", "code": "QT" }, { "name": "Quintana Roo", "code": "QR" }, { "name": "San Luis Potos\xED", "code": "SL" }, { "name": "Sinaloa", "code": "SI" }, { "name": "Sonora", "code": "SO" }, { "name": "Tabasco", "code": "TB" }, { "name": "Tamaulipas", "code": "TM" }, { "name": "Tlaxcala", "code": "TL" }, { "name": "Veracruz", "code": "VE" }, { "name": "Yucat\xE1n", "code": "YU" }, { "name": "Zacatecas", "code": "ZA" }];
@@ -327,6 +248,7 @@ async function resolveQuote(id, items, customer, e) {
 async function purchaseLabel(orderId, expectedCents, e) {
   if (e.LABEL_PURCHASES_ENABLED !== "true") fail2(409, "La compra de gu\xEDas a\xFAn est\xE1 desactivada.");
   const row = await first(e, `SELECT o.*,s.state shipping_state,s.label_data,q.payload,q.mode shipping_mode FROM orders o JOIN order_shipping s ON s.order_id=o.id JOIN shipping_quotes q ON q.id=s.quote_id WHERE o.id=?`, orderId);
+  if (row?.inventory_released || row?.fulfillment_hold) fail2(409, "El inventario de este pedido requiere revisi\xF3n antes de enviarlo.");
   if (!row || row.state !== "approved") fail2(409, "Solo se generan gu\xEDas para pedidos con pago aprobado.");
   if (row.shipping_mode !== providerMode(row, e) || row.mode !== e.MP_MODE) fail2(409, "El modo del pedido no coincide con las cuentas activas.");
   if (row.shipping_state === "ready") return JSON.parse(row.label_data);
@@ -338,7 +260,7 @@ async function purchaseLabel(orderId, expectedCents, e) {
   const maximum = Number(e.MAX_LABEL_COST_MXN) > 0 ? Math.round(Number(e.MAX_LABEL_COST_MXN) * 100) : row.shipping_cents;
   if (!Number.isSafeInteger(expectedCents) || expectedCents !== matched.total_cents || expectedCents > row.shipping_cents || !Number.isSafeInteger(maximum) || maximum <= 0 || expectedCents > maximum) fail2(409, "La tarifa cambi\xF3 o supera el importe autorizado. Revisa la cotizaci\xF3n antes de comprar.");
   const attempt = crypto.randomUUID();
-  const claim = await sql(e, "UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved')", attempt, stamp(), orderId, orderId).run();
+  const claim = await sql(e, "UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved' AND inventory_released=0 AND fulfillment_hold=0)", attempt, stamp(), orderId, orderId).run();
   if (claim.meta.changes !== 1) fail2(409, "La gu\xEDa ya se est\xE1 procesando o cambi\xF3 el estado del pago.");
   try {
     const data = await envia(e, "/ship/generate/", { ...payload, shipment: { ...payload.shipment, orderReference: orderId } }, async (response) => {
@@ -401,11 +323,11 @@ async function rates(items, customer, e) {
   });
   const results = await Promise.allSettled(tasks);
   const available = results.flatMap((r) => r.status === "fulfilled" ? r.value.quotes : []).sort((a, b) => Number(b.payable) - Number(a.payable) || a.total - b.total);
-  if(!available.length){
-  const rejected=results.find(r=>r.status==='rejected'&&r.reason instanceof APIError);
-  if(rejected)throw rejected.reason;
-  fail2(409,'Skydropx terminó la consulta sin tarifas utilizables. Revisa cobertura, origen y paquetes en Skydropx Sandbox.');
- }
+  if (!available.length) {
+    const rejected = results.find((r) => r.status === "rejected" && r.reason instanceof APIError);
+    if (rejected) throw rejected.reason;
+    fail2(409, "Skydropx termin\xF3 la consulta sin tarifas utilizables. Revisa cobertura, origen y paquetes en Skydropx Sandbox.");
+  }
   return { quotes: available, mode: e.MP_MODE, partial: results.some((r) => r.status === "rejected" || r.value?.partial), unavailable_providers: providers.filter((_, i) => results[i].status === "rejected") };
 }
 async function checkSkyLabel(row, orderId, e) {
@@ -434,7 +356,7 @@ async function buySkyLabel(row, orderId, expectedCents, e) {
   const maximum = Number(e.MAX_LABEL_COST_MXN) > 0 ? Math.round(Number(e.MAX_LABEL_COST_MXN) * 100) : row.shipping_cents;
   if (!Number.isSafeInteger(expectedCents) || expectedCents !== current.total_cents || expectedCents > row.shipping_cents || expectedCents > maximum) fail2(409, "La tarifa cambi\xF3 o supera el importe autorizado.");
   const body = skyShipment(payload, JSON.parse(row.items), e), attempt = crypto.randomUUID();
-  const claim = await sql(e, "UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved')", attempt, stamp(), orderId, orderId).run();
+  const claim = await sql(e, "UPDATE order_shipping SET state='creating',attempt_id=?,updated_at=? WHERE order_id=? AND state='not_started' AND EXISTS(SELECT 1 FROM orders WHERE id=? AND state='approved' AND inventory_released=0 AND fulfillment_hold=0)", attempt, stamp(), orderId, orderId).run();
   if (claim.meta.changes !== 1) fail2(409, "Esta gu\xEDa ya se est\xE1 procesando.");
   try {
     const d = await sky(e, "shipments", body, async (data) => {
@@ -451,8 +373,224 @@ async function buySkyLabel(row, orderId, expectedCents, e) {
   }
 }
 
-// cloudflare/src/admin.mjs
+// cloudflare/src/operations.mjs
 var sql2 = (e, s, ...a) => e.DB.prepare(s).bind(...a);
+var now = () => Math.floor(Date.now() / 1e3);
+var emailReady = (e) => e.EMAIL_ENABLED === "true" && !!e.RESEND_API_KEY && /^[^\r\n]+@[^\r\n]+\.[^\r\n]+$/.test(e.EMAIL_FROM || "");
+var issue = (e, id, kind, message) => sql2(e, "INSERT INTO operation_issues(order_id,kind,message,updated_at) VALUES(?,?,?,?) ON CONFLICT(order_id,kind) DO UPDATE SET message=excluded.message,updated_at=excluded.updated_at", id, kind, message, now()).run();
+var clear = (e, id, kind) => sql2(e, "DELETE FROM operation_issues WHERE order_id=? AND kind=?", id, kind).run();
+async function publicFulfillment(e, id) {
+  const row = await sql2(e, "SELECT state,label_data FROM order_shipping WHERE order_id=?", id).first();
+  let labels = [];
+  if (row?.state === "ready") {
+    try {
+      labels = JSON.parse(row.label_data).labels.map((l) => ({ carrier: String(l.carrier), tracking: String(l.tracking) }));
+    } catch {
+    }
+  }
+  const notes = await sql2(e, "SELECT kind,state FROM notifications WHERE order_id=?", id).all();
+  return { shipping: row ? { state: row.state, labels } : { state: "not_required", labels: [] }, notifications: Object.fromEntries(notes.results.map((n) => [n.kind, n.state])) };
+}
+async function recoverLateReservation(e, id) {
+  const row = await sql2(e, "SELECT state,inventory_released FROM orders WHERE id=?", id).first();
+  if (row?.state !== "approved" || !row.inventory_released) return;
+  try {
+    await sql2(e, "UPDATE orders SET inventory_released=0,fulfillment_hold=0 WHERE id=? AND state='approved' AND inventory_released=1", id).run();
+    await clear(e, id, "inventory");
+  } catch {
+    await sql2(e, "UPDATE orders SET fulfillment_hold=1 WHERE id=?", id).run();
+    await issue(e, id, "inventory", "Pago confirmado despu\xE9s de liberar la reserva. Reponer existencias y actualizar el pago antes de preparar o enviar.");
+  }
+}
+async function releaseExpired(e, mp2, apply) {
+  if (e.RESERVATION_RECOVERY_ENABLED !== "true" || !e.MP_ACCESS_TOKEN) return;
+  const rows = await sql2(e, "SELECT * FROM orders WHERE inventory_released=0 AND state IN ('awaiting_payment','pending','in_process','rejected','cancelled') AND preference_id IS NOT NULL AND created_at<? ORDER BY ops_checked_at,created_at LIMIT 2", now() - 86400).all();
+  for (const row of rows.results) {
+    try {
+      await sql2(e, "UPDATE orders SET ops_checked_at=? WHERE id=?", now(), row.id).run();
+      if (row.mode !== e.MP_MODE) continue;
+      const pref = await mp2(e, "GET", "/checkout/preferences/" + encodeURIComponent(row.preference_id));
+      const expiry = Date.parse(pref.expiration_date_to);
+      if (pref.external_reference !== row.id || pref.expires !== true || !Number.isFinite(expiry) || expiry > Date.now() - 36e5) continue;
+      const found = await mp2(e, "GET", "/v1/payments/search?" + new URLSearchParams({ external_reference: row.id, limit: "100" }));
+      if (!Array.isArray(found.results) || !Number.isInteger(found.paging?.total) || found.paging.total > found.results.length) continue;
+      if (found.results.some((p) => p.external_reference !== row.id)) continue;
+      for (const p of found.results) await apply(p, e);
+      if (found.results.some((p) => !["rejected", "cancelled"].includes(p.status))) continue;
+      await sql2(e, "UPDATE orders SET inventory_released=1,state='expired' WHERE id=? AND inventory_released=0 AND state IN ('awaiting_payment','rejected','cancelled') AND NOT EXISTS(SELECT 1 FROM payments WHERE order_id=? AND status NOT IN ('rejected','cancelled'))", row.id, row.id).run();
+      await clear(e, row.id, "reservation");
+    } catch {
+      await issue(e, row.id, "reservation", "No se pudo verificar la reserva con Mercado Pago; se conserva el inventario apartado.");
+    }
+  }
+}
+async function queueNotice(e, row, kind, link, labels = []) {
+  if (!emailReady(e) || row.mode !== "live") return;
+  const customer = JSON.parse(row.customer);
+  const text2 = kind === "payment" ? `Hola ${customer.name}. Mercado Pago confirm\xF3 tu pedido ${row.id} por $${(row.total_cents / 100).toFixed(2)} MXN. Consulta su estado: ${link}
+Una gu\xEDa generada no significa que el paquete haya sido entregado a la paqueter\xEDa.` : `Hola ${customer.name}. La gu\xEDa de tu pedido ${row.id} est\xE1 lista:
+${labels.map((l) => `${l.carrier}: ${l.tracking}`).join("\n")}
+Consulta tu pedido: ${link}
+El movimiento del rastreo comienza cuando la paqueter\xEDa recibe el paquete.`;
+  const payload = { from: e.EMAIL_FROM, to: [customer.email], subject: kind === "payment" ? "ARTBAN \xB7 Pago confirmado" : "ARTBAN \xB7 Tu gu\xEDa de rastreo", text: text2 };
+  await sql2(e, "INSERT OR IGNORE INTO notifications(id,order_id,kind,payload,created_at) VALUES(?,?,?,?,?)", row.id + "-" + kind, row.id, kind, JSON.stringify(payload), now()).run();
+}
+async function sendNotices(e) {
+  if (!emailReady(e)) return;
+  const pending = await sql2(e, "SELECT * FROM notifications WHERE state IN ('queued','retry','sending') AND lease_until<=? ORDER BY created_at LIMIT 2", now()).all();
+  for (const n of pending.results) {
+    if (n.first_attempt && now() - n.first_attempt >= 82800) {
+      await sql2(e, "UPDATE notifications SET state='needs_review',last_error='Verificar el env\xEDo en Resend antes de volver a enviarlo' WHERE id=? AND state!='sent'", n.id).run();
+      continue;
+    }
+    const claim = await sql2(e, "UPDATE notifications SET state='sending',attempts=attempts+1,first_attempt=COALESCE(first_attempt,?),lease_until=? WHERE id=? AND state IN ('queued','retry','sending') AND lease_until<=?", now(), now() + 120, n.id, now()).run();
+    if (claim.meta.changes !== 1) continue;
+    try {
+      const r = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: "Bearer " + e.RESEND_API_KEY, "Content-Type": "application/json", "Idempotency-Key": n.id }, body: n.payload, signal: AbortSignal.timeout(15e3) });
+      if (!r.ok) throw Error("HTTP " + r.status);
+      const d = await r.json();
+      if (typeof d.id !== "string" || !d.id) throw Error("Respuesta incompleta");
+      await sql2(e, "UPDATE notifications SET state='sent',provider_id=?,last_error=NULL WHERE id=?", d.id, n.id).run();
+    } catch {
+      await sql2(e, "UPDATE notifications SET state='retry',lease_until=?,last_error='No se confirm\xF3 el env\xEDo; reintento con la misma referencia' WHERE id=?", now() + Math.min(3600, 60 * 2 ** Math.min(n.attempts, 6)), n.id).run();
+    }
+  }
+}
+async function fulfill(e, sign) {
+  const auto = e.AUTO_LABELS_ENABLED === "true" && e.MP_MODE === "live" && e.SKYDROPX_MODE === "live" && e.LABEL_PURCHASES_ENABLED === "true" && e.SKYDROPX_LABEL_PURCHASES_ENABLED === "true";
+  const rows = await sql2(e, `SELECT * FROM orders WHERE state='approved' AND mode='live' AND inventory_released=0 AND fulfillment_hold=0 AND
+ ((?=1 AND NOT EXISTS(SELECT 1 FROM notifications n WHERE n.order_id=orders.id AND n.kind='payment')) OR
+ EXISTS(SELECT 1 FROM order_shipping os WHERE os.order_id=orders.id AND ((os.state!='ready' AND ?=1) OR (os.state='ready' AND ?=1 AND NOT EXISTS(SELECT 1 FROM notifications n WHERE n.order_id=orders.id AND n.kind='shipping')))))
+ ORDER BY ops_checked_at,created_at LIMIT 2`, emailReady(e) ? 1 : 0, auto ? 1 : 0, emailReady(e) ? 1 : 0).all();
+  for (const row of rows.results) {
+    await sql2(e, "UPDATE orders SET ops_checked_at=? WHERE id=?", now(), row.id).run();
+    if (row.inventory_released || row.fulfillment_hold) continue;
+    const link = e.SITE_URL.replace(/\/$/, "") + "/pago.html?" + new URLSearchParams({ order: row.id, token: await sign(e.STATUS_SIGNING_SECRET, row.id) });
+    await queueNotice(e, row, "payment", link);
+    let status = await publicFulfillment(e, row.id);
+    if (status.shipping.state !== "not_required" && status.shipping.state !== "ready" && e.AUTO_LABELS_ENABLED === "true" && e.MP_MODE === "live" && e.SKYDROPX_MODE === "live" && e.LABEL_PURCHASES_ENABLED === "true" && e.SKYDROPX_LABEL_PURCHASES_ENABLED === "true") {
+      try {
+        const rate = await labelRate(row.id, e);
+        if (rate.state !== "ready") {
+          if (status.shipping.state !== "not_started") throw Error("La gu\xEDa necesita revisi\xF3n; no repetir la compra.");
+          const max = Math.round(Number(e.MAX_LABEL_COST_MXN) * 100);
+          if (!(max > 0) || rate.total_cents > max || rate.total_cents > row.shipping_cents) throw Error("La tarifa excede el l\xEDmite autorizado o el env\xEDo pagado.");
+          await purchaseLabel(row.id, rate.total_cents, e);
+        }
+        await clear(e, row.id, "shipping");
+        status = await publicFulfillment(e, row.id);
+      } catch (err) {
+        await issue(e, row.id, "shipping", err.message || "Revisar gu\xEDa en Skydropx.");
+      }
+    }
+    if (status.shipping.state === "ready") await queueNotice(e, row, "shipping", link, status.shipping.labels);
+  }
+}
+async function runOperations(e, { mp: mp2, apply, sign }) {
+  await releaseExpired(e, mp2, apply);
+  await fulfill(e, sign);
+  await sendNotices(e);
+}
+
+// cloudflare/src/catalog-seed.mjs
+var catalog_seed_default = [
+  { id: "venom-001", name: "Figura Venom", description: "Figura s\xF3lida con recubrimiento de exhibici\xF3n. Acabado profesional monocolor.", category: "art-toy", type: "fixed", price: 850, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 350 }], image: "ven1.png", tags: ["ACABADO PRO", "COLECCI\xD3NABLE"], weight: 180, featured: true },
+  { id: "elefante-002", name: "Elefante Art Toy", description: "Pieza decorativa con dise\xF1o organico. Acabado liso tipo inyeccion.", category: "art-toy", type: "fixed", price: 650, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 300 }], image: "elefante1.png", tags: ["DECORATIVO", "PREMIUM"], weight: 220, featured: true },
+  { id: "snoopy-003", name: "Snoopy Figure", description: "R\xE9plica artesanal de alta fidelidad con acabado de exhibici\xF3n.", category: "figura", type: "fixed", price: 450, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 300 }], image: "snoppy.png", tags: ["FIGURA", "DETALLADO"], weight: 150, featured: false },
+  { id: "hello-004", name: "Hello Kitty", description: "Figura decorativa con dise\xF1o cute. Perfecta para regalo.", category: "figura", type: "fixed", price: 400, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 300 }], image: "hello1.png", tags: ["REGALO", "CUTE"], weight: 120, featured: false },
+  { id: "gato-005", name: "Gato Sentado", description: "Art Toy minimalista con acabado premium. Edici\xF3n de estudio.", category: "art-toy", type: "fixed", price: 350, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 250 }], image: "cat-sit.png", tags: ["ART TOY", "MINIMALISTA"], weight: 130, featured: false },
+  { id: "conejo-006", name: "Conejo Decorativo", description: "Pieza decorativa con textura org\xE1nica y acabado brillante.", category: "art-toy", type: "fixed", price: 380, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 270 }], image: "conejo1.png", tags: ["DECORATIVO", "ORG\xC1NICO"], weight: 160, featured: false },
+  { id: "corazon-007", name: "Coraz\xF3n Anat\xF3mico 3D", description: "Art Toy custom de coleccion. Pieza anat\xF3mica detallada.", category: "art-toy", type: "fixed", price: 550, variants: [{ name: "Sin pintar", mod: 0 }, { name: "Pintado a mano", mod: 350 }], image: "corazon1.png", tags: ["COLECCI\xD3N", "ANAT\xD3MICO"], weight: 200, featured: true },
+  { id: "regalo-008", name: "Regalo Personalizado", description: "Pieza exclusiva dise\xF1ada a tu medida. Edici\xF3n \xFAnica irrepetible.", category: "custom", type: "custom", price: null, variants: [], image: "sen1.png", tags: ["EXCLUSIVO", "PERSONALIZADO"], weight: null, featured: false },
+  { id: "recuerdo-009", name: "Recuerdo Inolvidable", description: "Escultura personalizada con calidad de exhibici\xF3n profesional.", category: "custom", type: "custom", price: null, variants: [], image: "bebe1.png", tags: ["RECUERDO", "PREMIUM"], weight: null, featured: false },
+  { id: "muneca-010", name: "Mu\xF1eca Personalizada", description: "Coleccionable custom con nivel de detalle artesanal.", category: "custom", type: "custom", price: null, variants: [], image: "elena1.png", tags: ["CUSTOM", "DETALLADO"], weight: null, featured: false },
+  { id: "retrato-011", name: "Retrato 3D", description: "Pieza de exhibici\xF3n \xFAnica basada en fotograf\xEDa real.", category: "custom", type: "custom", price: null, variants: [], image: "mujer1.png", tags: ["RETRATO", "\xDANICO"], weight: null, featured: false },
+  { id: "centro-012", name: "Centro de Mesa XV A\xF1os", description: "Producci\xF3n a medida para eventos. Dise\xF1o exclusivo.", category: "custom", type: "custom", price: null, variants: [], image: "jan1.png", tags: ["EVENTO", "PRODUCCI\xD3N"], weight: null, featured: false },
+  { id: "angel-013", name: "\xC1ngel 3D", description: "Escultura art\xEDstica con alas detalladas. Pieza de exhibici\xF3n.", category: "custom", type: "custom", price: null, variants: [], image: "angel1.png", tags: ["ARTE", "EXHIBICION"], weight: null, featured: false },
+  { id: "lampara-014", name: "L\xE1mpara de Regalo", description: "Pieza funcional con iluminaci\xF3n integrada. Dise\xF1o decorativo.", category: "custom", type: "custom", price: null, variants: [], image: "jan2.png", tags: ["FUNCIONAL", "ILUMINACI\xD3N"], weight: null, featured: false }
+];
+
+// cloudflare/src/content.mjs
+var q = (e, s, ...v) => e.DB.prepare(s).bind(...v);
+async function getContent(e) {
+  const r = await q(e, "SELECT value FROM store_settings WHERE key='content'").first();
+  return r ? JSON.parse(r.value) : { revision: 0, products: catalog_seed_default, collections: [], promotions: [] };
+}
+function activePromotions(c, time = Date.now()) {
+  return c.promotions.filter((x) => x.active && (!x.start || Date.parse(x.start) <= time) && (!x.end || Date.parse(x.end) > time));
+}
+function pricedProducts(c, time = Date.now()) {
+  const offers = activePromotions(c, time);
+  return c.products.filter((p) => p.active !== false).map((p) => {
+    const promo = offers.filter((x) => !x.collection || p.collection === x.collection).sort((a, b) => b.percent - a.percent)[0];
+    const rate = 1 - (promo?.percent || 0) / 100;
+    return { ...p, originalPrice: p.price, price: p.price === null ? null : Math.round(p.price * rate * 100) / 100, variants: p.variants.map((v) => ({ ...v, mod: Math.round(v.mod * rate * 100) / 100 })), promotion: promo?.title || "" };
+  });
+}
+var bad = (m) => {
+  throw new APIError(400, m);
+};
+function text(x, max = 200) {
+  if (typeof x !== "string" || x.length > max || /[<>]/.test(x)) bad("Revisa los textos: no se admite HTML.");
+  return x.trim();
+}
+function image(x) {
+  if (typeof x !== "string" || x.length > 19e4 || !(/^[a-zA-Z0-9_.-]+$/.test(x) || /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(x) || /^https:\/\/[^\s"'<>]+$/.test(x))) bad("Imagen no v\xE1lida. Usa JPG, PNG, WebP o una URL HTTPS.");
+  return x;
+}
+function validateContent(b) {
+  if (!b || !Number.isInteger(b.revision) || !Array.isArray(b.products) || !Array.isArray(b.collections) || !Array.isArray(b.promotions) || b.products.length > 100 || b.collections.length > 40 || b.promotions.length > 40) bad("Contenido no v\xE1lido o demasiado grande.");
+  const ids = /* @__PURE__ */ new Set();
+  const id = (x) => {
+    if (typeof x !== "string" || !/^[-a-z0-9]{1,60}$/.test(x) || ids.has(x)) bad("Identificador repetido o no v\xE1lido.");
+    ids.add(x);
+    return x;
+  };
+  const collections = b.collections.map((x) => ({ id: id(x.id), name: text(x.name, 80), description: text(x.description || "", 400), image: image(x.image), active: !!x.active }));
+  const products = b.products.map((x) => {
+    if (!["fixed", "custom"].includes(x.type) || !["art-toy", "figura", "custom", "lienzo"].includes(x.category) || !Array.isArray(x.variants) || x.variants.length > 8 || x.type === "fixed" && (!Number.isFinite(x.price) || x.price < 1 || x.price > 1e6 || !x.variants.length)) bad("Revisa el precio y los acabados.");
+    if (x.collection && !collections.some((c) => c.id === x.collection)) bad("Colecci\xF3n no encontrada.");
+    return { id: id(x.id), name: text(x.name, 100), description: text(x.description || "", 1500), category: x.category, type: x.type, price: x.type === "custom" ? null : x.price, variants: x.variants.map((v) => {
+      if (!Number.isFinite(v.mod) || v.mod < 0 || v.mod > 1e6) bad("Precio adicional no v\xE1lido.");
+      return { name: text(v.name, 80), mod: v.mod };
+    }), image: image(x.image), images: (x.images || []).slice(0, 4).map(image), tags: [], featured: !!x.featured, active: x.active !== false, collection: x.collection || "" };
+  });
+  const promotions = b.promotions.map((x) => {
+    if (!Number.isFinite(x.percent) || x.percent < 1 || x.percent > 90) bad("El descuento debe estar entre 1 y 90%.");
+    if (x.collection && !collections.some((c) => c.id === x.collection)) bad("Colecci\xF3n de promoci\xF3n no encontrada.");
+    for (const k of ["start", "end"]) if (x[k] && !Number.isFinite(Date.parse(x[k]))) bad("Fecha no v\xE1lida.");
+    if (x.start && x.end && Date.parse(x.end) <= Date.parse(x.start)) bad("El fin debe ser posterior al inicio.");
+    return { id: id(x.id), title: text(x.title, 100), percent: x.percent, collection: x.collection || "", start: x.start || "", end: x.end || "", active: !!x.active };
+  });
+  const result = { revision: b.revision + 1, products, collections, promotions };
+  if (JSON.stringify(result).length > 18e5) bad("El cat\xE1logo supera 1.8 MB. Reduce el n\xFAmero o tama\xF1o de las fotos.");
+  return result;
+}
+async function saveContent(e, body) {
+  const next = validateContent(body);
+  await q(e, "INSERT OR IGNORE INTO store_settings(key,value) VALUES('content',?)", JSON.stringify({ revision: 0, products: catalog_seed_default, collections: [], promotions: [] })).run();
+  const old = await getContent(e);
+  if (old.revision !== body.revision) throw new APIError(409, "Otra sesi\xF3n modific\xF3 el cat\xE1logo. Recarga antes de guardar.");
+  const commands = [q(e, "UPDATE store_settings SET value=? WHERE key='content' AND value=?", JSON.stringify(next), JSON.stringify(old))];
+  for (const p of next.products) for (let i = 0; i < p.variants.length; i++) commands.push(q(e, "INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES(?,?,0)", p.id, i));
+  const result = await e.DB.batch(commands);
+  if (result[0].meta.changes !== 1) throw new APIError(409, "El cat\xE1logo cambi\xF3. Recarga el panel.");
+  return next;
+}
+
+// cloudflare/src/catalog.mjs
+var catalog_default = [
+  { "id": "venom-001", "name": "Figura Venom", "price": 850, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 350 }] },
+  { "id": "elefante-002", "name": "Elefante Art Toy", "price": 650, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 300 }] },
+  { "id": "snoopy-003", "name": "Snoopy Figure", "price": 450, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 300 }] },
+  { "id": "hello-004", "name": "Hello Kitty", "price": 400, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 300 }] },
+  { "id": "gato-005", "name": "Gato Sentado", "price": 350, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 250 }] },
+  { "id": "conejo-006", "name": "Conejo Decorativo", "price": 380, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 270 }] },
+  { "id": "corazon-007", "name": "Coraz\xF3n Anat\xF3mico 3D", "price": 550, "variants": [{ "name": "Sin pintar", "mod": 0 }, { "name": "Pintado a mano", "mod": 350 }] }
+];
+
+// cloudflare/src/admin.mjs
+var sql3 = (e, s, ...a) => e.DB.prepare(s).bind(...a);
 async function authenticate(request, e) {
   if (!e.ADMIN_TOKEN || e.ADMIN_TOKEN.length < 32) throw new APIError(503, "El acceso privado necesita ADMIN_TOKEN de al menos 32 caracteres.");
   const actual = request.headers.get("Authorization") || "";
@@ -467,26 +605,35 @@ async function admin(path, method, body, e, mp2) {
     if (method === "GET") return getContent(e);
     if (method === "POST") return saveContent(e, body);
   }
+  if (path === "/api/admin/shop") {
+    if (method === "GET") return getShop(e);
+    if (method === "POST") return saveShop(e, body);
+  }
+  if (path === "/api/admin/operations" && method === "GET") {
+    const issues = await sql3(e, "SELECT * FROM operation_issues ORDER BY updated_at DESC LIMIT 50").all();
+    const notices = await sql3(e, "SELECT order_id,kind,state,attempts,last_error FROM notifications ORDER BY created_at DESC LIMIT 50").all();
+    return { issues: issues.results, notifications: notices.results };
+  }
   const CATALOG = (await getContent(e)).products;
   if (path === "/api/admin/skydropx-test" && method === "POST") return skyCheck(e);
   if (path === "/api/admin/payment-diagnostic" && method === "POST") {
     if (!/^4RT-[a-f0-9]{32}$/.test(body?.order_id || "")) throw new APIError(400, "Referencia no v\xE1lida.");
-    const order = await sql2(e, "SELECT id,total_cents,shipping_cents,mode FROM orders WHERE id=?", body.order_id).first();
+    const order = await sql3(e, "SELECT id,total_cents,shipping_cents,mode FROM orders WHERE id=?", body.order_id).first();
     if (!order) throw new APIError(404, "Pedido no encontrado.");
     const data = await mp2(e, "GET", "/v1/payments/search?" + new URLSearchParams({ external_reference: order.id, sort: "date_created", criteria: "desc", limit: "30" }));
     const account = await mp2(e, "GET", "/users/me");
     return { account_is_test: Array.isArray(account.tags) && account.tags.includes("test_user"), account_matches: String(account.id) === e.MP_COLLECTOR_ID, order, payments: (data.results || []).filter((p) => p.external_reference === order.id).map((p) => ({ id: p.id, status: p.status, transaction_amount: p.transaction_amount, shipping_amount: p.shipping_amount, total_paid_amount: p.transaction_details?.total_paid_amount, currency: p.currency_id, collector_matches: String(p.collector_id) === e.MP_COLLECTOR_ID, live_mode: p.live_mode })) };
   }
   if (path === "/api/admin/status" && method === "GET") {
-    const inventory = await sql2(e, "SELECT i.*,p.weight,p.length,p.width,p.height FROM inventory i LEFT JOIN package_profiles p ON p.product_id=i.product_id AND p.variant=i.variant").all();
-    const origin2 = await sql2(e, "SELECT value FROM store_settings WHERE key='origin'").first();
-    return { mode: e.MP_MODE, payments_enabled: e.PAYMENTS_ENABLED === "true", skydropx_configured: skyConfigured(e), skydropx_mode: e.SKYDROPX_MODE || "pendiente", origin: origin2 ? JSON.parse(origin2.value) : null, inventory: inventory.results.map((i) => {
+    const inventory = await sql3(e, "SELECT i.*,p.weight,p.length,p.width,p.height FROM inventory i LEFT JOIN package_profiles p ON p.product_id=i.product_id AND p.variant=i.variant").all();
+    const origin2 = await sql3(e, "SELECT value FROM store_settings WHERE key='origin'").first();
+    return { shop_configured: (await getShop(e)).configured, email_ready: emailReady(e), auto_labels: e.AUTO_LABELS_ENABLED === "true" && e.LABEL_PURCHASES_ENABLED === "true" && e.SKYDROPX_LABEL_PURCHASES_ENABLED === "true" && e.MP_MODE === "live" && e.SKYDROPX_MODE === "live" && Number(e.MAX_LABEL_COST_MXN) > 0, reservation_recovery: e.RESERVATION_RECOVERY_ENABLED === "true", mode: e.MP_MODE, payments_enabled: e.PAYMENTS_ENABLED === "true", skydropx_configured: skyConfigured(e), skydropx_mode: e.SKYDROPX_MODE || "pendiente", origin: origin2 ? JSON.parse(origin2.value) : null, inventory: inventory.results.map((i) => {
       const p = CATALOG.find((p2) => p2.id === i.product_id);
       return { ...i, title: (p?.name || i.product_id) + " / " + (p?.variants[i.variant]?.name || i.variant) };
     }) };
   }
   if (path === "/api/admin/orders" && method === "GET") {
-    const r = await sql2(e, "SELECT id,state,total_cents,shipping_cents,created_at,mode,items,customer FROM orders ORDER BY created_at DESC LIMIT 50").all();
+    const r = await sql3(e, "SELECT id,state,total_cents,shipping_cents,created_at,mode,items,customer,inventory_released,fulfillment_hold FROM orders ORDER BY created_at DESC LIMIT 50").all();
     return { orders: r.results.map((o) => ({ ...o, items: JSON.parse(o.items), customer: JSON.parse(o.customer) })) };
   }
   if (path === "/api/admin/mercadopago" && method === "POST") {
@@ -495,7 +642,7 @@ async function admin(path, method, body, e, mp2) {
   }
   if (path === "/api/admin/origin" && method === "POST") {
     const a = address2(body);
-    await sql2(e, "INSERT INTO store_settings(key,value) VALUES('origin',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value", JSON.stringify(a)).run();
+    await sql3(e, "INSERT INTO store_settings(key,value) VALUES('origin',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value", JSON.stringify(a)).run();
     return { saved: true };
   }
   if (path === "/api/admin/inventory" && method === "POST") {
@@ -503,8 +650,8 @@ async function admin(path, method, body, e, mp2) {
     if (!p?.variants[body?.variant] || !Number.isInteger(body.variant) || !Number.isInteger(body.stock) || body.stock < 0 || body.stock > 1e4 || !Number.isInteger(body.previous_stock)) throw new APIError(400, "Revisa el producto y las unidades disponibles.");
     for (const k of ["weight", "length", "width", "height"]) if (typeof body[k] !== "number" || !Number.isFinite(body[k]) || body[k] <= 0 || body[k] > (k === "weight" ? 100 : 300)) throw new APIError(400, "Indica el peso en kg y las medidas en cm del paquete cerrado.");
     const r = await e.DB.batch([
-      sql2(e, "UPDATE inventory SET stock=? WHERE product_id=? AND variant=? AND stock=?", body.stock, body.product_id, body.variant, body.previous_stock),
-      sql2(e, "INSERT INTO package_profiles(product_id,variant,weight,length,width,height) SELECT ?,?,?,?,?,? WHERE changes()=1 ON CONFLICT(product_id,variant) DO UPDATE SET weight=excluded.weight,length=excluded.length,width=excluded.width,height=excluded.height", body.product_id, body.variant, body.weight, body.length, body.width, body.height)
+      sql3(e, "UPDATE inventory SET stock=? WHERE product_id=? AND variant=? AND stock=?", body.stock, body.product_id, body.variant, body.previous_stock),
+      sql3(e, "INSERT INTO package_profiles(product_id,variant,weight,length,width,height) SELECT ?,?,?,?,?,? WHERE changes()=1 ON CONFLICT(product_id,variant) DO UPDATE SET weight=excluded.weight,length=excluded.length,width=excluded.width,height=excluded.height", body.product_id, body.variant, body.weight, body.length, body.width, body.height)
     ]);
     if (r[0].meta.changes !== 1) throw new APIError(409, "Las existencias cambiaron. Recarga el panel antes de guardar.");
     return { saved: true };
@@ -518,7 +665,7 @@ var fail3 = (status, message) => {
 };
 var encoder = new TextEncoder();
 var hex = (bytes) => [...new Uint8Array(bytes)].map((x) => x.toString(16).padStart(2, "0")).join("");
-var now = () => Math.floor(Date.now() / 1e3);
+var now2 = () => Math.floor(Date.now() / 1e3);
 var digest = async (value) => hex(await crypto.subtle.digest("SHA-256", encoder.encode(value)));
 async function hmac(secret, value) {
   const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
@@ -530,8 +677,8 @@ function equal(a, b) {
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
 }
-var stmt = (env, sql3, ...args) => env.DB.prepare(sql3).bind(...args);
-var one = (env, sql3, ...args) => stmt(env, sql3, ...args).first();
+var stmt = (env, sql4, ...args) => env.DB.prepare(sql4).bind(...args);
+var one = (env, sql4, ...args) => stmt(env, sql4, ...args).first();
 function config(env) {
   const rates2 = Object.fromEntries(["local", "centro", "nacional"].map((k) => [k, Number(env["SHIPPING_" + k.toUpperCase()] ?? { local: 50, centro: 150, nacional: 220 }[k])]));
   const validRates = Object.values(rates2).every((n) => Number.isSafeInteger(n) && n >= 0 && n <= 1e5);
@@ -598,7 +745,7 @@ async function checkoutResult(row, env) {
 }
 async function existing(row, fingerprint, env) {
   if (row.fingerprint !== fingerprint) fail3(409, "Esta referencia pertenece a otra selecci\xF3n.");
-  if (row.checkout_url && ["awaiting_payment", "pending", "in_process"].includes(row.state) && now() - row.created_at < 1800) return checkoutResult(row, env);
+  if (row.checkout_url && ["awaiting_payment", "pending", "in_process"].includes(row.state) && now2() - row.created_at < 1800) return checkoutResult(row, env);
   fail3(409, "El intento ya est\xE1 registrado. Consulta al estudio con referencia " + row.id + ".");
 }
 async function checkout(body, key, env) {
@@ -617,7 +764,7 @@ async function checkout(body, key, env) {
   const id = "4RT-" + crypto.randomUUID().replaceAll("-", "");
   try {
     await env.DB.batch([
-      stmt(env, "INSERT INTO orders(id,request_key,fingerprint,items,customer,total_cents,shipping_cents,state,created_at,mode) VALUES(?,?,?,?,?,?,?,?,?,?)", id, key, fingerprint, JSON.stringify(items), JSON.stringify(customer), total, shipping, "creating", now(), env.MP_MODE),
+      stmt(env, "INSERT INTO orders(id,request_key,fingerprint,items,customer,total_cents,shipping_cents,state,created_at,mode) VALUES(?,?,?,?,?,?,?,?,?,?)", id, key, fingerprint, JSON.stringify(items), JSON.stringify(customer), total, shipping, "creating", now2(), env.MP_MODE),
       ...items.map((i) => stmt(env, "INSERT INTO order_items(order_id,product_id,variant,quantity) VALUES(?,?,?,?)", id, i.id, i.variant, i.quantity)),
       ...quote ? [stmt(env, "INSERT INTO order_shipping(order_id,quote_id) VALUES(?,?)", id, quote.id)] : []
     ]);
@@ -684,20 +831,21 @@ async function applyPayment(p, env) {
     stmt(env, `INSERT INTO payments(id,order_id,status,updated_at) VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET status=excluded.status,updated_at=excluded.updated_at WHERE payments.order_id=excluded.order_id AND payments.updated_at<excluded.updated_at`, id, row.id, p.status, updated),
     stmt(env, `UPDATE orders SET state=COALESCE((SELECT status FROM payments WHERE order_id=? ORDER BY CASE status WHEN 'approved' THEN 1 WHEN 'charged_back' THEN 2 WHEN 'refunded' THEN 3 WHEN 'in_process' THEN 4 WHEN 'pending' THEN 5 WHEN 'rejected' THEN 6 ELSE 7 END LIMIT 1),state) WHERE id=?`, row.id, row.id)
   ]);
+  await recoverLateReservation(env, row.id);
 }
 async function orderStatus(id, token2, env) {
   if (!env.STATUS_SIGNING_SECRET || !equal(await hmac(env.STATUS_SIGNING_SECRET, id), token2)) fail3(404, "No se encontr\xF3 ese pedido.");
   let row = await one(env, "SELECT * FROM orders WHERE id=?", id);
   if (!row) fail3(404, "No se encontr\xF3 ese pedido.");
   if (env.MP_ACCESS_TOKEN) {
-    const claim = await stmt(env, "UPDATE orders SET checked_at=? WHERE id=? AND checked_at<=?", now(), id, now() - 15).run();
+    const claim = await stmt(env, "UPDATE orders SET checked_at=? WHERE id=? AND checked_at<=?", now2(), id, now2() - 15).run();
     if (claim.meta.changes) {
       const result = await mp(env, "GET", "/v1/payments/search?" + new URLSearchParams({ external_reference: id, sort: "date_created", criteria: "desc", limit: "30" }));
       for (const p of result.results || []) if (p.external_reference === id) await applyPayment(p, env);
     }
   }
   row = await one(env, "SELECT * FROM orders WHERE id=?", id);
-  return { order_id: id, status: row.state, total: row.total_cents / 100, mode: row.mode };
+  return { order_id: id, status: row.state, total: row.total_cents / 100, mode: row.mode, fulfillment_hold: !!row.fulfillment_hold, ...await publicFulfillment(env, id) };
 }
 async function readBody(request, max = 16e3) {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) fail3(400, "Se requiere JSON.");
@@ -738,7 +886,10 @@ function limit(request, path) {
   if (item.hits > (["/api/checkout", "/api/shipping/quotes"].includes(path) ? 15 : 120)) fail3(429, "Demasiadas solicitudes. Intenta en un minuto.");
 }
 var worker_default = {
-  async fetch(request, env) {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(runOperations({ ...env, SHIPPING_PROVIDER: "skydropx", ENVIA_TOKEN: void 0 }, { mp, apply: applyPayment, sign: hmac }));
+  },
+  async fetch(request, env, ctx) {
     env = { ...env, SHIPPING_PROVIDER: "skydropx", ENVIA_TOKEN: void 0 };
     const u = new URL(request.url), path = u.pathname, origin2 = request.headers.get("Origin") || "";
     let siteOrigin = "";
@@ -754,14 +905,16 @@ var worker_default = {
         if (!siteOrigin || origin2 !== siteOrigin) fail3(403, "Origen no permitido.");
         return new Response(null, { status: 204, headers });
       }
-      if (path === "/api/content" && request.method === "GET") {
+      if (path === "/api/shop" && request.method === "GET") result = await getShop(env);
+      else if (path === "/api/content" && request.method === "GET") {
         const c = await getContent(env);
         result = { products: pricedProducts(c), collections: c.collections.filter((x) => x.active), promotions: activePromotions(c) };
       } else if (path === "/api/config" && request.method === "GET") result = config(env);
       else if (path === "/api/health" && request.method === "GET") {
         if (!env.DB) fail3(503, "Base de datos pendiente.");
-        await one(env, "SELECT id FROM orders LIMIT 1");
-        result = { ok: true, payments_enabled: config(env).enabled };
+        await one(env, "SELECT inventory_released,fulfillment_hold,ops_checked_at FROM orders LIMIT 1");
+        await one(env, "SELECT id FROM notifications LIMIT 1");
+        result = { ok: true, version: "2026-10-19-operations", payments_enabled: config(env).enabled };
       } else if (path.startsWith("/api/")) {
         limit(request, path);
         if (["/api/checkout", "/api/shipping/quotes", "/api/admin/test-checkout"].includes(path)) env = { ...env, catalog: pricedProducts(await getContent(env)).filter((p) => p.type === "fixed") };
@@ -798,6 +951,7 @@ var worker_default = {
             const p = await mp(env, "GET", "/v1/payments/" + id);
             if (String(p.id) !== id) fail3(400, "Referencia no v\xE1lida.");
             await applyPayment(p, env);
+            if (ctx?.waitUntil) ctx.waitUntil(runOperations(env, { mp, apply: applyPayment, sign: hmac }));
           }
           result = { received: true };
         } else if (/^\/api\/orders\/4RT-[a-f0-9]{32}$/.test(path) && request.method === "GET") result = await orderStatus(path.split("/").pop(), u.searchParams.get("token") || "", env);

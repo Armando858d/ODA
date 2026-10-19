@@ -16,3 +16,13 @@
  document.querySelectorAll('.trust-strip p').forEach(p=>{if(p.textContent.includes('Disponible al activar'))p.textContent='Consulta la disponibilidad al confirmar tu pedido.'});
  document.querySelectorAll('img').forEach(img=>{img.decoding='async';if(!img.closest('.hero'))img.loading='lazy'});
 })();
+// Condiciones reales guardadas por el propietario; nunca insertar HTML del panel.
+if(page==='compra-segura'){
+ const policyLabels={businessName:'Responsable del negocio',contactEmail:'Correo de atención',contactPhone:'Teléfono de atención',businessAddress:'Domicilio de atención',production:'Elaboración y disponibilidad',shipping:'Envíos y entregas',changes:'Cambios y devoluciones',cancellations:'Cancelaciones',damages:'Daños durante el transporte',privacy:'Aviso de privacidad'};
+ const policies=document.createElement('section');policies.className='wrap';policies.id='condiciones';policies.innerHTML='<div class="section-head"><h2>ANTES DE COMPRAR.</h2></div><p role="status">Consultando las condiciones del estudio…</p>';document.querySelector('main').append(policies);
+ fetch(STORE_CONFIG.apiBase+'/api/shop',{cache:'no-store',signal:AbortSignal.timeout(6000)}).then(async r=>{if(!r.ok)throw Error();return r.json()}).then(data=>{
+  policies.querySelector('p').textContent=data.configured?'Condiciones y datos de atención publicados por el estudio.':'Consulta las condiciones de tu proyecto con el estudio antes de pagar.';
+  if(!data.configured)return;
+  for(const [key,label] of Object.entries(policyLabels)){const detail=document.createElement('details'),summary=document.createElement('summary'),copy=document.createElement('p');detail.className='panel';summary.textContent=label;copy.textContent=data[key];copy.style.whiteSpace='pre-line';detail.append(summary,copy);policies.append(detail)}
+ }).catch(()=>{policies.querySelector('p').textContent='No pudimos consultar las condiciones actualizadas. Contáctanos por WhatsApp antes de confirmar tu pedido.'});
+}

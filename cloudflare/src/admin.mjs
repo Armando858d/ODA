@@ -1,3 +1,5 @@
+import {emailReady} from './operations.mjs';
+import {getShop,saveShop} from './shop-settings.mjs';
 import {skyCheck,skyConfigured} from './skydropx.mjs';
 import {getContent,saveContent} from './content.mjs';
 import {APIError} from './errors.mjs';
@@ -13,6 +15,12 @@ export async function authenticate(request,e){
 }
 export async function admin(path,method,body,e,mp){
  if(path==='/api/admin/content'){if(method==='GET')return getContent(e);if(method==='POST')return saveContent(e,body);}
+ if(path==='/api/admin/shop'){if(method==='GET')return getShop(e);if(method==='POST')return saveShop(e,body);}
+ if(path==='/api/admin/operations'&&method==='GET'){
+  const issues=await sql(e,'SELECT * FROM operation_issues ORDER BY updated_at DESC LIMIT 50').all();
+  const notices=await sql(e,'SELECT order_id,kind,state,attempts,last_error FROM notifications ORDER BY created_at DESC LIMIT 50').all();
+  return {issues:issues.results,notifications:notices.results};
+ }
  const CATALOG=(await getContent(e)).products;
  if(path==='/api/admin/skydropx-test'&&method==='POST')return skyCheck(e);
  if(path==='/api/admin/payment-diagnostic'&&method==='POST'){
@@ -25,10 +33,10 @@ export async function admin(path,method,body,e,mp){
  if(path==='/api/admin/status'&&method==='GET'){
   const inventory=await sql(e,'SELECT i.*,p.weight,p.length,p.width,p.height FROM inventory i LEFT JOIN package_profiles p ON p.product_id=i.product_id AND p.variant=i.variant').all();
   const origin=await sql(e,"SELECT value FROM store_settings WHERE key='origin'").first();
-  return {mode:e.MP_MODE,payments_enabled:e.PAYMENTS_ENABLED==='true',skydropx_configured:skyConfigured(e),skydropx_mode:e.SKYDROPX_MODE||'pendiente',origin:origin?JSON.parse(origin.value):null,inventory:inventory.results.map(i=>{const p=CATALOG.find(p=>p.id===i.product_id);return {...i,title:(p?.name||i.product_id)+' / '+(p?.variants[i.variant]?.name||i.variant)}})};
+  return {shop_configured:(await getShop(e)).configured,email_ready:emailReady(e),auto_labels:e.AUTO_LABELS_ENABLED==='true'&&e.LABEL_PURCHASES_ENABLED==='true'&&e.SKYDROPX_LABEL_PURCHASES_ENABLED==='true'&&e.MP_MODE==='live'&&e.SKYDROPX_MODE==='live'&&Number(e.MAX_LABEL_COST_MXN)>0,reservation_recovery:e.RESERVATION_RECOVERY_ENABLED==='true',mode:e.MP_MODE,payments_enabled:e.PAYMENTS_ENABLED==='true',skydropx_configured:skyConfigured(e),skydropx_mode:e.SKYDROPX_MODE||'pendiente',origin:origin?JSON.parse(origin.value):null,inventory:inventory.results.map(i=>{const p=CATALOG.find(p=>p.id===i.product_id);return {...i,title:(p?.name||i.product_id)+' / '+(p?.variants[i.variant]?.name||i.variant)}})};
  }
  if(path==='/api/admin/orders'&&method==='GET'){
-  const r=await sql(e,'SELECT id,state,total_cents,shipping_cents,created_at,mode,items,customer FROM orders ORDER BY created_at DESC LIMIT 50').all();return {orders:r.results.map(o=>({...o,items:JSON.parse(o.items),customer:JSON.parse(o.customer)}))};
+  const r=await sql(e,'SELECT id,state,total_cents,shipping_cents,created_at,mode,items,customer,inventory_released,fulfillment_hold FROM orders ORDER BY created_at DESC LIMIT 50').all();return {orders:r.results.map(o=>({...o,items:JSON.parse(o.items),customer:JSON.parse(o.customer)}))};
  }
  if(path==='/api/admin/mercadopago'&&method==='POST'){
   const user=await mp(e,'GET','/users/me');return {valid:true,collector_matches:String(user.id)===e.MP_COLLECTOR_ID,mode:e.MP_MODE,message:'Credencial consultada. Todavía hace falta completar una compra de prueba y verificar su notificación.'};

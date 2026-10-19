@@ -1,3 +1,5 @@
+import {getShop} from './shop-settings.mjs';
+import {runOperations,publicFulfillment,recoverLateReservation} from './operations.mjs';
 import {getContent,pricedProducts,activePromotions} from './content.mjs';
 import CATALOG from './catalog.mjs';
 
@@ -127,6 +129,7 @@ export async function applyPayment(p,env) {
     stmt(env,`INSERT INTO payments(id,order_id,status,updated_at) VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET status=excluded.status,updated_at=excluded.updated_at WHERE payments.order_id=excluded.order_id AND payments.updated_at<excluded.updated_at`,id,row.id,p.status,updated),
     stmt(env,`UPDATE orders SET state=COALESCE((SELECT status FROM payments WHERE order_id=? ORDER BY CASE status WHEN 'approved' THEN 1 WHEN 'charged_back' THEN 2 WHEN 'refunded' THEN 3 WHEN 'in_process' THEN 4 WHEN 'pending' THEN 5 WHEN 'rejected' THEN 6 ELSE 7 END LIMIT 1),state) WHERE id=?`,row.id,row.id)
   ]);
+  await recoverLateReservation(env,row.id);
 }
 export async function orderStatus(id,token,env) {
   if(!env.STATUS_SIGNING_SECRET||!equal(await hmac(env.STATUS_SIGNING_SECRET,id),token))fail(404,'No se encontró ese pedido.');
@@ -138,7 +141,7 @@ export async function orderStatus(id,token,env) {
       for(const p of result.results||[])if(p.external_reference===id)await applyPayment(p,env);
     }
   }
-  row=await one(env,'SELECT * FROM orders WHERE id=?',id);return {order_id:id,status:row.state,total:row.total_cents/100,mode:row.mode};
+  row=await one(env,'SELECT * FROM orders WHERE id=?',id);return {order_id:id,status:row.state,total:row.total_cents/100,mode:row.mode,fulfillment_hold:!!row.fulfillment_hold,...await publicFulfillment(env,id)};
 }
 async function readBody(request,max=16000) {
   if(!request.headers.get('content-type')?.toLowerCase().startsWith('application/json'))fail(400,'Se requiere JSON.');
@@ -156,7 +159,8 @@ function limit(request,path){
   if(item.hits>(['/api/checkout','/api/shipping/quotes'].includes(path)?15:120))fail(429,'Demasiadas solicitudes. Intenta en un minuto.');
 }
 export default {
-  async fetch(request,env){
+  async scheduled(event,env,ctx){ctx.waitUntil(runOperations({...env,SHIPPING_PROVIDER:'skydropx',ENVIA_TOKEN:undefined},{mp,apply:applyPayment,sign:hmac}));},
+  async fetch(request,env,ctx){
     // Retired provider cannot be reactivated by stale dashboard variables.
     env={...env,SHIPPING_PROVIDER:"skydropx",ENVIA_TOKEN:undefined};
     const u=new URL(request.url),path=u.pathname,origin=request.headers.get('Origin')||'';let siteOrigin='';try{siteOrigin=new URL(env.SITE_URL).origin}catch{}
@@ -165,9 +169,10 @@ export default {
     try{
       let result;
       if(request.method==='OPTIONS'){if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');return new Response(null,{status:204,headers});}
-      if(path==='/api/content'&&request.method==='GET'){const c=await getContent(env);result={products:pricedProducts(c),collections:c.collections.filter(x=>x.active),promotions:activePromotions(c)};}
+      if(path==='/api/shop'&&request.method==='GET')result=await getShop(env);
+      else if(path==='/api/content'&&request.method==='GET'){const c=await getContent(env);result={products:pricedProducts(c),collections:c.collections.filter(x=>x.active),promotions:activePromotions(c)};}
       else if(path==='/api/config'&&request.method==='GET')result=config(env);
-      else if(path==='/api/health'&&request.method==='GET'){if(!env.DB)fail(503,'Base de datos pendiente.');await one(env,'SELECT id FROM orders LIMIT 1');result={ok:true,payments_enabled:config(env).enabled};}
+      else if(path==='/api/health'&&request.method==='GET'){if(!env.DB)fail(503,'Base de datos pendiente.');await one(env,'SELECT inventory_released,fulfillment_hold,ops_checked_at FROM orders LIMIT 1');await one(env,'SELECT id FROM notifications LIMIT 1');result={ok:true,version:'2026-10-19-operations',payments_enabled:config(env).enabled};}
       else if(path.startsWith('/api/')){
         limit(request,path);
         if(['/api/checkout','/api/shipping/quotes','/api/admin/test-checkout'].includes(path))env={...env,catalog:pricedProducts(await getContent(env)).filter(p=>p.type==='fixed')};
@@ -197,6 +202,7 @@ export default {
           if(body?.type==='payment'&&/^\d+$/.test(id)){
             if(String(body.data?.id)!==id)fail(400,'Referencia no válida.');
             const p=await mp(env,'GET','/v1/payments/'+id);if(String(p.id)!==id)fail(400,'Referencia no válida.');await applyPayment(p,env);
+            if(ctx?.waitUntil)ctx.waitUntil(runOperations(env,{mp,apply:applyPayment,sign:hmac}));
           }result={received:true};
         }else if(/^\/api\/orders\/4RT-[a-f0-9]{32}$/.test(path)&&request.method==='GET')result=await orderStatus(path.split('/').pop(),u.searchParams.get('token')||'',env);
         else fail(404,'Ruta no encontrada.');

@@ -1,3 +1,5 @@
+> Actualización 19 de octubre: seguir [Activar tienda](../docs/ACTIVAR-TIENDA.md). Requiere migración 0004 antes del Worker.
+
 > Guía actual de la tienda y el administrador: [Implementación](../docs/IMPLEMENTACION.md).
 
 # ODA · Cloudflare Workers + D1

@@ -4,6 +4,7 @@
   "main": "src/worker.mjs",
   "compatibility_date": "2026-10-05",
   "workers_dev": true,
+  "triggers": { "crons": ["*/5 * * * *"] },
   "observability": {
     "enabled": false
   },
@@ -23,7 +24,11 @@
     "SKYDROPX_MODE": "test",
     "SKYDROPX_LABEL_PURCHASES_ENABLED": "false",
     "LABEL_PURCHASES_ENABLED": "false",
-    "MAX_LABEL_COST_MXN": "0"
+    "MAX_LABEL_COST_MXN": "0",
+    "AUTO_LABELS_ENABLED": "false",
+    "RESERVATION_RECOVERY_ENABLED": "true",
+    "EMAIL_ENABLED": "false",
+    "EMAIL_FROM": ""
   },
   "d1_databases": [
     {
