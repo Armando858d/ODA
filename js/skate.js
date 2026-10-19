@@ -6,8 +6,8 @@ if(page==='index'){
  document.querySelector('main').classList.add('skate-home');
  const hero=document.querySelector('.hero');
  hero.querySelector('.eyebrow').textContent='ODA STUDIO — CULTURA CREATIVA INDEPENDIENTE';
- hero.querySelector('h1').innerHTML='CERO<br><em>MOLDES.</em><br><span class="outline-type">TODO ESTILO.</span>';
- hero.querySelector('.hero-content p').textContent='De la imaginación a tu espacio. Figuras de diseño y piezas 3D para quienes hacen las cosas a su manera.';
+ hero.querySelector('h1').innerHTML='TU HISTORIA.<br><em>OTRA FORMA.</em>';
+ hero.querySelector('.hero-content p').textContent='Figuras 3D y lienzos que hablan de ti. Elige una pieza del estudio o dale forma a una idea propia.';
  hero.querySelector('.hero-content .btn').innerHTML='ARMA TU COLECCIÓN <span>↗</span>';
  hero.querySelector('.hero-tag').innerHTML='Hecho para<br>salir de lo común.';
  hero.querySelector('.hero-sticker').innerHTML='<span>100%</span><b>ACTITUD</b><small>0% EN SERIE*</small>';

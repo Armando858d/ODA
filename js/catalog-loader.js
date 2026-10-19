@@ -13,12 +13,18 @@
   surfaces.forEach(el => { el.inert = true; });
   if (main) main.setAttribute('aria-busy', 'true');
   window.ODA_CONTENT = { collections: [], promotions: [] };
-  window.productImage = s => /^(https:|data:)/.test(s) ? s : 'assets/images/' + s;
+  const optimizedImages = new Set(["bebe1.png", "sen1.png", "ven1.png", "mujer1.png", "conejo1.png", "cat-sit.png", "elena1.png", "angel1.png", "jan2.png", "hello1.png", "sofiplano1.png", "elefante1.png", "corazon1.png", "jan1.png", "snoppy.png", "camaraplano1.png"]);
+  window.productImage = s => {
+    if(typeof s !== 'string') return 'assets/images/artban-logo.png';
+    if(optimizedImages.has(s)) return 'assets/optimized/' + s.replace(/\.png$/,'.webp');
+    if(/^https:\/\//.test(s) || /^data:image\/(png|jpeg|webp);base64,/.test(s)) return s;
+    return /^[A-Za-z0-9_-]+\.(png|jpe?g|webp)$/.test(s) ? 'assets/images/' + s : 'assets/images/artban-logo.png';
+  };
   try {
     const r = await fetch(window.STORE_CONFIG.apiBase + '/api/content', { signal: AbortSignal.timeout(5000), cache: 'no-store' });
     if (!r.ok) throw Error();
     const c = await r.json();
-    if (!Array.isArray(c.products)) throw Error();
+    if (!Array.isArray(c.products) || !c.products.every(p => p && typeof p.id==='string' && typeof p.name==='string' && Array.isArray(p.variants) && Array.isArray(p.tags) && (p.type==='custom' || (Number.isFinite(p.price) && p.price>=0 && p.variants.length && p.variants.every(v=>typeof v.name==='string'&&Number.isFinite(v.mod)))))) throw Error();
     CATALOG.splice(0, CATALOG.length, ...c.products);
     window.ODA_CONTENT = c;
   } catch { window.ODA_CATALOG_OFFLINE = true; }
@@ -59,6 +65,7 @@
     loader.classList.add('studio-loading--done');
     loader.addEventListener('transitionend', () => loader.remove(), { once: true });
     setTimeout(() => loader.remove(), 600);
-    document.title = 'ARTBAN';
+    const names={index:'Figuras y lienzos con actitud',tienda:'Tienda',personalizados:'Crea tu figura',proyectos:'El estudio',envios:'Envíos',checkout:'Tu pedido',pago:'Estado de tu pago','crear-lienzo':'Crea tu lienzo','compra-segura':'Compra con claridad'};
+    document.title = (names[(location.pathname.split('/').pop()||'index.html').replace('.html','')]||'Estudio')+' | ARTBAN';
   }
 })();
