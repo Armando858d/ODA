@@ -1,3 +1,4 @@
+import {createRequest,requestAdmin,saveMarketplaces,marketplaces} from '../src/requests.mjs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
@@ -16,7 +17,7 @@ test('payment diagnostic distinguishes sandbox accounts without disclosing crede
 
 // SQLite runs the actual migration/trigger SQL; this adapter follows D1's atomic batch contract.
 class D1 {
- constructor(){this.sql=new DatabaseSync(':memory:');this.sql.exec('PRAGMA foreign_keys=ON');for(const f of ['0001_orders.sql','0002_catalog.sql','0003_shipping.sql','0004_operations.sql'])this.sql.exec(readFileSync(new URL('../migrations/'+f,import.meta.url),'utf8'));}
+ constructor(){this.sql=new DatabaseSync(':memory:');this.sql.exec('PRAGMA foreign_keys=ON');for(const f of ['0001_orders.sql','0002_catalog.sql','0003_shipping.sql','0004_operations.sql','0006_requests.sql'])this.sql.exec(readFileSync(new URL('../migrations/'+f,import.meta.url),'utf8'));}
  prepare(sql){const db=this;return {bind(...args){return {sql,args,async first(){return db.sql.prepare(sql).get(...args)||null},async all(){return {results:db.sql.prepare(sql).all(...args)}},async run(){return {meta:db.sql.prepare(sql).run(...args)}}}}};}
  async batch(statements){this.sql.exec('BEGIN IMMEDIATE');try{const r=statements.map(s=>({meta:this.sql.prepare(s.sql).run(...s.args)}));this.sql.exec('COMMIT');return r}catch(e){this.sql.exec('ROLLBACK');throw e}}
 }
@@ -319,4 +320,17 @@ test('automatic fulfillment buys one verified label and queues tracking once',as
   if(url.endsWith('/shipments')){purchases++;return Response.json({data:{id:'shipment',attributes:{payment_status:'paid',total:'120.50',carrier_name:'fedex'},relationships:{packages:{data:[{id:'pkg'}]}}},included:[{id:'pkg',attributes:{tracking_number:'TEST',label_url:'https://labels.example/sky.pdf'}}]});}
   return skyFetch(url,o);
  },async()=>{const b=shippingBody(),v=validate(b,e),quotes=await rates(v.items,v.customer,e);b.shipping_quote_id=quotes.quotes.find(q=>q.provider==='skydropx').id;await checkout(b,crypto.randomUUID(),e);e.DB.sql.exec("UPDATE orders SET state='approved'");await operations.fulfill(e,hmac);await operations.fulfill(e,hmac);assert.equal(purchases,1);assert.equal(e.DB.sql.prepare('SELECT COUNT(*) n FROM notifications').get().n,2);});
+});
+
+test('personalized requests are idempotent and admin tracking persists',async()=>{
+ const e=env(),key=crypto.randomUUID(),b={name:'QA',email:'qa@example.com',phone:'',piece:'Figura',quantity:1,size:'10 cm',details:'Prueba',website:''};
+ const a=await createRequest(b,key,e),again=await createRequest(b,key,e);assert.equal(a.id,again.id);
+ await assert.rejects(createRequest({...b,quantity:2},key,e),{status:409});
+ await requestAdmin('/api/admin/requests','POST',{id:a.id,status:'quoted',quote_cents:15000,internal_notes:'Revisado'},e);
+ const rows=await requestAdmin('/api/admin/requests','GET',null,e);assert.equal(rows.requests.length,1);assert.equal(rows.requests[0].quote_cents,15000);assert.equal(rows.requests[0].request_key,undefined);
+ await assert.rejects(createRequest({...b,email:'bad'},crypto.randomUUID(),e),{status:400});
+});
+test('marketplace links permit only official HTTPS hosts',async()=>{
+ const e=env();await saveMarketplaces({tiktok:'https://www.tiktok.com/@artb4nn'},e);assert.equal((await marketplaces(e)).amazon,'');
+ for(const u of ['https://amazon.com.evil.test','javascript:alert(1)','http://amazon.com','https://user:pass@amazon.com'])await assert.rejects(saveMarketplaces({amazon:u},e),{status:400});
 });

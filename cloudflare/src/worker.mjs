@@ -1,3 +1,4 @@
+import {marketplaces,createRequest,requestAdmin} from './requests.mjs';
 import {getShop} from './shop-settings.mjs';
 import {runOperations,publicFulfillment,recoverLateReservation} from './operations.mjs';
 import {getContent,pricedProducts,activePromotions} from './content.mjs';
@@ -156,7 +157,7 @@ const limits=new Map();
 function limit(request,path){
   const ip=request.headers.get('CF-Connecting-IP')||'local',key=ip+':'+(path.includes('/orders/')?'orders':path),minute=Math.floor(Date.now()/60000);
   if(limits.size>5000)limits.clear();let item=limits.get(key);if(!item||item.minute!==minute)item={minute,hits:0};item.hits++;limits.set(key,item);
-  if(item.hits>(['/api/checkout','/api/shipping/quotes'].includes(path)?15:120))fail(429,'Demasiadas solicitudes. Intenta en un minuto.');
+  if(item.hits>(['/api/checkout','/api/shipping/quotes','/api/requests'].includes(path)?15:120))fail(429,'Demasiadas solicitudes. Intenta en un minuto.');
 }
 export default {
   async scheduled(event,env,ctx){ctx.waitUntil(runOperations({...env,SHIPPING_PROVIDER:'skydropx',ENVIA_TOKEN:undefined},{mp,apply:applyPayment,sign:hmac}));},
@@ -171,6 +172,7 @@ export default {
       if(request.method==='OPTIONS'){if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');return new Response(null,{status:204,headers});}
       if(path==='/api/shop'&&request.method==='GET')result=await getShop(env);
       else if(path==='/api/content'&&request.method==='GET'){const c=await getContent(env);result={products:pricedProducts(c),collections:c.collections.filter(x=>x.active),promotions:activePromotions(c)};}
+      else if(path==='/api/marketplaces'&&request.method==='GET')result=await marketplaces(env);
       else if(path==='/api/config'&&request.method==='GET')result=config(env);
       else if(path==='/api/health'&&request.method==='GET'){if(!env.DB)fail(503,'Base de datos pendiente.');await one(env,'SELECT inventory_released,fulfillment_hold,ops_checked_at FROM orders LIMIT 1');await one(env,'SELECT id FROM notifications LIMIT 1');result={ok:true,version:'2026-10-19-operations',payments_enabled:config(env).enabled};}
       else if(path.startsWith('/api/')){
@@ -187,7 +189,8 @@ export default {
           }else if(path==='/api/admin/test-checkout'&&request.method==='POST'){
             if(env.MP_MODE!=='test')fail(409,'Disponible solo en modo de prueba.');
             result=await checkout(body,request.headers.get('Idempotency-Key'),{...env,PAYMENTS_ENABLED:'true',PICKUP_CONFIRMED:'true'});
-          }else result=await admin(path,request.method,body,env,mp);
+          }else if(['/api/admin/requests','/api/admin/marketplaces'].includes(path))result=await requestAdmin(path,request.method,body,env);else result=await admin(path,request.method,body,env,mp);
+        }else if(path==='/api/requests'&&request.method==='POST'){if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');result=await createRequest(await readBody(request),request.headers.get('Idempotency-Key'),env);
         }else if(path==='/api/shipping/quotes'&&request.method==='POST'){
           if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');
           const v=validate(await readBody(request),env);if(v.customer.method!=='shipping')fail(400,'Selecciona env?o a domicilio.');
