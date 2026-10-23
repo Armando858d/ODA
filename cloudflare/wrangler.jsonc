@@ -21,7 +21,7 @@
     "SHIPPING_CENTRO": "150",
     "SHIPPING_NACIONAL": "220",
     "SHIPPING_PROVIDER": "skydropx",
-    "SKYDROPX_MODE": "test",
+    "SKYDROPX_MODE": "live",
     "SKYDROPX_TEST_API_URL": "https://sb-pro.skydropx.com",
     "SKYDROPX_LABEL_PURCHASES_ENABLED": "false",
     "LABEL_PURCHASES_ENABLED": "false",
