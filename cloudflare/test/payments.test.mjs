@@ -11,6 +11,7 @@ test('payment diagnostic distinguishes sandbox accounts without disclosing crede
   const result=await admin('/api/admin/mercadopago','POST',{},env(),async()=>({id:123,tags}));
   assert.equal(result.account_is_test,expected);
   assert.equal(result.collector_matches,true);
+  assert.equal(result.collector_id,"123");
   assert.equal(JSON.stringify(result).includes('test-only-not-a-real-token'),false);
  }
 });
