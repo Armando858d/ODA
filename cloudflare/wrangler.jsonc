@@ -22,6 +22,7 @@
     "SHIPPING_NACIONAL": "220",
     "SHIPPING_PROVIDER": "skydropx",
     "SKYDROPX_MODE": "live",
+    "SKYDROPX_PACKAGE_CODES": "{\"corazon-007\":{\"consignment_note\":\"60121003\",\"package_type\":\"4G\"}}",
     "SKYDROPX_TEST_API_URL": "https://sb-pro.skydropx.com",
     "SKYDROPX_LABEL_PURCHASES_ENABLED": "false",
     "LABEL_PURCHASES_ENABLED": "false",
