@@ -120,6 +120,20 @@ test('admin requires private bearer token and allowed origin',async()=>{
  assert.equal((await call(e.ADMIN_TOKEN,'https://evil.example')).status,403);
  const r=await call(e.ADMIN_TOKEN);assert.equal(r.status,200);const d=await r.json();assert.equal(d.inventory.length,14);assert.ok(!JSON.stringify(d).includes(e.ADMIN_TOKEN));
 });
+
+test('private live checkout keeps public payments closed and requires explicit confirmation',async()=>{
+ const e={...env(),MP_MODE:'live',PAYMENTS_ENABLED:'false',ADMIN_TOKEN:'s'.repeat(40)};stock(e);
+ const call=(payload,token=e.ADMIN_TOKEN,origin='https://armando858d.github.io')=>worker.fetch(new Request('https://api.example/api/admin/live-checkout',{method:'POST',headers:{Origin:origin,Authorization:'Bearer '+token,'Content-Type':'application/json','Idempotency-Key':crypto.randomUUID()},body:JSON.stringify(payload)}),e);
+ assert.equal((await call(body(),'bad')).status,401);
+ assert.equal((await call(body(),e.ADMIN_TOKEN,'https://evil.example')).status,403);
+ assert.equal((await call(body())).status,400);
+ e.MP_MODE='test';assert.equal((await call({...body(),confirm_real_payment:true})).status,409);e.MP_MODE='live';
+ e.PICKUP_CONFIRMED='false';assert.equal((await call({...body(),confirm_real_payment:true})).status,409);e.PICKUP_CONFIRMED='true';
+ await mock(async()=>Response.json({id:'live-pref',init_point:'https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=live'}),async()=>{
+  const result=await call({...body(),confirm_real_payment:true});assert.equal(result.status,200);assert.equal((await result.json()).total,850);
+ });
+ assert.equal(config(e).enabled,false);assert.equal(getStock(e),2);
+});
 test('admin saves measured packages and rejects concurrent inventory changes',async()=>{
  const {admin}=await import('../src/admin.mjs');const e=env();
  const b={product_id:'venom-001',variant:0,previous_stock:0,stock:2,weight:1,length:20,width:20,height:30};

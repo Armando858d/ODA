@@ -177,7 +177,7 @@ export default {
       else if(path==='/api/health'&&request.method==='GET'){if(!env.DB)fail(503,'Base de datos pendiente.');await one(env,'SELECT inventory_released,fulfillment_hold,ops_checked_at FROM orders LIMIT 1');await one(env,'SELECT id FROM notifications LIMIT 1');result={ok:true,version:'2026-10-19-operations',payments_enabled:config(env).enabled};}
       else if(path.startsWith('/api/')){
         limit(request,path);
-        if(['/api/checkout','/api/shipping/quotes','/api/admin/test-checkout'].includes(path))env={...env,catalog:pricedProducts(await getContent(env)).filter(p=>p.type==='fixed')};
+        if(['/api/checkout','/api/shipping/quotes','/api/admin/test-checkout','/api/admin/live-checkout'].includes(path))env={...env,catalog:pricedProducts(await getContent(env)).filter(p=>p.type==='fixed')};
         if(path.startsWith('/api/admin/')){
           if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');
           await authenticate(request,env);
@@ -189,6 +189,12 @@ export default {
           }else if(path==='/api/admin/test-checkout'&&request.method==='POST'){
             if(env.MP_MODE!=='test')fail(409,'Disponible solo en modo de prueba.');
             result=await checkout(body,request.headers.get('Idempotency-Key'),{...env,PAYMENTS_ENABLED:'true',PICKUP_CONFIRMED:'true'});
+          }else if(path==='/api/admin/live-checkout'&&request.method==='POST'){
+            if(env.MP_MODE!=='live')fail(409,'Disponible solo en producción.');
+            if(body?.confirm_real_payment!==true)fail(400,'Confirma que este pedido generará un cobro real al pagarlo.');
+            // Private launch check: retain real prices, stock, delivery and all credential checks.
+            // The public payment switch and delivery options remain unchanged.
+            result=await checkout(body,request.headers.get('Idempotency-Key'),{...env,PAYMENTS_ENABLED:'true'});
           }else if(['/api/admin/requests','/api/admin/marketplaces'].includes(path))result=await requestAdmin(path,request.method,body,env);else result=await admin(path,request.method,body,env,mp);
         }else if(path==='/api/requests'&&request.method==='POST'){if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');result=await createRequest(await readBody(request),request.headers.get('Idempotency-Key'),env);
         }else if(path==='/api/shipping/quotes'&&request.method==='POST'){
