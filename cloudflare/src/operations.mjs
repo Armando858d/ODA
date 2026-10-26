@@ -35,7 +35,7 @@ export async function releaseExpired(e,mp,apply){
  }catch{await issue(e,row.id,'reservation','No se pudo verificar la reserva con Mercado Pago; se conserva el inventario apartado.');}}
 }
 export async function queueNotice(e,row,kind,link,labels=[]){
- if(!emailReady(e)||row.mode!=='live')return;
+ if(!emailReady(e)||row.mode!=='live'||JSON.parse(row.customer).method==='payment_test')return;
  const customer=JSON.parse(row.customer);
  const text=kind==='payment'?`Hola ${customer.name}. Mercado Pago confirmó tu pedido ${row.id} por $${(row.total_cents/100).toFixed(2)} MXN. Consulta su estado: ${link}\nUna guía generada no significa que el paquete haya sido entregado a la paquetería.`:`Hola ${customer.name}. La guía de tu pedido ${row.id} está lista:\n${labels.map(l=>`${l.carrier}: ${l.tracking}`).join('\n')}\nConsulta tu pedido: ${link}\nEl movimiento del rastreo comienza cuando la paquetería recibe el paquete.`;
  const payload={from:e.EMAIL_FROM,to:[customer.email],subject:kind==='payment'?'ARTBAN · Pago confirmado':'ARTBAN · Tu guía de rastreo',text};
@@ -58,7 +58,7 @@ export async function sendNotices(e){
 }
 export async function fulfill(e,sign){
  const auto=e.AUTO_LABELS_ENABLED==='true'&&e.MP_MODE==='live'&&e.SKYDROPX_MODE==='live'&&e.LABEL_PURCHASES_ENABLED==='true'&&e.SKYDROPX_LABEL_PURCHASES_ENABLED==='true';
- const rows=await sql(e,`SELECT * FROM orders WHERE state='approved' AND mode='live' AND inventory_released=0 AND fulfillment_hold=0 AND
+ const rows=await sql(e,`SELECT * FROM orders WHERE state='approved' AND mode='live' AND json_extract(customer,'$.method')!='payment_test' AND inventory_released=0 AND fulfillment_hold=0 AND
  ((?=1 AND NOT EXISTS(SELECT 1 FROM notifications n WHERE n.order_id=orders.id AND n.kind='payment')) OR
  EXISTS(SELECT 1 FROM order_shipping os WHERE os.order_id=orders.id AND ((os.state!='ready' AND ?=1) OR (os.state='ready' AND ?=1 AND NOT EXISTS(SELECT 1 FROM notifications n WHERE n.order_id=orders.id AND n.kind='shipping')))))
  ORDER BY ops_checked_at,created_at LIMIT 2`,emailReady(e)?1:0,auto?1:0,emailReady(e)?1:0).all();

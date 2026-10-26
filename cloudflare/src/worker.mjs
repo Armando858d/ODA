@@ -106,6 +106,56 @@ export async function checkout(body,key,env) {
     fail(503,'No se pudo confirmar el enlace. No repitas el pedido; consulta al estudio con referencia '+id+'.');
   }
 }
+// Owner-only diagnostic coupon. No catalog discount or shipping privilege is exposed publicly.
+export async function createPaymentCoupon(env) {
+  if(env.MP_MODE!=='live'||!config({...env,PICKUP_CONFIRMED:'true'}).enabled)fail(409,'Activa Mercado Pago de producción antes de crear esta prueba.');
+  const code=crypto.randomUUID(),hash=await digest(code),expires_at=now()+3600;
+  await stmt(env,'INSERT INTO store_settings(key,value) VALUES(?,?)','payment-test:'+hash,JSON.stringify({expires_at})).run();
+  return {code,expires_at,total:1,shipping:0};
+}
+export async function paymentCouponCheckout(body,env) {
+  if(env.MP_MODE!=='live'||!config({...env,PICKUP_CONFIRMED:'true'}).enabled)fail(409,'La prueba requiere cobros reales habilitados.');
+  if(body?.confirm_real_payment!==true)fail(400,'Confirma la prueba real de $1 MXN, sin producto ni envío.');
+  const code=field(body,'code',80),name=field(body,'name',100),email=field(body,'email',180);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))fail(400,'Revisa el correo del comprador.');
+  const hash=await digest(code),key='payment-test:'+hash;
+  const fingerprint=await digest(JSON.stringify([name,email]));
+  // The unique request_key is the coupon claim. Concurrent requests cannot create two payments.
+  const previous=await one(env,'SELECT * FROM orders WHERE request_key=?',key);
+  if(previous)return existing(previous,fingerprint,env);
+  const coupon=await one(env,'SELECT value FROM store_settings WHERE key=?',key);
+  if(!coupon||JSON.parse(coupon.value).expires_at<=now())fail(409,'Cupón inválido o vencido. Genera uno nuevo desde el panel.');
+  const id='4RT-'+crypto.randomUUID().replaceAll('-','');
+  const customer={name,email,method:'payment_test',notes:'Prueba privada de $1 MXN. Sin fabricación, entrega ni guía.'};
+  const items=[{id:'private-payment-test',variant:0,quantity:1,title:'Prueba privada de pago — sin producto ni envío',price_cents:100}];
+  try{
+    await stmt(env,"INSERT INTO orders(id,request_key,fingerprint,items,customer,total_cents,shipping_cents,state,created_at,mode) VALUES(?,?,?,?,?,100,0,'creating',?,'live')",id,key,fingerprint,JSON.stringify(items),JSON.stringify(customer),now()).run();
+  }catch(e){
+    const concurrent=await one(env,'SELECT * FROM orders WHERE request_key=?',key);
+    if(concurrent)return existing(concurrent,fingerprint,env);
+    throw e;
+  }
+  // No order_items / inventory reservation / shipping quote or order_shipping row is created.
+  const token=await hmac(env.STATUS_SIGNING_SECRET,id);
+  const callback=env.SITE_URL.replace(/\/$/,'')+'/pago.html?'+new URLSearchParams({order:id,token});
+  try{
+    const response=await mp(env,'POST','/checkout/preferences',{
+      items:[{id:'private-payment-test',title:items[0].title,quantity:1,unit_price:1,currency_id:'MXN'}],
+      payer:{email,name},external_reference:id,
+      back_urls:{success:callback,pending:callback,failure:callback},auto_return:'approved',
+      notification_url:env.API_URL.replace(/\/$/,'')+'/api/webhooks/mercadopago',
+      payment_methods:{installments:1},shipments:{cost:0,mode:'not_specified'},
+      expires:true,expiration_date_to:new Date(Date.now()+1800000).toISOString(),statement_descriptor:'4RTB4N STUDIO'
+    });
+    let valid=false;try{const u=new URL(response.init_point);valid=u.protocol==='https:'&&u.hostname==='www.mercadopago.com.mx'&&!u.username&&!u.password}catch{}
+    if(!valid||!response.id)fail(502,'No se recibió un enlace válido.');
+    await stmt(env,"UPDATE orders SET preference_id=?,checkout_url=?,state=CASE WHEN state='creating' THEN 'awaiting_payment' ELSE state END WHERE id=?",String(response.id),response.init_point,id).run();
+    return checkoutResult(await one(env,'SELECT * FROM orders WHERE id=?',id),env);
+  }catch{
+    await stmt(env,"UPDATE orders SET state='needs_review' WHERE id=? AND state='creating'",id).run();
+    fail(503,'No se confirmó el enlace de $1. No se aumentará el importe automáticamente. Revisa Mercado Pago con la referencia '+id+' antes de generar otra prueba.');
+  }
+}
 export async function signatureValid(signature,requestId,dataId,env) {
   try{
     const parts=Object.fromEntries(signature.split(',').map(s=>s.trim().split('='))),ts=Number(parts.ts),seconds=ts>1e12?ts/1000:ts;
@@ -142,7 +192,7 @@ export async function orderStatus(id,token,env) {
       for(const p of result.results||[])if(p.external_reference===id)await applyPayment(p,env);
     }
   }
-  row=await one(env,'SELECT * FROM orders WHERE id=?',id);return {order_id:id,status:row.state,total:row.total_cents/100,mode:row.mode,fulfillment_hold:!!row.fulfillment_hold,...await publicFulfillment(env,id)};
+  row=await one(env,'SELECT * FROM orders WHERE id=?',id);return {order_id:id,status:row.state,total:row.total_cents/100,mode:row.mode,payment_test:JSON.parse(row.customer).method==='payment_test',fulfillment_hold:!!row.fulfillment_hold,...await publicFulfillment(env,id)};
 }
 async function readBody(request,max=16000) {
   if(!request.headers.get('content-type')?.toLowerCase().startsWith('application/json'))fail(400,'Se requiere JSON.');
@@ -174,7 +224,7 @@ export default {
       else if(path==='/api/content'&&request.method==='GET'){const c=await getContent(env);result={products:pricedProducts(c),collections:c.collections.filter(x=>x.active),promotions:activePromotions(c)};}
       else if(path==='/api/marketplaces'&&request.method==='GET')result=await marketplaces(env);
       else if(path==='/api/config'&&request.method==='GET')result=config(env);
-      else if(path==='/api/health'&&request.method==='GET'){if(!env.DB)fail(503,'Base de datos pendiente.');await one(env,'SELECT inventory_released,fulfillment_hold,ops_checked_at FROM orders LIMIT 1');await one(env,'SELECT id FROM notifications LIMIT 1');result={ok:true,version:'2026-10-19-operations',payments_enabled:config(env).enabled};}
+      else if(path==='/api/health'&&request.method==='GET'){if(!env.DB)fail(503,'Base de datos pendiente.');await one(env,'SELECT inventory_released,fulfillment_hold,ops_checked_at FROM orders LIMIT 1');await one(env,'SELECT id FROM notifications LIMIT 1');result={ok:true,version:'2026-10-26-private-payment-test',payments_enabled:config(env).enabled};}
       else if(path.startsWith('/api/')){
         limit(request,path);
         if(['/api/checkout','/api/shipping/quotes','/api/admin/test-checkout','/api/admin/live-checkout'].includes(path))env={...env,catalog:pricedProducts(await getContent(env)).filter(p=>p.type==='fixed')};
@@ -189,6 +239,10 @@ export default {
           }else if(path==='/api/admin/test-checkout'&&request.method==='POST'){
             if(env.MP_MODE!=='test')fail(409,'Disponible solo en modo de prueba.');
             result=await checkout(body,request.headers.get('Idempotency-Key'),{...env,PAYMENTS_ENABLED:'true',PICKUP_CONFIRMED:'true'});
+          }else if(path==='/api/admin/payment-test-coupon'&&request.method==='POST'){
+            result=await createPaymentCoupon(env);
+          }else if(path==='/api/admin/payment-test-checkout'&&request.method==='POST'){
+            result=await paymentCouponCheckout(body,env);
           }else if(path==='/api/admin/live-checkout'&&request.method==='POST'){
             if(env.MP_MODE!=='live')fail(409,'Disponible solo en producción.');
             if(body?.confirm_real_payment!==true)fail(400,'Confirma que este pedido generará un cobro real al pagarlo.');
