@@ -403,3 +403,7 @@ test('one-peso live payment must match amount and status identifies diagnostic o
   await applyPayment(paid,e);const result=await orderStatus(order.order_id,order.status_token,e);assert.equal(result.status,'approved');assert.equal(result.payment_test,true);assert.equal(result.total,1);assert.equal(result.shipping.state,'not_required');
  });
 });
+
+test('catalog preserves independent home and carousel selections',async()=>{
+ const {validateContent}=await import('../src/content.mjs');const {getContent}=await import('../src/content.mjs');const content=await getContent(env());content.products[0].carousel=true;content.products[0].featured=false;const result=validateContent(content);assert.equal(result.products[0].carousel,true);assert.equal(result.products[0].featured,false);assert.equal(result.products[1].carousel,false);
+});

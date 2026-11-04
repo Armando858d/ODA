@@ -1,11 +1,11 @@
 'use strict';
 // Capa editorial: conserva catálogo, carrusel automático y checkout.
 document.body.classList.add('skate-edition');
-const studioMark=document.querySelector('.wordmark small');if(studioMark)studioMark.textContent='ODA STUDIO / MÉXICO';
+const studioMark=document.querySelector('.wordmark small');if(studioMark)studioMark.textContent='Semilla + ODA';
 if(page==='index'){
  document.querySelector('main').classList.add('skate-home');
  const hero=document.querySelector('.hero');
- hero.querySelector('.eyebrow').textContent='ODA STUDIO — CULTURA CREATIVA INDEPENDIENTE';
+ hero.querySelector('.eyebrow').textContent='ARTBAN · SEMILLA + ODA';
  hero.querySelector('h1').innerHTML='TU HISTORIA.<br><em>OTRA FORMA.</em>';
  hero.querySelector('.hero-content p').textContent='Figuras 3D y lienzos que hablan de ti. Elige una pieza del estudio o dale forma a una idea propia.';
  hero.querySelector('.hero-content .btn').innerHTML='ARMA TU COLECCIÓN <span>↗</span>';
