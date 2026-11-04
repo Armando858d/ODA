@@ -99,7 +99,7 @@ test('order status requires token and exposes no address or email',async()=>{
  const e=env();stock(e);await mock(async()=>preference(),async()=>{
  const r=await checkout(body(),crypto.randomUUID(),e);delete e.MP_ACCESS_TOKEN;
  await assert.rejects(orderStatus(r.order_id,'bad',e),{status:404});
- assert.deepEqual(Object.keys(await orderStatus(r.order_id,r.status_token,e)).sort(),['fulfillment_hold','mode','notifications','order_id','shipping','status','total']);
+ assert.deepEqual(Object.keys(await orderStatus(r.order_id,r.status_token,e)).sort(),['fulfillment_hold','mode','notifications','order_id','payment_test','shipping','status','total']);
  });
 });
 test('HTTP CORS, invalid bodies, signatures, config and private paths',async()=>{
@@ -348,4 +348,58 @@ test('personalized requests are idempotent and admin tracking persists',async()=
 test('marketplace links permit only official HTTPS hosts',async()=>{
  const e=env();await saveMarketplaces({tiktok:'https://www.tiktok.com/@artb4nn'},e);assert.equal((await marketplaces(e)).amazon,'');
  for(const u of ['https://amazon.com.evil.test','javascript:alert(1)','http://amazon.com','https://user:pass@amazon.com'])await assert.rejects(saveMarketplaces({amazon:u},e),{status:400});
+});
+
+// Owner-only $1 diagnostic: the code never grants a public catalog discount.
+test('private one-peso coupon is hashed, expires, and requires authenticated owner',async()=>{
+ const e={...env(),MP_MODE:'live',ADMIN_TOKEN:'z'.repeat(40)};
+ const request=(path,data,auth=true)=>new Request('https://oda.example.com/api/admin/'+path,{method:'POST',headers:{Origin:'https://armando858d.github.io','Content-Type':'application/json',...(auth?{Authorization:'Bearer '+e.ADMIN_TOKEN}:{})},body:JSON.stringify(data)});
+ assert.equal((await worker.fetch(request('payment-test-coupon',{},false),e)).status,401);
+ assert.equal((await worker.fetch(request('payment-test-checkout',{confirm_real_payment:true},false),e)).status,401);
+ const response=await worker.fetch(request('payment-test-coupon',{}),e);assert.equal(response.status,200);const c=await response.json();assert.equal(c.total,1);
+ assert.ok(c.expires_at> Date.now()/1000+3500);assert.ok(!JSON.stringify(e.DB.sql.prepare('SELECT * FROM store_settings').all()).includes(c.code));
+ const row=e.DB.sql.prepare("SELECT key FROM store_settings WHERE key LIKE 'payment-test:%'").get();
+ e.DB.sql.prepare('UPDATE store_settings SET value=? WHERE key=?').run(JSON.stringify({expires_at:1}),row.key);
+ assert.equal((await worker.fetch(request('payment-test-checkout',{code:c.code,name:'Prueba',email:'qa@example.com',confirm_real_payment:true}),e)).status,409);
+ assert.equal((await worker.fetch(request('payment-test-coupon',{}),{...e,MP_MODE:'test'})).status,409);
+});
+
+test('one-peso coupon fixes the amount, claims once, and cannot reserve stock or buy shipping',async()=>{
+ const {createPaymentCoupon,paymentCouponCheckout}=await import('../src/worker.mjs');
+ const {fulfill}=await import('../src/operations.mjs');const {purchaseLabel}=await import('../src/shipping.mjs');
+ const e={...env(),MP_MODE:'live',EMAIL_ENABLED:'true',RESEND_API_KEY:'test',EMAIL_FROM:'test@example.com',AUTO_LABELS_ENABLED:'true',LABEL_PURCHASES_ENABLED:'true',SKYDROPX_LABEL_PURCHASES_ENABLED:'true',SKYDROPX_MODE:'live'};
+ stock(e);const c=await createPaymentCoupon(e);const data={code:c.code,name:'Prueba',email:'qa@example.com',confirm_real_payment:true,total:0,shipping_quote_id:'forged',customer:{method:'shipping'}};
+ let calls=0;
+ await mock(async(url,options)=>{
+  calls++;assert.match(url,/checkout\/preferences/);const p=JSON.parse(options.body);assert.equal(p.items[0].unit_price,1);assert.equal(p.items[0].quantity,1);assert.equal(p.shipments.cost,0);assert.equal(p.payment_methods.installments,1);
+  return Response.json({id:'live-private',init_point:'https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=private-test'});
+ },async()=>{
+  const attempts=await Promise.allSettled([paymentCouponCheckout(data,e),paymentCouponCheckout(data,e)]);const a=attempts.find(x=>x.status==='fulfilled').value;
+  const retry=await paymentCouponCheckout(data,e);assert.equal(a.order_id,retry.order_id);assert.equal(a.total,1);assert.equal(calls,1);
+  assert.equal(getStock(e),3);assert.equal(e.DB.sql.prepare('SELECT COUNT(*) n FROM order_items').get().n,0);assert.equal(e.DB.sql.prepare('SELECT COUNT(*) n FROM order_shipping').get().n,0);
+  await assert.rejects(paymentCouponCheckout({...data,email:'other@example.com'},e),{status:409});
+  e.DB.sql.prepare("UPDATE orders SET state='approved' WHERE id=?").run(a.order_id);
+  await fulfill(e,hmac);assert.equal(calls,1);assert.equal(e.DB.sql.prepare('SELECT COUNT(*) n FROM notifications').get().n,0);
+  await assert.rejects(purchaseLabel(a.order_id,100,e),{status:409});assert.equal(calls,1);
+  await assert.rejects(paymentCouponCheckout(data,e),{status:409});
+ });
+ assert.throws(()=>validate({items:[{id:'private-payment-test',variant:0,quantity:1}],customer:{name:'Prueba',email:'qa@example.com',method:'payment_test'}},e),{status:409});
+});
+
+test('uncertain one-peso preference cannot consume coupon twice or raise amount',async()=>{
+ const {createPaymentCoupon,paymentCouponCheckout}=await import('../src/worker.mjs');const e={...env(),MP_MODE:'live'};const c=await createPaymentCoupon(e);
+ const data={code:c.code,name:'Prueba',email:'qa@example.com',confirm_real_payment:true};let calls=0;
+ await assert.rejects(paymentCouponCheckout({...data,confirm_real_payment:false},e),{status:400});
+ await mock(async()=>{calls++;throw Error('timeout')},async()=>{await assert.rejects(paymentCouponCheckout(data,e),{status:503});await assert.rejects(paymentCouponCheckout(data,e),{status:409});assert.equal(calls,1)});
+ assert.equal(e.DB.sql.prepare('SELECT total_cents FROM orders').get().total_cents,100);
+});
+
+test('one-peso live payment must match amount and status identifies diagnostic order',async()=>{
+ const {createPaymentCoupon,paymentCouponCheckout}=await import('../src/worker.mjs');const e={...env(),MP_MODE:'live'};const c=await createPaymentCoupon(e);let order;
+ await mock(async()=>Response.json({id:'p1',init_point:'https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=p1'}),async()=>{order=await paymentCouponCheckout({code:c.code,name:'Prueba',email:'qa@example.com',confirm_real_payment:true},e)});
+ const paid={...payment(order.order_id),transaction_amount:1,shipping_amount:0,live_mode:true};
+ await mock(async url=>Response.json(url.includes('/users/me')?{id:123,tags:[]}:{results:[paid]}),async()=>{
+  await assert.rejects(applyPayment({...paid,transaction_amount:2},e),{status:409});
+  await applyPayment(paid,e);const result=await orderStatus(order.order_id,order.status_token,e);assert.equal(result.status,'approved');assert.equal(result.payment_test,true);assert.equal(result.total,1);assert.equal(result.shipping.state,'not_required');
+ });
 });
