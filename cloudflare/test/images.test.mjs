@@ -1,0 +1,10 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync} from 'node:fs';
+import {saveImage,imageResponse,externalizeImages} from '../src/images.mjs';
+const png='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWo0AAAAASUVORK5CYII=';
+function env(){const db=new DatabaseSync(':memory:');db.exec(readFileSync(new URL('../migrations/0007_catalog_images.sql',import.meta.url),'utf8'));return {API_URL:'https://api.example',sql:db,DB:{prepare(sql){return {bind(...args){return {run:async()=>db.prepare(sql).run(...args),first:async()=>db.prepare(sql).get(...args)}}}}}};}
+test('images stored separately deduplicate and serve exact binary with immutable caching',async()=>{const e=env();const a=await saveImage(e,png);assert.deepEqual(await saveImage(e,png),a);assert.equal(e.sql.prepare('SELECT count(*) n FROM catalog_images').get().n,1);const r=await imageResponse(e,a.url.split('/').pop());assert.equal(r.headers.get('Content-Type'),'image/png');assert.match(r.headers.get('Cache-Control'),/immutable/);assert.deepEqual(Buffer.from(await r.arrayBuffer()),Buffer.from(png.split(',')[1],'base64'));await assert.rejects(imageResponse(e,'missing'),{status:404});});
+test('reject oversized, malformed and mislabeled images',async()=>{const e=env();for(const data of ['data:image/svg+xml;base64,PHN2Zz4=',png.replace('image/png','image/webp'),'data:image/png;base64,'+'a'.repeat(190000)])await assert.rejects(saveImage(e,data),{status:400});});
+test('existing inline images become URLs without changing products or input',async()=>{const e=env(),b={revision:9,products:[{id:'heart',price:550,image:png,images:[png,'photo.jpg']}],collections:[{id:'one',image:png}]};const out=await externalizeImages(e,b);assert.equal(b.products[0].image,png);assert.equal(out.products[0].price,550);assert.equal(out.revision,9);assert.match(out.products[0].image,/^https:/);assert.equal(out.products[0].images[1],'photo.jpg');assert.equal(e.sql.prepare('SELECT count(*) n FROM catalog_images').get().n,1);});

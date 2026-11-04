@@ -1,3 +1,4 @@
+import {externalizeImages} from './images.mjs';
 import SEED from './catalog-seed.mjs';
 import {APIError} from './errors.mjs';
 const q=(e,s,...v)=>e.DB.prepare(s).bind(...v);
@@ -15,7 +16,7 @@ export function validateContent(b){
  const promotions=b.promotions.map(x=>{if(!Number.isFinite(x.percent)||x.percent<1||x.percent>90)bad('El descuento debe estar entre 1 y 90%.');if(x.collection&&!collections.some(c=>c.id===x.collection))bad('Colección de promoción no encontrada.');for(const k of ['start','end'])if(x[k]&&!Number.isFinite(Date.parse(x[k])))bad('Fecha no válida.');if(x.start&&x.end&&Date.parse(x.end)<=Date.parse(x.start))bad('El fin debe ser posterior al inicio.');return {id:id(x.id),title:text(x.title,100),percent:x.percent,collection:x.collection||'',start:x.start||'',end:x.end||'',active:!!x.active};});
  const result={revision:b.revision+1,products,collections,promotions};if(JSON.stringify(result).length>1800000)bad('El catálogo supera 1.8 MB. Reduce el número o tamaño de las fotos.');return result;
 }
-export async function saveContent(e,body){const next=validateContent(body);await q(e,"INSERT OR IGNORE INTO store_settings(key,value) VALUES('content',?)",JSON.stringify({revision:0,products:SEED,collections:[],promotions:[]})).run();const old=await getContent(e);if(old.revision!==body.revision)throw new APIError(409,'Otra sesión modificó el catálogo. Recarga antes de guardar.');
+export async function saveContent(e,body){const next=validateContent(await externalizeImages(e,body));await q(e,"INSERT OR IGNORE INTO store_settings(key,value) VALUES('content',?)",JSON.stringify({revision:0,products:SEED,collections:[],promotions:[]})).run();const old=await getContent(e);if(old.revision!==body.revision)throw new APIError(409,'Otra sesión modificó el catálogo. Recarga antes de guardar.');
  const commands=[q(e,"UPDATE store_settings SET value=? WHERE key='content' AND value=?",JSON.stringify(next),JSON.stringify(old))];
  for(const p of next.products)for(let i=0;i<p.variants.length;i++)commands.push(q(e,'INSERT OR IGNORE INTO inventory(product_id,variant,stock) VALUES(?,?,0)',p.id,i));
  const result=await e.DB.batch(commands);if(result[0].meta.changes!==1)throw new APIError(409,'El catálogo cambió. Recarga el panel.');return next;}

@@ -1,3 +1,4 @@
+import {saveImage,imageResponse} from './images.mjs';
 import {marketplaces,createRequest,requestAdmin} from './requests.mjs';
 import {getShop} from './shop-settings.mjs';
 import {runOperations,publicFulfillment,recoverLateReservation} from './operations.mjs';
@@ -170,6 +171,7 @@ export default {
     try{
       let result;
       if(request.method==='OPTIONS'){if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');return new Response(null,{status:204,headers});}
+      if(/^\/api\/images\/[a-f0-9]{64}$/.test(path)&&request.method==='GET')return await imageResponse(env,path.split('/').pop());
       if(path==='/api/shop'&&request.method==='GET')result=await getShop(env);
       else if(path==='/api/content'&&request.method==='GET'){const c=await getContent(env);result={products:pricedProducts(c),collections:c.collections.filter(x=>x.active),promotions:activePromotions(c)};}
       else if(path==='/api/marketplaces'&&request.method==='GET')result=await marketplaces(env);
@@ -181,9 +183,10 @@ export default {
         if(path.startsWith('/api/admin/')){
           if(!siteOrigin||origin!==siteOrigin)fail(403,'Origen no permitido.');
           await authenticate(request,env);
-          const body=request.method==='POST'?await readBody(request,path==='/api/admin/content'?2000000:16000):null;
+          const body=request.method==='POST'?await readBody(request,path==='/api/admin/content'?2000000:path==='/api/admin/images'?200000:16000):null;
           const match=path.match(/^\/api\/admin\/orders\/(4RT-[a-f0-9]{32})\/(rate|label|payment)$/);
-          if(match&&request.method==='POST'){
+          if(path==='/api/admin/images'&&request.method==='POST')result=await saveImage(env,body?.data);
+          else if(match&&request.method==='POST'){
             const payment=await orderStatus(match[1],await hmac(env.STATUS_SIGNING_SECRET,match[1]),env);
             result=match[2]==='payment'?payment:match[2]==='rate'?await labelRate(match[1],env):await purchaseLabel(match[1],body.expected_cents,env);
           }else if(path==='/api/admin/test-checkout'&&request.method==='POST'){
