@@ -20,3 +20,6 @@ Las tasas son ejemplos editables consultados el 2026-11-10. La guía de TikTok y
 
 ## Validación
 `node test.cjs` comprueba IVA incluido/adicional, descuentos, exentos, comisiones Point/MSI, costo por lote, tarifas TikTok, topes SFP, retenciones sin duplicación y rechazo de respaldos inválidos. Se verificaron también interacciones en navegador.
+
+## Desglose de terminal por producto
+La caja y el historial muestran comisión, IVA de comisión, cargo total y neto de cada renglón. Se reparte el cargo del cobro proporcionalmente a los importes con IVA después de descuentos. Se asignan centavos por restos mayores para que la suma coincida exactamente con el total de la terminal. Para cantidades mayores a uno se muestra el promedio por pieza. El historial antiguo se calcula con sus comisiones guardadas. El ticket del cliente conserva únicamente sus importes de compra.
